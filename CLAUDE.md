@@ -38,6 +38,56 @@ apps-script/appsscript.json  manifest: fija los permisos del Web App y la zona h
 .clasp.json                 ata esta carpeta al proyecto de Apps Script (scriptId + rootDir)
 ```
 
+## Hosting: GitHub + Railway
+
+El sitio está publicado en **https://blatos-sitio-production.up.railway.app**
+
+| | |
+|---|---|
+| Repo | https://github.com/nacho0dwg/blatos-sitio-tesis (público, rama `main`) |
+| Proyecto Railway | `BLATOS-sitio-tesis` · `124595b8-e56e-4d8e-a394-014f5ecf9c84` |
+| Servicio | `blatos-sitio`, enganchado al repo |
+
+**Deploy continuo: cada push a `main` redeploya solo.** No hay que correr nada
+de Railway a mano:
+
+```
+git add -A && git commit -m "…" && git push
+```
+
+Railway lo detecta como **sitio estático** con su builder (Railpack) y lo sirve
+tal cual: no hay `package.json`, ni build, ni `Dockerfile`, y **no hace falta
+agregarlos**. Si alguna vez se suma un `package.json` al repo, Railway va a
+dejar de tratarlo como estático y va a intentar levantarlo como app de Node.
+
+Ojo con la identidad de git: está configurada **local al repo** (`git config`
+sin `--global`) con el usuario de GitHub y su mail `noreply`, para no publicar
+la dirección real en cada commit.
+
+### Los dos backends son independientes
+
+Conviven dos deploys que no se tocan entre sí:
+
+- **el sitio** → GitHub → Railway (automático con cada push);
+- **el Apps Script** → `clasp push` + `clasp deploy -i` (a mano, ver abajo).
+
+Cambiar `apps-script/Code.gs` y pushear a GitHub **no** actualiza el backend:
+el push sube el archivo al repo, pero a Google hay que mandarlo con clasp.
+
+### CORS
+
+El navegador llama al Apps Script desde el dominio de Railway, que es otro
+origen. Funciona sin configurar nada:
+
+- el **GET** del tablero y del contador devuelve 200 desde el dominio nuevo
+  (verificado en producción);
+- el **POST** viaja con `Content-Type: text/plain`, que evita el preflight
+  `OPTIONS` —el que Apps Script no responde—. Verificado también en producción
+  contra el `/exec` real.
+
+Si algún día hubiera que agregar un dominio nuevo, no hay lista blanca que
+tocar: el Web App está publicado con acceso "cualquier usuario".
+
 ## Backend: deploy con clasp
 
 El backend se sube y deploya con `clasp` (CLI oficial de Apps Script, v3). Ya está
@@ -305,7 +355,6 @@ El motor de `encuesta-vivienda.js` está separado del contenido: las preguntas s
 ## Pendientes
 - **Todavía no hay datos de producción**: el esquema se puede seguir cambiando sin cuidado por compatibilidad.
 - **Zona horaria de la Sheet**: el manifest fija la del *script*, pero la *planilla* quedó con el default de Google (US Pacific), así que los timestamps se ven 4 h atrasados. Se arregla a mano una vez en Archivo > Configuración > Zona horaria → (GMT-03:00) Buenos Aires. El instante guardado es correcto; lo que está mal es cómo se muestra e interpreta.
-- Configurar hosting.
 - Favicon (hoy da 404).
 - Completar el contenido de `el-proyecto.html` (la estructura y la galería ya
   están; falta el material propio de la tesis a medida que avance).
