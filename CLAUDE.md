@@ -354,7 +354,9 @@ El motor de `encuesta-vivienda.js` está separado del contenido: las preguntas s
 
 ## Pendientes
 - **Todavía no hay datos de producción**: el esquema se puede seguir cambiando sin cuidado por compatibilidad.
-- **Zona horaria de la Sheet**: el manifest fija la del *script*, pero la *planilla* quedó con el default de Google (US Pacific), así que los timestamps se ven 4 h atrasados. Se arregla a mano una vez en Archivo > Configuración > Zona horaria → (GMT-03:00) Buenos Aires. El instante guardado es correcto; lo que está mal es cómo se muestra e interpreta.
+
+  La zona horaria de la planilla ya quedó en Buenos Aires y las filas de prueba
+  del deploy ya se borraron: lo que haya en la Sheet de acá en adelante es dato.
 - Favicon (hoy da 404).
 - Completar el contenido de `el-proyecto.html` (la estructura y la galería ya
   están; falta el material propio de la tesis a medida que avance).
