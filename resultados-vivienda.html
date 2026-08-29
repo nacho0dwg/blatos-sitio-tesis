@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Resultados — Vivir juntos en Cosquín</title>
+  <meta name="description" content="Resultados agregados de la encuesta sobre vivienda intergeneracional en Cosquín y el Valle de Punilla.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Instrument+Serif:ital@0;1&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <!-- Mismo criterio que en index.html: el estado de partida de los
+       reveals se habilita antes del primer pintado. Ver divulgacion.js. -->
+  <script>
+    (function () {
+      try {
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          document.documentElement.classList.add('es-animable');
+        }
+      } catch (e) { /* sin matchMedia, todo queda visible: es el default seguro */ }
+    })();
+  </script>
+</head>
+<body class="tema-oscuro">
+
+  <header class="sitio-header sobre-hero">
+    <div class="contenedor-ancho">
+      <a class="marca" href="index.html">
+        <svg class="marca-icono" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+          <g fill="currentColor">
+            <rect x="0" y="0" width="5" height="5"/><rect x="7.5" y="0" width="5" height="5"/><rect x="15" y="0" width="5" height="5"/>
+            <rect x="0" y="7.5" width="5" height="5"/><rect x="7.5" y="7.5" width="5" height="5"/><rect x="15" y="7.5" width="5" height="5"/>
+            <rect x="0" y="15" width="5" height="5"/><rect x="7.5" y="15" width="5" height="5"/><rect x="15" y="15" width="5" height="5"/>
+          </g>
+        </svg>
+        <span>
+          <span class="marca-nombre">BLATOS</span>
+          <span class="marca-bajada">Vivienda intergeneracional</span>
+        </span>
+      </a>
+
+      <nav class="nav-principal" aria-label="Navegación principal">
+        <a href="index.html">Inicio</a>
+        <a href="el-proyecto.html">El proyecto</a>
+        <a href="resultados-vivienda.html">Resultados</a>
+        <a class="nav-cta" href="encuesta-vivienda.html"><span class="cta-largo">Responder la encuesta</span><span class="cta-corto">Encuesta</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- =========================================================
+         HERO
+         ========================================================= -->
+    <section class="hero-cine hero-corto hero-resultados">
+      <div class="hero-fondo" aria-hidden="true"></div>
+      <div class="hero-velo" aria-hidden="true"></div>
+
+      <div class="contenedor-ancho hero-contenido">
+        <p class="hero-meta">
+          <span>BLATOS — Relevamiento social</span>
+          <span class="derecha">
+            Datos agregados<br>
+            Siempre anónimos
+          </span>
+        </p>
+
+        <h1 class="hero-titulo" aria-label="Resultados en vivo de la encuesta">
+          <span class="hero-display" aria-hidden="true">RESULTADOS</span>
+          <span class="hero-script" aria-hidden="true">en vivo</span>
+        </h1>
+
+        <ul class="hero-tags">
+          <li>— Agregados</li>
+          <li>— Anónimos</li>
+          <li>— Abiertos</li>
+        </ul>
+
+        <p class="hero-bajada">
+          Lo que va respondiendo la gente, actualizado solo a medida que llegan
+          respuestas nuevas. <strong>Nunca hay respuestas individuales</strong>:
+          todo lo que se ve acá son totales.
+        </p>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         CÓMO LEER ESTOS DATOS
+         ========================================================= -->
+    <section class="seccion">
+      <div class="contenedor-ancho">
+        <span class="antetitulo" data-revelar>Antes de mirar</span>
+        <h2 class="titulo-display" data-revelar-palabras>Cómo leer estos datos</h2>
+
+        <dl class="texto-dos-columnas espacio-arriba" data-revelar="grupo">
+          <div class="dato">
+            <dt>Cinco grupos</dt>
+            <dd>
+              Las respuestas están separadas en <strong>cinco grupos</strong> de personas.
+              No son promedios de todo junto: cada grupo respondió preguntas distintas.
+            </dd>
+          </div>
+          <div class="dato">
+            <dt>Mirá siempre el n</dt>
+            <dd>
+              Al lado de cada gráfico está el <strong>n</strong>, la cantidad de personas
+              que respondieron esa pregunta. Con pocas respuestas, un gráfico dice poco.
+            </dd>
+          </div>
+          <div class="dato">
+            <dt>Mínimo de 5</dt>
+            <dd>
+              Una pregunta con <strong>menos de 5 respuestas no se muestra</strong>, para
+              que no se pueda deducir quién contestó qué.
+            </dd>
+          </div>
+          <div class="dato">
+            <dt>Sin comentarios</dt>
+            <dd>
+              Las respuestas escritas a mano alzada <strong>no se publican nunca</strong>:
+              se usan solo para el análisis de la tesis.
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         LOS GRÁFICOS (los dibuja dashboard.js)
+         ========================================================= -->
+    <section class="seccion">
+      <div class="contenedor-ancho">
+        <p id="estado-carga" role="status" aria-live="polite">
+          Cargando resultados…
+        </p>
+
+        <p class="mensaje mensaje-error oculto" id="error-dashboard" role="alert"></p>
+
+        <div id="contenedor-tracks"></div>
+
+        <p class="solo-lectura-visual espacio-arriba" id="pie-actualizado"></p>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         CTA
+         ========================================================= -->
+    <section class="seccion">
+      <div class="contenedor-ancho">
+        <span class="antetitulo" data-revelar>Sumar una respuesta</span>
+        <h2 class="titulo-display" data-revelar-palabras>¿Todavía no respondiste?</h2>
+
+        <div class="texto-dos-columnas espacio-arriba" data-revelar="grupo">
+          <p>
+            Cada respuesta hace que estos gráficos digan algo más. Lleva entre 5 y 8
+            minutos y es <strong>anónima</strong>.
+          </p>
+        </div>
+
+        <div class="grupo-botones" data-revelar>
+          <a class="boton boton-primario boton-xl" href="encuesta-vivienda.html">Responder la encuesta</a>
+          <a class="boton boton-secundario" href="el-proyecto.html">Conocer el proyecto</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="sitio-footer">
+    <div class="contenedor-ancho">
+      <div class="footer-grilla">
+        <a class="marca" href="index.html">
+          <svg class="marca-icono" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <g fill="currentColor">
+              <rect x="0" y="0" width="5" height="5"/><rect x="7.5" y="0" width="5" height="5"/><rect x="15" y="0" width="5" height="5"/>
+              <rect x="0" y="7.5" width="5" height="5"/><rect x="7.5" y="7.5" width="5" height="5"/><rect x="15" y="7.5" width="5" height="5"/>
+              <rect x="0" y="15" width="5" height="5"/><rect x="7.5" y="15" width="5" height="5"/><rect x="15" y="15" width="5" height="5"/>
+            </g>
+          </svg>
+          <span>
+            <span class="marca-nombre">BLATOS</span>
+            <span class="marca-bajada">Cosquín · Valle de Punilla</span>
+          </span>
+        </a>
+
+        <nav class="nav-principal" aria-label="Navegación del pie">
+          <a href="index.html">Inicio</a>
+          <a href="el-proyecto.html">El proyecto</a>
+          <a href="encuesta-vivienda.html">Encuesta</a>
+          <a href="resultados-vivienda.html">Resultados</a>
+        </nav>
+      </div>
+
+      <div class="footer-legal">
+        <p>
+          Trabajo Final de Carrera · Arquitectura 6D · FAUD — Universidad Nacional de Córdoba ·
+          <span data-anio-actual></span>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+  <script src="assets/js/config.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/dashboard.js" defer></script>
+  <script src="assets/js/divulgacion.js" defer></script>
+</body>
+</html>

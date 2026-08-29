@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>El proyecto — Vivir juntos en Cosquín</title>
+  <meta name="description" content="Sobre la tesis: tema, cátedra, proceso de trabajo e imaginario del TFC sobre vivienda intergeneracional en Cosquín.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Instrument+Serif:ital@0;1&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <!-- Mismo criterio que en index.html: el estado de partida de los
+       reveals se habilita antes del primer pintado. Ver divulgacion.js. -->
+  <script>
+    (function () {
+      try {
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          document.documentElement.classList.add('es-animable');
+        }
+      } catch (e) { /* sin matchMedia, todo queda visible: es el default seguro */ }
+    })();
+  </script>
+</head>
+<body class="tema-oscuro">
+
+  <header class="sitio-header sobre-hero">
+    <div class="contenedor-ancho">
+      <a class="marca" href="index.html">
+        <svg class="marca-icono" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+          <g fill="currentColor">
+            <rect x="0" y="0" width="5" height="5"/><rect x="7.5" y="0" width="5" height="5"/><rect x="15" y="0" width="5" height="5"/>
+            <rect x="0" y="7.5" width="5" height="5"/><rect x="7.5" y="7.5" width="5" height="5"/><rect x="15" y="7.5" width="5" height="5"/>
+            <rect x="0" y="15" width="5" height="5"/><rect x="7.5" y="15" width="5" height="5"/><rect x="15" y="15" width="5" height="5"/>
+          </g>
+        </svg>
+        <span>
+          <span class="marca-nombre">BLATOS</span>
+          <span class="marca-bajada">Vivienda intergeneracional</span>
+        </span>
+      </a>
+
+      <nav class="nav-principal" aria-label="Navegación principal">
+        <a href="index.html">Inicio</a>
+        <a href="el-proyecto.html">El proyecto</a>
+        <a href="resultados-vivienda.html">Resultados</a>
+        <a class="nav-cta" href="encuesta-vivienda.html"><span class="cta-largo">Responder la encuesta</span><span class="cta-corto">Encuesta</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- =========================================================
+         HERO
+         ========================================================= -->
+    <section class="hero-cine hero-corto hero-el-proyecto">
+      <div class="hero-fondo" aria-hidden="true"></div>
+      <div class="hero-velo" aria-hidden="true"></div>
+
+      <div class="contenedor-ancho hero-contenido">
+        <p class="hero-meta">
+          <span>BLATOS — Trabajo Final de Carrera</span>
+          <span class="derecha">
+            Etapa 1<br>
+            Relevamiento social
+          </span>
+        </p>
+
+        <h1 class="hero-titulo" aria-label="El proyecto: una tesis en curso sobre vivienda intergeneracional en Cosquín">
+          <span class="hero-display" aria-hidden="true">EL PROYECTO</span>
+          <span class="hero-script" aria-hidden="true">una tesis en curso</span>
+        </h1>
+
+        <ul class="hero-tags">
+          <li>— Tema-problema</li>
+          <li>— Cátedra 6D</li>
+          <li>— Cosquín</li>
+        </ul>
+
+        <p class="hero-bajada">
+          Una investigación sobre <strong>cómo agrupar viviendas</strong> para que
+          adultos mayores, familias y jóvenes puedan vivir cerca en Cosquín y el
+          Valle de Punilla, con lo propio y lo compartido bien resueltos.
+        </p>
+        <p class="hero-bajada solo-lectura-visual">
+          Esta página se va a ir completando a medida que avance la tesis.
+        </p>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         EL TEMA
+         ========================================================= -->
+    <section class="seccion">
+      <div class="contenedor-ancho">
+        <span class="antetitulo" data-revelar>Tema-problema</span>
+        <h2 class="titulo-display" data-revelar-palabras>El tema</h2>
+
+        <div class="texto-dos-columnas espacio-arriba" data-revelar="grupo">
+          <p>
+            El trabajo investiga la <strong>vivienda intergeneracional</strong> como respuesta
+            a una situación concreta de Cosquín y el Valle de Punilla: una población que
+            envejece, adultos mayores que viven solos, jóvenes que se van por falta de
+            vivienda o trabajo, y un mercado de suelo tensionado por el turismo y la
+            temporada.
+          </p>
+          <p>
+            La hipótesis de partida es que el problema no se resuelve solo construyendo más
+            metros cuadrados, sino repensando <em class="acento-script">cómo</em> se agrupan
+            las viviendas: qué es privado, qué es compartido, y qué programas —culturales,
+            educativos, de cuidado— conviene hibridar con el uso residencial para que la
+            convivencia entre generaciones funcione en el día a día.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         MARCO ACADÉMICO
+         ========================================================= -->
+    <section class="seccion">
+      <div class="contenedor-ancho">
+        <span class="antetitulo" data-revelar>Contexto</span>
+        <h2 class="titulo-display" data-revelar-palabras>El marco académico</h2>
+
+        <dl class="grilla-datos" data-revelar="grupo">
+          <div class="dato">
+            <dt>Carrera</dt>
+            <dd>Arquitectura, FAUD — Universidad Nacional de Córdoba</dd>
+          </div>
+          <div class="dato">
+            <dt>Cátedra</dt>
+            <dd>Arquitectura 6D</dd>
+          </div>
+          <div class="dato">
+            <dt>Instancia</dt>
+            <dd>Trabajo Final de Carrera (TFC)</dd>
+          </div>
+          <div class="dato">
+            <dt>Localización</dt>
+            <dd>Cosquín, Valle de Punilla, Córdoba</dd>
+          </div>
+        </dl>
+
+        <div class="texto-dos-columnas espacio-arriba" data-revelar="grupo">
+          <p>
+            El TFC se desarrolla en etapas: definición del tema-problema y la localización,
+            desarrollo del proyecto, pre-tesis y examen final. Esta encuesta corresponde a
+            la instancia de <strong>relevamiento social</strong>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         PROCESO DE TRABAJO
+         ========================================================= -->
+    <section class="seccion">
+      <div class="contenedor-ancho">
+        <span class="antetitulo" data-revelar>Cómo se trabaja</span>
+        <h2 class="titulo-display" data-revelar-palabras>El proceso</h2>
+
+        <ol class="pasos-proceso" data-revelar="grupo">
+          <li>
+            <h3>Trabajo de campo</h3>
+            <p>
+              Recorridos por Cosquín, observación de cómo se usa la ciudad en temporada
+              y fuera de ella, y entrevistas a vecinos y vecinas.
+            </p>
+          </li>
+          <li>
+            <h3>Datos e información urbana</h3>
+            <p>
+              Análisis de la información existente sobre población, vivienda y suelo en
+              el Valle de Punilla.
+            </p>
+          </li>
+          <li>
+            <h3>Esta encuesta</h3>
+            <p>
+              Abierta a la comunidad. Es el primer instrumento de una serie: más adelante
+              pueden sumarse otros relevamientos sobre temas puntuales del proyecto.
+            </p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         GALERÍA — IMAGINARIO
+         Las tarjetas las arma galeria.js a partir de este listado.
+         ========================================================= -->
+    <section class="seccion">
+      <div class="contenedor-ancho">
+        <span class="antetitulo" data-revelar>Imaginario</span>
+        <h2 class="titulo-display" data-revelar-palabras>Cómo podría verse</h2>
+
+        <div class="texto-dos-columnas espacio-arriba" data-revelar="grupo">
+          <p>
+            Estas imágenes no son el proyecto: son un <strong>imaginario</strong>, una forma
+            de poner en imágenes las escenas de las que habla la tesis —cocinar juntos,
+            cruzarse en una galería, tener un taller abierto al barrio— antes de que exista
+            un plano.
+          </p>
+          <p>
+            Sirven para conversar. Lo que la encuesta busca es justamente eso:
+            <em class="acento-script">qué de esto tiene sentido</em> para quienes viven acá,
+            y qué no.
+          </p>
+        </div>
+
+        <div class="galeria" id="galeria" data-galeria data-revelar="grupo-escala"></div>
+
+        <p class="solo-lectura-visual espacio-arriba">
+          Imágenes de trabajo, generadas como material de discusión del TFC.
+          Tocá cualquiera para verla más grande.
+        </p>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         DATOS
+         ========================================================= -->
+    <section class="seccion">
+      <div class="contenedor-ancho">
+        <span class="antetitulo" data-revelar>Privacidad</span>
+        <h2 class="titulo-display" data-revelar-palabras>Qué pasa con los datos</h2>
+
+        <div class="tarjeta tarjeta-acento espacio-arriba" data-revelar>
+          <p>
+            Las respuestas de la encuesta son <strong>anónimas</strong>. No se pide nombre,
+            documento ni dirección exacta, y se usan únicamente con fines académicos dentro
+            de esta tesis.
+          </p>
+          <p>
+            Los resultados que se publican en el sitio son siempre <strong>agregados</strong>
+            (totales y porcentajes), nunca respuestas individuales. Además, una pregunta solo
+            se publica cuando tiene una cantidad mínima de respuestas, para que nadie pueda
+            ser identificado por descarte.
+          </p>
+          <p>
+            Si al final de la encuesta alguien deja sus datos de contacto para una entrevista,
+            esos datos se guardan <strong>por separado y sin ninguna conexión</strong> con las
+            respuestas que dio.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         PARTICIPAR
+         ========================================================= -->
+    <section class="seccion">
+      <div class="contenedor-ancho">
+        <span class="antetitulo" data-revelar>Participar</span>
+        <h2 class="titulo-display" data-revelar-palabras>Cómo colaborar</h2>
+
+        <div class="texto-dos-columnas espacio-arriba" data-revelar="grupo">
+          <p>
+            La forma más directa de colaborar es respondiendo la encuesta, y compartiéndola
+            con vecinos y vecinas de Cosquín y la zona —sobre todo con adultos mayores y con
+            familias que conviven entre varias generaciones—.
+          </p>
+        </div>
+
+        <div class="grupo-botones" data-revelar>
+          <a class="boton boton-primario" href="encuesta-vivienda.html">Responder la encuesta</a>
+          <a class="boton boton-secundario" href="resultados-vivienda.html">Ver resultados</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ LIGHTBOX ============
+       Vive fuera de <main> porque mientras está abierto es lo único
+       navegable: el foco queda atrapado adentro. -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Imagen ampliada" hidden>
+    <button type="button" class="lightbox-btn lightbox-cerrar" id="lightbox-cerrar" aria-label="Cerrar">✕</button>
+
+    <figure class="lightbox-figura">
+      <img id="lightbox-img" src="" alt="">
+      <figcaption>
+        <span id="lightbox-texto"></span>
+        <span class="lightbox-contador" id="lightbox-contador"></span>
+      </figcaption>
+    </figure>
+
+    <div class="lightbox-controles">
+      <button type="button" class="lightbox-btn" id="lightbox-anterior" aria-label="Imagen anterior">←</button>
+      <button type="button" class="lightbox-btn" id="lightbox-siguiente" aria-label="Imagen siguiente">→</button>
+    </div>
+  </div>
+
+  <footer class="sitio-footer">
+    <div class="contenedor-ancho">
+      <div class="footer-grilla">
+        <a class="marca" href="index.html">
+          <svg class="marca-icono" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <g fill="currentColor">
+              <rect x="0" y="0" width="5" height="5"/><rect x="7.5" y="0" width="5" height="5"/><rect x="15" y="0" width="5" height="5"/>
+              <rect x="0" y="7.5" width="5" height="5"/><rect x="7.5" y="7.5" width="5" height="5"/><rect x="15" y="7.5" width="5" height="5"/>
+              <rect x="0" y="15" width="5" height="5"/><rect x="7.5" y="15" width="5" height="5"/><rect x="15" y="15" width="5" height="5"/>
+            </g>
+          </svg>
+          <span>
+            <span class="marca-nombre">BLATOS</span>
+            <span class="marca-bajada">Cosquín · Valle de Punilla</span>
+          </span>
+        </a>
+
+        <nav class="nav-principal" aria-label="Navegación del pie">
+          <a href="index.html">Inicio</a>
+          <a href="el-proyecto.html">El proyecto</a>
+          <a href="encuesta-vivienda.html">Encuesta</a>
+          <a href="resultados-vivienda.html">Resultados</a>
+        </nav>
+      </div>
+
+      <div class="footer-legal">
+        <p>
+          Trabajo Final de Carrera · Arquitectura 6D · FAUD — Universidad Nacional de Córdoba ·
+          <span data-anio-actual></span>
+        </p>
+        <p>Investigación académica sin fines comerciales.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/galeria.js" defer></script>
+  <script src="assets/js/divulgacion.js" defer></script>
+</body>
+</html>

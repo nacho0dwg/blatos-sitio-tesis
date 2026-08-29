@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Encuesta de vivienda — Vivir juntos en Cosquín</title>
+  <meta name="description" content="Encuesta anónima sobre vivienda y convivencia entre generaciones en Cosquín y el Valle de Punilla.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Instrument+Serif:ital@0;1&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="pagina-encuesta">
+
+  <header class="sitio-header">
+    <div class="contenedor-ancho">
+      <a class="marca" href="index.html">
+        <svg class="marca-icono" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+          <g fill="currentColor">
+            <rect x="0" y="0" width="5" height="5"/><rect x="7.5" y="0" width="5" height="5"/><rect x="15" y="0" width="5" height="5"/>
+            <rect x="0" y="7.5" width="5" height="5"/><rect x="7.5" y="7.5" width="5" height="5"/><rect x="15" y="7.5" width="5" height="5"/>
+            <rect x="0" y="15" width="5" height="5"/><rect x="7.5" y="15" width="5" height="5"/><rect x="15" y="15" width="5" height="5"/>
+          </g>
+        </svg>
+        <span>
+          <span class="marca-nombre">BLATOS</span>
+          <span class="marca-bajada">Vivienda intergeneracional</span>
+        </span>
+      </a>
+
+      <nav class="nav-principal" aria-label="Navegación principal">
+        <a href="index.html">Inicio</a>
+        <a href="el-proyecto.html">El proyecto</a>
+        <a href="resultados-vivienda.html">Resultados</a>
+        <a href="encuesta-vivienda.html">Encuesta</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="contenedor">
+
+      <div class="progreso" id="progreso" hidden>
+        <div class="progreso-barra" id="progreso-barra" style="width: 0%"></div>
+      </div>
+
+      <!-- Región para anunciar cambios de paso a lectores de pantalla -->
+      <p id="anuncio-paso" class="oculto" role="status" aria-live="polite"></p>
+
+      <!-- ============ PASO 1: CONSENTIMIENTO ============ -->
+      <section id="paso-consentimiento" class="paso">
+        <h1>Encuesta sobre vivienda y convivencia</h1>
+
+        <div class="consentimiento-texto">
+            <h2>Antes de empezar</h2>
+            <p>
+              Esta encuesta es parte de una investigación académica de la Facultad de
+              Arquitectura (FAUD — UNC) sobre vivienda intergeneracional en Cosquín y
+              el Valle de Punilla. No es un proyecto comercial ni inmobiliario.
+            </p>
+            <ul class="lista-simple">
+              <li>
+                <strong>Es anónima.</strong> No se pide nombre, documento ni dirección.
+              </li>
+              <li>
+                <strong>Se usa solo para la tesis.</strong> Las respuestas se analizan en
+                conjunto y los resultados se publican en gráficos, nunca de a una persona.
+              </li>
+              <li>
+                <strong>Podés dejarla cuando quieras.</strong> Si cerrás la página antes de
+                enviarla, no se guarda nada.
+              </li>
+              <li>
+                <strong>Las preguntas abiertas son opcionales</strong> y no se publican
+                nunca en el sitio.
+              </li>
+              <li>
+                <strong>Si al final querés dejar tu contacto</strong> para una entrevista,
+                esos datos se guardan aparte, sin conexión con las respuestas que diste.
+              </li>
+            </ul>
+          <p>Lleva entre 5 y 8 minutos.</p>
+        </div>
+
+        <label class="opcion" for="consentimiento-check">
+          <input type="checkbox" id="consentimiento-check">
+          <span>Leí lo de arriba y quiero participar.</span>
+        </label>
+
+        <p class="mensaje mensaje-error oculto" id="error-consentimiento" role="alert">
+          Para continuar hace falta marcar la casilla.
+        </p>
+
+        <div class="grupo-botones">
+          <button type="button" class="boton boton-primario" id="btn-empezar">
+            Empezar
+          </button>
+        </div>
+      </section>
+
+      <!-- ============ PASO 2: GATING (DOS PANTALLAS) ============
+           "Para empezar" y "Tu convivencia". Como con los bloques, es
+           un solo paso genérico que el JS vuelve a llenar: el título, la
+           bajada y las preguntas salen de GATING_PASOS. -->
+      <section id="paso-gating" class="paso oculto">
+        <h1 class="titulo-bloque" id="titulo-gating"></h1>
+        <p class="bajada-bloque" id="bajada-gating"></p>
+        <form id="form-gating" novalidate>
+          <div id="contenedor-gating"></div>
+          <p class="mensaje mensaje-error oculto" id="error-gating" role="alert"></p>
+          <div class="grupo-botones">
+            <button type="button" class="boton boton-secundario" id="btn-atras-gating" hidden>Atrás</button>
+            <button type="submit" class="boton boton-primario">Continuar</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- ============ PASO 3: BLOQUES TEMÁTICOS ============
+           Un solo paso genérico: el JS lo vuelve a llenar con las
+           preguntas de cada bloque. El botón cambia de "Continuar" a
+           "Enviar respuestas" en el último. -->
+      <section id="paso-bloque" class="paso oculto">
+        <p class="contador-bloque" id="contador-bloque"></p>
+        <h1 class="titulo-bloque" id="titulo-bloque"></h1>
+        <p class="bajada-bloque" id="bajada-bloque"></p>
+
+        <form id="form-bloque" novalidate>
+          <div id="contenedor-bloque"></div>
+          <p class="mensaje mensaje-error oculto" id="error-bloque" role="alert"></p>
+          <div class="grupo-botones">
+            <button type="button" class="boton boton-secundario" id="btn-atras">Atrás</button>
+            <button type="submit" class="boton boton-primario" id="btn-siguiente">Continuar</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- ============ CORTE: SIN TRAYECTO ============ -->
+      <section id="paso-corte" class="paso oculto">
+        <div class="texto-centrado">
+          <h1>¡Gracias por el interés!</h1>
+          <p>
+            Esta encuesta está dirigida a personas mayores de 18 años que viven en Cosquín o
+            el Valle de Punilla, o que viven en Córdoba Capital y tienen un vínculo con la zona.
+            Por eso no vamos a seguir con las preguntas.
+          </p>
+          <p>
+            De todas formas te invitamos a conocer el proyecto: si conocés a alguien de Cosquín
+            o de la zona, compartirle la encuesta ayuda muchísimo.
+          </p>
+          <div class="grupo-botones">
+            <a class="boton boton-primario" href="el-proyecto.html">Conocer el proyecto</a>
+            <a class="boton boton-secundario" href="resultados-vivienda.html">Ver resultados</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ ENVIANDO / ERROR DE ENVÍO ============ -->
+      <section id="paso-enviando" class="paso oculto texto-centrado">
+        <h1>Enviando…</h1>
+        <p>Un momento, por favor. No cierres la página.</p>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="sitio-footer">
+    <div class="contenedor-ancho">
+      <div class="footer-grilla">
+        <a class="marca" href="index.html">
+          <svg class="marca-icono" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <g fill="currentColor">
+              <rect x="0" y="0" width="5" height="5"/><rect x="7.5" y="0" width="5" height="5"/><rect x="15" y="0" width="5" height="5"/>
+              <rect x="0" y="7.5" width="5" height="5"/><rect x="7.5" y="7.5" width="5" height="5"/><rect x="15" y="7.5" width="5" height="5"/>
+              <rect x="0" y="15" width="5" height="5"/><rect x="7.5" y="15" width="5" height="5"/><rect x="15" y="15" width="5" height="5"/>
+            </g>
+          </svg>
+          <span>
+            <span class="marca-nombre">BLATOS</span>
+            <span class="marca-bajada">Cosquín · Valle de Punilla</span>
+          </span>
+        </a>
+
+        <nav class="nav-principal" aria-label="Navegación del pie">
+          <a href="index.html">Inicio</a>
+          <a href="el-proyecto.html">El proyecto</a>
+          <a href="encuesta-vivienda.html">Encuesta</a>
+          <a href="resultados-vivienda.html">Resultados</a>
+        </nav>
+      </div>
+
+      <div class="footer-legal">
+        <p>
+          Trabajo Final de Carrera · Arquitectura 6D · FAUD — Universidad Nacional de Córdoba ·
+          <span data-anio-actual></span>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/encuesta-vivienda.js"></script>
+</body>
+</html>

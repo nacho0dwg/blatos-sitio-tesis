@@ -1,0 +1,2225 @@
+/* ===========================================================
+   BLATOS — TFC Vivienda Intergeneracional (Cosquín)
+   Hoja de estilos única para todo el sitio.
+
+   DOS LENGUAJES VISUALES, UNA SOLA MARCA
+   --------------------------------------
+   · Páginas de divulgación (index, el-proyecto, resultados):
+     <body class="tema-oscuro"> → fondo carbón cálido, tipografía
+     display enorme, animación marcada.
+   · encuesta-vivienda.html: SIN esa clase → fondo hueso claro,
+     alto contraste, targets de 56px, sin parallax. Se completa
+     asistida con adultos mayores; ahí manda la legibilidad.
+
+   El header de marca es oscuro en las dos, para que se lea como
+   el mismo sitio.
+   =========================================================== */
+
+/* ===========================================================
+   1. TOKENS
+   =========================================================== */
+
+:root {
+  /* --- Paleta de marca (sierra y tierra de Cosquín) --- */
+  --bg: #1c1712;
+  --bg-elevado: #241d16;
+  --accent-primary: #b5652f;      /* terracota / ladrillo */
+  --accent-primary-fuerte: #a1571f; /* terracota profunda: fondo de texto chico */
+  --accent-primary-vivo: #d98f52; /* terracota aclarada, para texto sobre oscuro */
+  --accent-secondary: #a68a52;    /* ocre apagado */
+  --text: #f3ede2;                /* blanco hueso cálido */
+  --text-muted: #a89e90;          /* gris cálido */
+
+  /* Imagen del hero. Para cambiarla, se toca SOLO acá. */
+  --hero-imagen: url("../img/imaginarios/Imaginario 0 (4).jpeg");
+
+  /* --- Tipografía --- */
+  --fuente-display: "Archivo Black", "Arial Black", Impact, sans-serif;
+  --fuente-script: "Instrument Serif", Georgia, "Times New Roman", serif;
+  /* Cuerpo de TODO el sitio. Se declara acá y en ningún otro lado: la
+     usa `body` (sección 2) y de ahí hereda cada página, incluida la
+     encuesta. Si hay que cambiar la tipografía de cuerpo, se cambia esta
+     línea y nada más. */
+  --fuente-cuerpo: "Source Serif 4", Georgia, "Times New Roman", serif;
+
+  /* --- Semántica en claro (encuesta, gracias, superficies claras) ---
+     Derivada de la misma paleta: hueso en vez de blanco puro,
+     terracota oscurecida para que el texto pase contraste AA. */
+  --color-fondo: #f7f2e8;
+  --color-texto: #201a14;
+  --color-texto-suave: #5b5145;
+  --color-primario: #8f4a22;
+  --color-primario-oscuro: #6d3718;
+  --color-primario-claro: #f0e2d3;
+  --color-acento: #2e6b5e;
+  --color-borde: #ddd2c0;         /* divisorias sutiles (tablas, tarjetas) */
+  /* Borde de CONTROL: separado del anterior porque WCAG 1.4.11 pide 3:1
+     para el límite de un componente interactivo, y a ese contraste una
+     divisoria de tabla quedaría pesada. #ddd2c0 daba 1.47 sobre la
+     superficie clara: el recuadro de 56px casi no se veía. */
+  --color-borde-control: #8f8069;
+  --color-superficie: #fffdf8;
+  --color-error: #b3261e;
+  --color-foco: #1f5f8b;
+
+  --radio: 12px;
+  --radio-chico: 8px;
+  --sombra: 0 2px 8px rgba(32, 26, 20, 0.10);
+
+  --espacio-1: 0.5rem;
+  --espacio-2: 1rem;
+  --espacio-3: 1.5rem;
+  --espacio-4: 2rem;
+  --espacio-5: 3rem;
+  --espacio-6: 5rem;
+
+  font-size: 18px;
+}
+
+/* --- Remapeo semántico para las páginas de divulgación ---
+   Los componentes (.tarjeta, .boton, .tabla-datos…) están escritos
+   contra los tokens semánticos, así que cambiando estos seis
+   valores el mismo componente funciona en claro y en oscuro. */
+.tema-oscuro {
+  --color-fondo: var(--bg);
+  --color-texto: var(--text);
+  --color-texto-suave: var(--text-muted);
+  --color-primario: var(--accent-primary-vivo);
+  --color-primario-oscuro: var(--text);
+  --color-primario-claro: rgba(181, 101, 47, 0.16);
+  --color-borde: rgba(243, 237, 226, 0.16);
+  --color-borde-control: rgba(243, 237, 226, 0.42);
+  --color-superficie: var(--bg-elevado);
+  --sombra: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+/* ===========================================================
+   2. BASE
+   =========================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--fuente-cuerpo);
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  line-height: 1.55;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* El display: none que trae el atributo `hidden` lo pisa cualquier regla
+   propia que declare display —y varias lo hacen: .contador-numero,
+   .bajada-bloque, .lightbox—. Con esto `hidden` vuelve a significar
+   oculto en todo el sitio, que es lo que el JS asume cuando lo usa. */
+[hidden] {
+  display: none !important;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  color: var(--color-primario-oscuro);
+  margin: 0 0 var(--espacio-2);
+}
+
+h1 {
+  font-size: clamp(1.7rem, 5vw, 2.4rem);
+}
+
+h2 {
+  font-size: clamp(1.35rem, 4vw, 1.8rem);
+}
+
+h3 {
+  font-size: 1.15rem;
+}
+
+p {
+  margin: 0 0 var(--espacio-2);
+}
+
+a {
+  color: var(--color-primario);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--color-foco);
+  outline-offset: 2px;
+}
+
+/* Sobre fondo oscuro el azul de foco se pierde: se usa el ocre. */
+.tema-oscuro a:focus-visible,
+.tema-oscuro button:focus-visible,
+.tema-oscuro summary:focus-visible,
+.tema-oscuro [tabindex]:focus-visible {
+  outline-color: var(--accent-secondary);
+}
+
+/* Títulos de sección en display, solo en divulgación.
+   En la encuesta los títulos siguen siendo de cuerpo: una condensada
+   pesada es peor para leer un enunciado largo. */
+.tema-oscuro h2.titulo-display,
+.tema-oscuro h1.titulo-display {
+  font-family: var(--fuente-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 0.95;
+  font-size: clamp(2rem, 7vw, 4.5rem);
+  color: var(--text);
+  /* Una palabra larga en display no entra en un teléfono angosto:
+     medido en 300px, "RESPONDISTE?" sola mide 344px y empujaba el
+     scroll horizontal de toda la página. Primero se intenta cortar con
+     guión; break-word es la red por si el idioma no permite guionado. */
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Los <span> que arma divulgacion.js para escalonar el título son
+   inline-block: sin esto, el corte de arriba no los alcanza. */
+.palabra {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.acento-script {
+  font-family: var(--fuente-script);
+  font-style: italic;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--accent-primary-vivo);
+}
+
+/* ===========================================================
+   3. LAYOUT
+   =========================================================== */
+
+.contenedor {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 var(--espacio-2);
+}
+
+/* Las páginas de divulgación respiran más que el formulario. */
+.contenedor-ancho {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--espacio-3);
+}
+
+@media (min-width: 900px) {
+  .contenedor-ancho {
+    padding: 0 var(--espacio-5);
+  }
+}
+
+main {
+  display: block;
+  padding: var(--espacio-4) 0 var(--espacio-5);
+}
+
+/* En divulgación el hero arranca pegado al borde: el padding
+   de main lo pone cada sección. */
+.tema-oscuro main {
+  padding: 0 0 var(--espacio-5);
+}
+
+.seccion {
+  margin-bottom: var(--espacio-5);
+}
+
+.tema-oscuro .seccion {
+  margin-bottom: var(--espacio-6);
+}
+
+/* ===========================================================
+   4. HEADER / MARCA
+   =========================================================== */
+
+.sitio-header {
+  background-color: var(--bg);
+  border-bottom: 1px solid rgba(243, 237, 226, 0.12);
+  padding: var(--espacio-2) 0;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.sitio-header .contenedor,
+.sitio-header .contenedor-ancho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-2);
+  flex-wrap: wrap;
+}
+
+/* Variante para el hero a sangre: el header flota encima de la
+   imagen en vez de empujarla hacia abajo. */
+.sitio-header.sobre-hero {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: transparent;
+  border-bottom: none;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+.marca-icono {
+  flex-shrink: 0;
+  color: var(--accent-primary-vivo);
+}
+
+.marca-nombre {
+  display: block;
+  font-family: var(--fuente-display);
+  font-weight: 400;
+  font-size: 1.05rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.marca-bajada {
+  display: block;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+/* Navegación: chips finos en mayúsculas, como la referencia. */
+.nav-principal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.nav-principal a {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.55rem 0.95rem;
+  border: 1px solid rgba(243, 237, 226, 0.18);
+  border-radius: 999px;
+  transition: color 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.nav-principal a:hover,
+.nav-principal a:focus-visible {
+  color: var(--text);
+  border-color: var(--accent-primary-vivo);
+}
+
+.nav-principal a[aria-current="page"] {
+  color: var(--bg);
+  background-color: var(--text);
+  border-color: var(--text);
+}
+
+/* El chip de la encuesta pesa más que el resto: es la acción
+   que el sitio quiere que pase. */
+.nav-principal a.nav-cta {
+  color: var(--text);
+  background-color: var(--accent-primary-fuerte);
+  border-color: var(--accent-primary-fuerte);
+}
+
+.nav-principal a.nav-cta:hover,
+.nav-principal a.nav-cta:focus-visible {
+  background-color: var(--accent-primary-vivo);
+  border-color: var(--accent-primary-vivo);
+  color: var(--bg);
+}
+
+/* ===========================================================
+   5. HERO CINEMÁTICO (solo divulgación)
+   =========================================================== */
+
+.hero-cine {
+  position: relative;
+  min-height: 100svh;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  background-color: var(--bg);
+  padding: 7rem 0 var(--espacio-3);
+  isolation: isolate;
+}
+
+/* La capa de imagen es más alta que el hero: ese sobrante es el
+   recorrido que GSAP usa para el parallax sin dejar bordes vacíos. */
+.hero-fondo {
+  position: absolute;
+  inset: -12% 0 -12% 0;
+  background-image: var(--hero-imagen);
+  background-size: cover;
+  background-position: center 55%;
+  z-index: -2;
+  will-change: transform;
+}
+
+/* Velo cálido: sin esto la tipografía grande no se sostiene sobre
+   el cielo del atardecer. Doble gradiente = oscurece abajo (donde
+   va la ficha) y mantiene aire arriba. */
+.hero-velo {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(to bottom,
+      rgba(28, 23, 18, 0.62) 0%,
+      rgba(28, 23, 18, 0.30) 35%,
+      rgba(28, 23, 18, 0.72) 78%,
+      rgba(28, 23, 18, 0.94) 100%),
+    linear-gradient(to right,
+      rgba(28, 23, 18, 0.45) 0%,
+      rgba(28, 23, 18, 0.05) 55%);
+}
+
+.hero-contenido {
+  position: relative;
+  width: 100%;
+}
+
+/* --- Meta line: dos textos chiquitos arriba, izquierda y derecha --- */
+.hero-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--espacio-3);
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: var(--espacio-3);
+}
+
+.hero-meta span {
+  display: block;
+}
+
+.hero-meta .derecha {
+  text-align: right;
+}
+
+/* --- El título: display enorme + palabra en itálica encima --- */
+.hero-titulo {
+  margin: 0;
+  color: var(--text);
+  position: relative;
+}
+
+/* Las letras van en <span> y se reparten con space-between: así el
+   título llega a sangre de borde a borde en CUALQUIER ancho, sin
+   depender de acertarle a un font-size. Es la propiedad que define
+   el hero de la referencia. */
+.hero-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--fuente-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: clamp(3rem, 20vw, 17rem);
+  line-height: 0.82;
+  color: rgba(243, 237, 226, 0.93);
+  text-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  will-change: transform;
+}
+
+.hero-script {
+  display: block;
+  font-family: var(--fuente-script);
+  font-style: italic;
+  font-size: clamp(2rem, 8vw, 6.5rem);
+  line-height: 0.9;
+  color: var(--text);
+  text-align: right;
+  /* Se monta sobre las últimas letras del display, como el
+     "cotta" de la referencia. */
+  margin-top: -0.18em;
+  padding-right: 0.06em;
+  text-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
+  will-change: transform;
+}
+
+/* --- Tags verticales a la derecha --- */
+.hero-tags {
+  list-style: none;
+  margin: var(--espacio-3) 0 0;
+  padding: 0;
+  text-align: right;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.hero-tags li {
+  margin-bottom: 0.35rem;
+}
+
+/* --- Ficha flotante translúcida --- */
+.ficha-flotante {
+  margin: var(--espacio-4) 0 0;
+  padding: var(--espacio-2) var(--espacio-3);
+  max-width: 26rem;
+  background-color: rgba(28, 23, 18, 0.55);
+  border: 1px solid rgba(243, 237, 226, 0.18);
+  border-radius: var(--radio-chico);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  font-size: 0.78rem;
+  transition: border-color 0.35s ease, background-color 0.35s ease, transform 0.35s ease;
+}
+
+.ficha-flotante:hover {
+  border-color: rgba(217, 143, 82, 0.55);
+  background-color: rgba(28, 23, 18, 0.68);
+  transform: translateY(-4px);
+}
+
+.ficha-fila {
+  display: flex;
+  gap: var(--espacio-2);
+  padding: 0.32rem 0;
+  border-bottom: 1px solid rgba(243, 237, 226, 0.08);
+}
+
+.ficha-fila:last-child {
+  border-bottom: none;
+}
+
+.ficha-fila dt {
+  flex: 0 0 8.5rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  padding-top: 0.1rem;
+}
+
+.ficha-fila dd {
+  margin: 0;
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* --- Bajada del hero en dos columnas, al pie --- */
+.hero-columnas {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espacio-2);
+  margin-top: var(--espacio-4);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.hero-columnas p {
+  margin: 0;
+}
+
+.hero-columnas strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* --- Composición en pantallas grandes --- */
+@media (min-width: 900px) {
+  .hero-cine {
+    padding: 6.5rem 0 var(--espacio-3);
+  }
+
+  /* Debajo del meta de la derecha, no a la misma altura: si arrancan
+     los dos en top:0 se pisan. */
+  .hero-tags {
+    position: absolute;
+    top: 3rem;
+    right: 0;
+    margin: 0;
+  }
+
+  /* Y el título arranca debajo de esa banda: un tag gris cayendo
+     sobre una letra color hueso queda ilegible. */
+  .hero-titulo {
+    margin-top: 3.4rem;
+  }
+
+  /* Ficha y columnas conviven en la misma banda inferior. */
+  .hero-pie {
+    display: grid;
+    grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
+    gap: var(--espacio-5);
+    align-items: end;
+  }
+
+  .ficha-flotante {
+    margin-top: 0;
+  }
+
+  .hero-columnas {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--espacio-4);
+    margin-top: 0;
+  }
+}
+
+/* ---------- Composición en pantallas chicas ----------
+   Medido en un viewport real de 390px: los 4 chips + el CTA se
+   apilaban en TRES filas, el header terminaba con 227px de alto y
+   se montaba sobre el meta del hero ("RESULTADOS" encima de "TRABAJO
+   FINAL DE CARRERA"). Se resuelve dejando el nav en una sola fila. */
+@media (max-width: 899px) {
+  /* Los tres chips suman 315px + gaps contra 321px disponibles: se
+     pasaban por 7px y caían a dos filas. Padding y gap ajustados para
+     que entren en una sola hasta 360px de ancho. */
+  /* Al bajar a su propia fila, el nav quedaba dimensionado por su
+     contenido (309px) en vez de por la fila (345px), y se partía por
+     7px. Con flex-basis 100% se queda con el renglón entero. */
+  .sitio-header .nav-principal {
+    flex: 1 1 100%;
+    justify-content: flex-start;
+  }
+
+  .nav-principal {
+    gap: 0.3rem;
+  }
+
+  .nav-principal a {
+    font-size: 0.62rem;
+    padding: 0.5rem 0.6rem;
+    letter-spacing: 0.08em;
+  }
+
+  /* El chip "Inicio" sale del header: el logo BLATOS ya lleva a la
+     home. Es el único link redundante, y sacarlo es lo que hace que
+     los tres restantes entren en una fila. En el footer se conserva. */
+  .sitio-header .nav-principal a[href="index.html"] {
+    display: none;
+  }
+
+  .cta-largo { display: none; }
+  .cta-corto { display: inline; }
+
+  /* El hero arranca más abajo para despejar el header de dos filas. */
+  .hero-cine {
+    padding-top: 7.5rem;
+  }
+}
+
+/* Margen lateral más angosto en celulares: son 18px de aire ganados a
+   cada lado, que es justo lo que necesita el nav para no partirse. */
+@media (max-width: 559px) {
+  .contenedor-ancho {
+    padding: 0 var(--espacio-2);
+  }
+}
+
+@media (min-width: 900px) {
+  .cta-largo { display: inline; }
+  .cta-corto { display: none; }
+}
+
+/* Debajo de 900px el título se apila sin montarse, para no cortar
+   letras contra el borde en pantallas angostas. */
+@media (max-width: 899px) {
+  .hero-script {
+    margin-top: -0.15em;
+  }
+
+  .ficha-flotante {
+    max-width: none;
+  }
+}
+
+/* Con 390px de ancho, un label de 8.5rem deja el valor en una columna
+   de tres palabras por línea ("Vivienda / intergeneracional"). Apilado
+   entra completo. */
+@media (max-width: 559px) {
+  .ficha-fila {
+    display: block;
+  }
+
+  .ficha-fila dt {
+    margin-bottom: 0.15rem;
+  }
+}
+
+/* Indicador de scroll */
+.hero-scroll {
+  position: absolute;
+  bottom: var(--espacio-2);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.hero-scroll::after {
+  content: "";
+  width: 1px;
+  height: 2rem;
+  background: linear-gradient(to bottom, var(--text-muted), transparent);
+}
+
+@media (max-width: 899px) {
+  .hero-scroll {
+    display: none;
+  }
+}
+
+/* ===========================================================
+   6. REVEALS (estado inicial; GSAP los lleva al estado final)
+   =========================================================== */
+
+/* Sin JS o con movimiento reducido nunca se aplican: el contenido
+   queda visible por default y .es-animable lo pone en su estado
+   de partida solo cuando GSAP efectivamente va a animarlo. */
+.es-animable [data-revelar] {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+/* ===========================================================
+   7. BOTONES
+   =========================================================== */
+
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 56px;
+  padding: var(--espacio-2) var(--espacio-3);
+  border-radius: var(--radio);
+  border: 2px solid transparent;
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  width: 100%;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+@media (min-width: 480px) {
+  .boton {
+    width: auto;
+  }
+}
+
+.boton-primario {
+  background-color: var(--color-primario);
+  color: #fff;
+}
+
+.boton-primario:hover,
+.boton-primario:focus-visible {
+  background-color: var(--color-primario-oscuro);
+}
+
+.boton-secundario {
+  background-color: transparent;
+  color: var(--color-primario);
+  border-color: var(--color-primario);
+}
+
+.boton-secundario:hover,
+.boton-secundario:focus-visible {
+  background-color: var(--color-primario-claro);
+}
+
+/* En oscuro el primario se dibuja con la terracota plena y texto
+   hueso: el --color-primario del tema es la versión aclarada, que
+   como fondo dejaría el texto blanco por debajo de contraste. */
+.tema-oscuro .boton-primario {
+  background-color: var(--accent-primary-fuerte);
+  color: var(--text);
+}
+
+.tema-oscuro .boton-primario:hover,
+.tema-oscuro .boton-primario:focus-visible {
+  background-color: var(--accent-primary-vivo);
+  color: var(--bg);
+}
+
+.tema-oscuro .boton-secundario:hover,
+.tema-oscuro .boton-secundario:focus-visible {
+  background-color: rgba(217, 143, 82, 0.14);
+}
+
+.boton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* CTA grande, para la sección de encuesta destacada. */
+.boton-xl {
+  min-height: 72px;
+  font-size: 1.15rem;
+  padding: var(--espacio-2) var(--espacio-5);
+  letter-spacing: 0.03em;
+}
+
+.grupo-botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-2);
+  margin-top: var(--espacio-3);
+}
+
+/* ===========================================================
+   8. SECCIONES Y TARJETAS
+   =========================================================== */
+
+.tarjeta {
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  padding: var(--espacio-3);
+  box-shadow: var(--sombra);
+}
+
+/* Hero simple (páginas que no llevan el hero cinematográfico). */
+.hero {
+  background-color: var(--color-primario-claro);
+  border-radius: var(--radio);
+  padding: var(--espacio-4) var(--espacio-3);
+  margin-bottom: var(--espacio-4);
+}
+
+.hero p {
+  color: var(--color-texto-suave);
+  font-size: 1.05rem;
+}
+
+.lista-simple {
+  padding-left: 1.2rem;
+}
+
+.lista-simple li {
+  margin-bottom: var(--espacio-1);
+}
+
+/* Antetítulo chiquito en mayúsculas sobre los títulos de sección. */
+.antetitulo {
+  display: block;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-secondary);
+  margin-bottom: var(--espacio-2);
+}
+
+/* Texto de lectura larga en divulgación: dos columnas en desktop. */
+.texto-dos-columnas {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espacio-3);
+}
+
+@media (min-width: 900px) {
+  .texto-dos-columnas {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--espacio-5);
+  }
+}
+
+/* ===========================================================
+   9. FOOTER
+   =========================================================== */
+
+.sitio-footer {
+  background-color: var(--bg);
+  color: var(--text);
+  padding: var(--espacio-5) 0 var(--espacio-3);
+  margin-top: var(--espacio-4);
+  border-top: 1px solid rgba(243, 237, 226, 0.12);
+}
+
+.tema-oscuro .sitio-footer {
+  margin-top: 0;
+}
+
+.footer-grilla {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espacio-3);
+  align-items: start;
+  padding-bottom: var(--espacio-3);
+  border-bottom: 1px solid rgba(243, 237, 226, 0.10);
+}
+
+@media (min-width: 720px) {
+  .footer-grilla {
+    grid-template-columns: auto 1fr;
+    gap: var(--espacio-5);
+  }
+}
+
+.footer-legal {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding-top: var(--espacio-3);
+}
+
+.footer-legal p {
+  margin: 0 0 var(--espacio-1);
+}
+
+.sitio-footer a {
+  color: var(--accent-primary-vivo);
+}
+
+/* ===========================================================
+   10. FORMULARIOS (encuesta — se conservan tal cual)
+   =========================================================== */
+
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 0 0 var(--espacio-4);
+}
+
+legend,
+.etiqueta-pregunta {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: var(--espacio-2);
+  color: var(--color-texto);
+  padding: 0;
+}
+
+.ayuda-pregunta {
+  font-size: 0.9rem;
+  color: var(--color-texto-suave);
+  margin-top: -0.5rem;
+  margin-bottom: var(--espacio-2);
+}
+
+.opciones {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+}
+
+.opcion {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  border: 2px solid var(--color-borde-control);
+  border-radius: var(--radio);
+  padding: var(--espacio-2);
+  background-color: var(--color-superficie);
+  min-height: 56px;
+  cursor: pointer;
+}
+
+.opcion:hover {
+  border-color: var(--color-primario);
+}
+
+.opcion input[type="radio"],
+.opcion input[type="checkbox"] {
+  width: 1.4rem;
+  height: 1.4rem;
+  flex-shrink: 0;
+  accent-color: var(--color-primario);
+}
+
+.opcion:has(input:checked) {
+  border-color: var(--color-primario);
+  background-color: var(--color-primario-claro);
+}
+
+.opcion span {
+  font-size: 1rem;
+}
+
+.campo-texto,
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+textarea,
+select {
+  width: 100%;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: var(--espacio-2);
+  border: 2px solid var(--color-borde-control);
+  border-radius: var(--radio);
+  background-color: var(--color-superficie);
+  color: var(--color-texto);
+  min-height: 52px;
+}
+
+textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.campo {
+  margin-bottom: var(--espacio-3);
+}
+
+.campo label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: var(--espacio-1);
+}
+
+/* Escala tipo Likert: en fila, para que se lea como un continuo
+   (el column de .opciones no aplica acá). */
+.escala {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: var(--espacio-1);
+  align-items: stretch;
+}
+
+.escala .opcion {
+  flex: 1 1 0;
+  min-width: 0;
+  justify-content: flex-start;
+  text-align: center;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: var(--espacio-2) 0.25rem;
+}
+
+.escala .opcion span {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.escala .opcion small {
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+/* Grupos dentro de una pregunta larga.
+   Diez opciones seguidas se leen como un muro; el subtítulo corta la
+   lista en tramos que se pueden nombrar en voz alta ("ahora las del
+   barrio"), que es como se completa asistida. */
+.grupo-opciones {
+  margin-bottom: var(--espacio-3);
+}
+
+.grupo-titulo {
+  margin: 0 0 var(--espacio-1);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-primario);
+}
+
+/* Contador del tope de selección ("Eligió 2 de 3"). */
+.contador-seleccion {
+  margin: var(--espacio-1) 0 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-texto-suave);
+}
+
+/* Opción bloqueada por haber llegado al tope. Se atenúa pero se sigue
+   leyendo: sigue siendo información, no desaparece de la lista. */
+.opcion-inactiva {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.opcion-inactiva:hover {
+  border-color: var(--color-borde-control);
+}
+
+/* Toggle modalidad */
+.toggle-modalidad {
+  display: flex;
+  gap: var(--espacio-2);
+  flex-wrap: wrap;
+}
+
+.toggle-modalidad .opcion {
+  flex: 1 1 200px;
+}
+
+/* Grilla de espacios: doce opciones con ícono, en dos columnas desde
+   tablet. En celular queda una sola columna: dos columnas de 56px de
+   alto con texto largo se cortan y se leen peor que una lista. */
+.opciones-grilla {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espacio-1);
+}
+
+@media (min-width: 620px) {
+  .opciones-grilla {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.opciones-grilla .opcion {
+  align-items: flex-start;
+  min-height: 64px;
+}
+
+.opciones-grilla .opcion span {
+  line-height: 1.35;
+}
+
+.opcion-icono {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  color: var(--color-primario);
+}
+
+/* ---------- Pregunta de orden (arrastre) ----------
+   Dos maneras de reordenar y las dos valen igual: el agarre para
+   arrastrar (mouse y dedo) y las flechas, que además son el único
+   camino con teclado. En un celular las flechas terminan siendo lo
+   más usado, así que son botones de 44px, no un adorno. */
+.caja-orden {
+  margin-top: var(--espacio-1);
+}
+
+.lista-orden {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item-orden {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-1);
+  border: 2px solid var(--color-borde-control);
+  border-radius: var(--radio);
+  padding: 0.6rem 0.7rem;
+  margin-bottom: var(--espacio-1);
+  background-color: var(--color-superficie);
+  /* La transformación durante el arrastre necesita contexto propio. */
+  position: relative;
+  touch-action: pan-y;
+}
+
+/* Solo el agarre bloquea el scroll táctil. Si lo hiciera el ítem
+   entero, con la lista ocupando toda la pantalla del celular no se
+   podría scrollear la página. */
+.orden-agarre {
+  flex-shrink: 0;
+  width: 40px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  touch-action: none;
+  color: var(--color-texto-suave);
+  fill: currentColor;
+}
+
+.orden-agarre:active {
+  cursor: grabbing;
+}
+
+.orden-pos {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--color-primario);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.orden-texto {
+  flex: 1 1 auto;
+  font-size: 0.98rem;
+  line-height: 1.3;
+}
+
+.orden-botones {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* 40px de alto por botón, no 30: en el celular las flechas son el
+   camino que más se usa, y la encuesta se completa asistida con gente
+   mayor. Un control de 30px se falla seguido. */
+.orden-btn {
+  width: 48px;
+  height: 40px;
+  border: 2px solid var(--color-borde-control);
+  border-radius: var(--radio-chico);
+  background-color: var(--color-superficie);
+  color: var(--color-texto);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.orden-btn:hover:not(:disabled) {
+  border-color: var(--color-primario);
+  background-color: var(--color-primario-claro);
+}
+
+.orden-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.item-orden.arrastrando {
+  z-index: 5;
+  border-color: var(--color-primario);
+  box-shadow: 0 8px 20px rgba(32, 26, 20, 0.22);
+  /* Sin transición: tiene que seguir al dedo, no llegar después. */
+  user-select: none;
+}
+
+/* En pantalla chica el agarre cede ancho al texto: 32px sigue siendo
+   un objetivo cómodo y el enunciado deja de partirse en cuatro líneas. */
+@media (max-width: 620px) {
+  .orden-agarre {
+    width: 32px;
+  }
+
+  .item-orden {
+    padding: 0.5rem 0.45rem;
+    gap: 0.35rem;
+  }
+}
+
+.orden-aviso {
+  margin: var(--espacio-1) 0 0;
+  font-size: 0.85rem;
+  color: var(--color-texto-suave);
+  min-height: 1.2em;
+}
+
+/* ===========================================================
+   11. MENSAJES DE ESTADO
+   =========================================================== */
+
+.mensaje {
+  border-radius: var(--radio);
+  padding: var(--espacio-2) var(--espacio-3);
+  margin-bottom: var(--espacio-3);
+}
+
+.mensaje-error {
+  background-color: #fbe9e7;
+  color: var(--color-error);
+  border: 1px solid var(--color-error);
+}
+
+.mensaje-info {
+  background-color: #e7f1ee;
+  color: var(--color-acento);
+  border: 1px solid var(--color-acento);
+}
+
+.tema-oscuro .mensaje-error {
+  background-color: rgba(179, 38, 30, 0.16);
+  color: #f2a49e;
+  border-color: rgba(242, 164, 158, 0.5);
+}
+
+.tema-oscuro .mensaje-info {
+  background-color: rgba(166, 138, 82, 0.14);
+  color: var(--accent-secondary);
+  border-color: rgba(166, 138, 82, 0.5);
+}
+
+/* ===========================================================
+   12. CONSENTIMIENTO Y PROGRESO (encuesta)
+   =========================================================== */
+
+/* Sin scroll interno a propósito: un área de scroll anidada esconde
+   texto y deja el checkbox fuera de vista. El texto es corto: que
+   fluya con la página. */
+.consentimiento-texto {
+  border-bottom: 1px solid var(--color-borde);
+  padding-bottom: var(--espacio-2);
+  margin-bottom: var(--espacio-3);
+}
+
+/* Encabezado de bloque temático. Usa la tipografía display de la
+   marca para que la encuesta se lea como parte del mismo sitio, pero
+   sobre fondo claro y en un cuerpo mucho más chico que el hero: acá
+   la prioridad sigue siendo leerlo, no impresionar. */
+.contador-bloque {
+  margin: 0 0 var(--espacio-1);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-primario);
+}
+
+.titulo-bloque {
+  font-family: var(--fuente-display);
+  font-size: clamp(1.6rem, 6vw, 2.4rem);
+  line-height: 1.05;
+  margin: 0 0 var(--espacio-1);
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+.bajada-bloque {
+  margin: 0 0 var(--espacio-4);
+  color: var(--color-texto-suave);
+  font-size: 1rem;
+}
+
+.bajada-bloque[hidden] {
+  display: none;
+}
+
+.progreso {
+  height: 8px;
+  background-color: var(--color-borde);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: var(--espacio-4);
+}
+
+.progreso-barra {
+  height: 100%;
+  background-color: var(--color-primario);
+  border-radius: 999px;
+  transition: width 0.25s ease;
+}
+
+/* Fade sutil al cambiar de paso. Es la única animación que corre en
+   la encuesta, y es corta a propósito: sin desplazamiento, sin
+   escala, nada que pueda leerse como que la página "se movió". */
+.paso-entra {
+  animation: pasoFade 0.28s ease-out;
+}
+
+@keyframes pasoFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ===========================================================
+   13. DASHBOARD
+   =========================================================== */
+
+.track-bloque {
+  margin-bottom: var(--espacio-5);
+  border-left: 6px solid var(--color-track, var(--color-primario));
+  padding-left: var(--espacio-3);
+}
+
+.track-titulo h2 {
+  font-family: var(--fuente-display);
+  text-transform: uppercase;
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  letter-spacing: 0.01em;
+  color: var(--color-texto);
+  margin-bottom: var(--espacio-1);
+}
+
+/* La tarjeta de gráfico sobre fondo oscuro necesita separarse del
+   fondo: el borde solo no alcanza cuando arriba hay una imagen. */
+.tema-oscuro .grafico-tarjeta {
+  background-color: rgba(243, 237, 226, 0.04);
+}
+
+.track-titulo {
+  display: flex;
+  align-items: baseline;
+  gap: var(--espacio-2);
+  flex-wrap: wrap;
+}
+
+.track-titulo .badge-n {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-texto);
+  background-color: var(--color-primario-claro);
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+}
+
+.grid-graficos {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espacio-3);
+}
+
+@media (min-width: 640px) {
+  .grid-graficos {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.grafico-tarjeta h3 {
+  font-size: 1rem;
+  margin-bottom: var(--espacio-2);
+  color: var(--color-texto);
+}
+
+.grafico-caja {
+  position: relative;
+  width: 100%;
+}
+
+/* Aclaración de cómo se leen las barras de una pregunta de orden.
+   Va arriba del gráfico, no al pie: si aparece después, el número ya
+   se leyó mal. */
+.grafico-nota {
+  margin: -0.4rem 0 var(--espacio-2);
+  font-size: 0.85rem;
+  color: var(--color-texto-suave);
+}
+
+.grafico-n {
+  font-size: 0.85rem;
+  color: var(--color-texto-suave);
+  margin-top: var(--espacio-2);
+  margin-bottom: 0;
+}
+
+.detalle-tabla {
+  margin-top: var(--espacio-2);
+  border-top: 1px solid var(--color-borde);
+  padding-top: var(--espacio-1);
+}
+
+.detalle-tabla summary {
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-primario);
+  padding: var(--espacio-1) 0;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.tabla-datos {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin-top: var(--espacio-1);
+}
+
+.tabla-datos th,
+.tabla-datos td {
+  text-align: left;
+  padding: 0.4rem 0.5rem;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.tabla-datos td:last-child,
+.tabla-datos th:last-child {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.sin-datos {
+  color: var(--color-texto-suave);
+  font-style: italic;
+}
+
+/* ===========================================================
+   14. HERO DE PÁGINA INTERIOR
+
+   La misma máquina que el hero de portada —imagen con parallax,
+   velo, display + itálica— en una versión más baja: acá el hero
+   presenta una página, no abre el sitio. Lo anima el mismo
+   divulgacion.js, que busca `.hero-cine`, así que no necesita JS
+   propio: alcanza con las clases.
+   =========================================================== */
+
+.hero-corto {
+  min-height: 66svh;
+  min-height: 66vh;
+  padding: 7.5rem 0 var(--espacio-4);
+}
+
+/* En la portada el título se reparte letra por letra de borde a borde.
+   Acá los títulos son palabras enteras ("EL PROYECTO"): separarlas así
+   las volvería ilegibles, se dibujan como un bloque normal. */
+.hero-corto .hero-display {
+  display: block;
+  font-size: clamp(2.4rem, 10vw, 6.5rem);
+  line-height: 0.88;
+}
+
+.hero-corto .hero-script {
+  margin-top: -0.06em;
+}
+
+/* Debajo de 360px el título de una sola palabra ya no entra: el hero
+   tiene overflow hidden, así que no rompía el scroll pero se comía la
+   última letra ("RESULTADO" por RESULTADOS). Solo en ese rango baja de
+   cuerpo; de 360px para arriba queda como estaba. */
+@media (max-width: 360px) {
+  .hero-corto .hero-display {
+    font-size: 1.95rem;
+  }
+}
+
+/* Las imágenes de las páginas interiores son de día y bastante más
+   claras que el atardecer de la portada: con el velo original, el meta
+   y los tags de arriba a la derecha quedaban ilegibles sobre el cielo.
+   Mismo gradiente, un punto más cargado arriba y a la derecha. */
+.hero-corto .hero-velo {
+  background:
+    linear-gradient(to bottom,
+      rgba(28, 23, 18, 0.82) 0%,
+      rgba(28, 23, 18, 0.46) 42%,
+      rgba(28, 23, 18, 0.80) 80%,
+      rgba(28, 23, 18, 0.96) 100%),
+    linear-gradient(to right,
+      rgba(28, 23, 18, 0.55) 0%,
+      rgba(28, 23, 18, 0.12) 55%,
+      rgba(28, 23, 18, 0.45) 100%);
+}
+
+@media (min-width: 900px) {
+  .hero-corto {
+    min-height: 72vh;
+    padding: 9rem 0 var(--espacio-5);
+  }
+}
+
+/* Una imagen por página. Para cambiarlas se toca SOLO acá, igual que
+   con la de la portada (--hero-imagen en :root). */
+.hero-el-proyecto { --hero-imagen: url("../img/imaginarios/Imaginario 0 (13).jpeg"); }
+.hero-resultados  { --hero-imagen: url("../img/imaginarios/Imaginario 0 (8).jpeg"); }
+.hero-gracias     { --hero-imagen: url("../img/imaginarios/Imaginario 0 (12).jpeg"); }
+
+/* Bajada del hero interior: una sola columna y más grande que la de la
+   portada, porque es el único texto de la primera pantalla. */
+.hero-bajada {
+  max-width: 44rem;
+  margin: var(--espacio-3) 0 0;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+.hero-bajada strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ===========================================================
+   15. PIEZAS DE CONTENIDO (divulgación)
+   =========================================================== */
+
+/* Ficha de datos en columnas: reemplaza a la lista de viñetas cuando
+   lo que hay son pares etiqueta/valor y no oraciones. */
+.grilla-datos {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espacio-3);
+  margin: var(--espacio-4) 0 0;
+}
+
+@media (min-width: 620px) {
+  .grilla-datos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1000px) {
+  .grilla-datos {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.dato {
+  border-top: 2px solid var(--accent-primary);
+  padding-top: var(--espacio-2);
+}
+
+.dato dt {
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-secondary);
+  margin-bottom: 0.35rem;
+}
+
+.dato dd {
+  margin: 0;
+  color: var(--color-texto);
+  font-weight: 600;
+}
+
+/* Pasos numerados. El número es decorativo (lo dibuja un ::before):
+   el orden real lo da la lista ordenada, que es lo que lee un lector
+   de pantalla. */
+.pasos-proceso {
+  list-style: none;
+  counter-reset: paso;
+  margin: var(--espacio-4) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espacio-3);
+}
+
+@media (min-width: 900px) {
+  .pasos-proceso {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--espacio-4);
+  }
+}
+
+.pasos-proceso li {
+  counter-increment: paso;
+  border-top: 1px solid var(--color-borde);
+  padding-top: var(--espacio-2);
+}
+
+.pasos-proceso li::before {
+  content: "0" counter(paso);
+  display: block;
+  font-family: var(--fuente-display);
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--accent-primary-vivo);
+  margin-bottom: var(--espacio-1);
+}
+
+.pasos-proceso h3 {
+  color: var(--color-texto);
+  font-size: 1.05rem;
+  margin-bottom: 0.4rem;
+}
+
+.pasos-proceso p {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--color-texto-suave);
+}
+
+/* Tarjeta ancha con borde de acento a la izquierda: para el bloque que
+   tiene que leerse distinto del resto (privacidad, aclaraciones). */
+.tarjeta-acento {
+  border-left: 4px solid var(--accent-primary);
+}
+
+/* ===========================================================
+   16. GALERÍA + LIGHTBOX
+
+   Sin librería: 13 imágenes no justifican traer un lightbox de
+   terceros, y uno propio se puede hacer accesible de entrada
+   (foco atrapado, Escape, flechas, aria-modal).
+   =========================================================== */
+
+.galeria {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espacio-2);
+  margin-top: var(--espacio-4);
+}
+
+@media (min-width: 620px) {
+  .galeria {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1000px) {
+  .galeria {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Es un <button> y no un <a>: abre un diálogo en la misma página, no
+   navega. Hay que apagarle los estilos de botón. */
+.galeria-item {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-chico);
+  overflow: hidden;
+  background-color: var(--bg-elevado);
+  cursor: zoom-in;
+  font: inherit;
+  color: inherit;
+  aspect-ratio: 16 / 9;
+}
+
+.galeria-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.galeria-item:hover img,
+.galeria-item:focus-visible img {
+  transform: scale(1.05);
+}
+
+.galeria-item:hover {
+  border-color: rgba(217, 143, 82, 0.55);
+}
+
+/* Número de la imagen, arriba a la izquierda: ubica en el conjunto
+   antes de abrir nada. */
+.galeria-num {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.6rem;
+  font-family: var(--fuente-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--text);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.galeria-pie {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 1.6rem 0.8rem 0.6rem;
+  text-align: left;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: var(--text);
+  background: linear-gradient(to top, rgba(20, 16, 12, 0.92), rgba(20, 16, 12, 0));
+}
+
+/* --- Lightbox --- */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-2);
+  padding: var(--espacio-2);
+  background-color: rgba(14, 11, 8, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.lightbox[hidden] {
+  display: none;
+}
+
+.lightbox-figura {
+  margin: 0;
+  max-width: min(1180px, 100%);
+  width: 100%;
+}
+
+.lightbox-figura img {
+  width: 100%;
+  height: auto;
+  max-height: 72vh;
+  object-fit: contain;
+  border-radius: var(--radio-chico);
+  background-color: var(--bg-elevado);
+}
+
+.lightbox-figura figcaption {
+  margin-top: var(--espacio-2);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-1) var(--espacio-2);
+  justify-content: space-between;
+  align-items: baseline;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.lightbox-contador {
+  font-family: var(--fuente-display);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--accent-primary-vivo);
+  white-space: nowrap;
+}
+
+/* Controles: 56px como en la encuesta. Se usan con el dedo y, en el
+   lightbox, también con el pulgar de una sola mano. */
+.lightbox-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  border: 1px solid rgba(243, 237, 226, 0.3);
+  background-color: rgba(28, 23, 18, 0.8);
+  color: var(--text);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.lightbox-btn:hover {
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+}
+
+.lightbox-controles {
+  display: flex;
+  gap: var(--espacio-2);
+  align-items: center;
+}
+
+.lightbox-cerrar {
+  position: absolute;
+  top: var(--espacio-2);
+  right: var(--espacio-2);
+}
+
+/* En pantallas anchas las flechas van a los costados de la imagen, que
+   es donde se las busca; en angostas quedan en una fila abajo, porque
+   flotando taparían la mitad de una imagen apaisada. */
+@media (min-width: 900px) {
+  .lightbox-controles {
+    position: absolute;
+    inset: 0;
+    justify-content: space-between;
+    padding: 0 var(--espacio-3);
+    pointer-events: none;
+  }
+
+  .lightbox-controles .lightbox-btn {
+    pointer-events: auto;
+  }
+}
+
+/* ===========================================================
+   17. SECCIÓN DE ENCUESTA CON CONTADOR EN VIVO (portada)
+   =========================================================== */
+
+.panel-encuesta {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background-color: var(--bg-elevado);
+  padding: var(--espacio-4) var(--espacio-3);
+}
+
+@media (min-width: 900px) {
+  .panel-encuesta {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: var(--espacio-5);
+    align-items: center;
+    padding: var(--espacio-5);
+  }
+}
+
+/* Trama de ladrillo calado, el mismo motivo del isotipo, muy tenue:
+   da textura sin competir con el número. */
+.panel-encuesta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(181, 101, 47, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(181, 101, 47, 0.16) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: radial-gradient(circle at 80% 0%, #000, transparent 70%);
+  -webkit-mask-image: radial-gradient(circle at 80% 0%, #000, transparent 70%);
+  pointer-events: none;
+}
+
+.panel-encuesta > * {
+  position: relative;
+}
+
+.contador-caja {
+  text-align: left;
+  /* En una sola columna el número queda pegado al párrafo de al lado;
+     en la grilla de dos columnas el gap ya los separa. */
+  margin-bottom: var(--espacio-3);
+}
+
+@media (min-width: 900px) {
+  .contador-caja {
+    margin-bottom: 0;
+  }
+}
+
+.contador-numero {
+  display: block;
+  font-family: var(--fuente-display);
+  font-size: clamp(4rem, 16vw, 9rem);
+  line-height: 0.85;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.contador-etiqueta {
+  display: block;
+  margin-top: var(--espacio-2);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-secondary);
+}
+
+/* Estado alternativo: mientras hay menos respuestas que el mínimo de
+   publicación, un número chico no dice nada bueno —y "3 respuestas"
+   desalienta más que invitar—. Se muestra la itálica en su lugar. */
+.contador-espera {
+  font-family: var(--fuente-script);
+  font-style: italic;
+  font-size: clamp(1.8rem, 6vw, 3rem);
+  line-height: 1.15;
+  color: var(--accent-primary-vivo);
+  margin: 0;
+}
+
+.panel-encuesta-texto p {
+  color: var(--text-muted);
+}
+
+.panel-encuesta-texto strong {
+  color: var(--text);
+}
+
+/* Vista previa de un gráfico del dashboard, dentro del panel. Va debajo
+   de las dos columnas y no dentro de una: una barra horizontal metida en
+   media columna queda de 200px y no se lee. */
+.preview-grafico {
+  margin-top: var(--espacio-3);
+  border-top: 1px solid var(--color-borde);
+  padding-top: var(--espacio-2);
+}
+
+@media (min-width: 900px) {
+  .preview-grafico {
+    grid-column: 1 / -1;
+  }
+}
+
+.preview-grafico .grafico-tarjeta {
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+.preview-grafico .detalle-tabla {
+  display: none;
+}
+
+/* ===========================================================
+   18. UTILIDADES
+   =========================================================== */
+
+.oculto {
+  display: none !important;
+}
+
+.solo-lectura-visual {
+  color: var(--color-texto-suave);
+  font-size: 0.9rem;
+}
+
+.texto-centrado {
+  text-align: center;
+}
+
+.espacio-arriba {
+  margin-top: var(--espacio-4);
+}
+
+/* Visible solo para lectores de pantalla. */
+.sr-solo {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===========================================================
+   19. ENCUESTA: FONDO AMBIENTAL + TARJETA SPOTLIGHT
+
+   La encuesta pasa a tener el fondo oscuro del resto del sitio, pero
+   NO cambia de tema: los tokens semánticos siguen siendo los claros,
+   así que la tarjeta donde se lee y se responde conserva exactamente
+   los mismos colores y contrastes que ya estaban validados
+   (#201a14 sobre #fffdf8, controles con borde #8f8069).
+
+   El fondo es ambiente, no superficie de lectura: imagen al 10%,
+   viñeta y un resplandor cálido detrás de la tarjeta. Nada que haya
+   que leer vive ahí.
+
+   Sin GSAP y sin parallax: la única animación es la entrada de cada
+   paso, que ya existía y el corte global de movimiento reducido
+   apaga igual que antes.
+   =========================================================== */
+
+.pagina-encuesta {
+  background-color: var(--bg);
+  color: var(--text);
+  /* Imagen ambiental. Para cambiarla se toca SOLO acá. */
+  --encuesta-imagen: url("../img/imaginarios/Imaginario 0 (2).jpeg");
+}
+
+/* Capa de imagen: fija, para que el fondo no “viaje” con el scroll de
+   un formulario largo, y muy tenue. Es identidad de marca, no algo
+   para mirar. */
+.pagina-encuesta::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background-image: var(--encuesta-imagen);
+  background-size: cover;
+  background-position: center 60%;
+  opacity: 0.1;
+  filter: saturate(0.75);
+}
+
+/* El reflector: un halo cálido arriba al centro —donde cae la
+   tarjeta— y una viñeta que cierra los bordes. Van en una capa
+   propia y no en el body para poder apilarlos sobre la imagen. */
+.pagina-encuesta::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(58rem 40rem at 50% 18%, rgba(217, 143, 82, 0.14), transparent 68%),
+    radial-gradient(130% 95% at 50% 0%, transparent 38%, rgba(12, 9, 7, 0.88) 100%);
+}
+
+/* El header flota sobre el ambiente en vez de taparlo, pero mantiene
+   un fondo propio: es sticky y le pasa contenido claro por debajo. */
+.pagina-encuesta .sitio-header {
+  background-color: rgba(28, 23, 18, 0.72);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  border-bottom-color: rgba(243, 237, 226, 0.1);
+}
+
+/* --- Barra de progreso: vive en el lenguaje oscuro (está fuera de la
+   tarjeta, no es contenido a leer). --- */
+.pagina-encuesta .progreso {
+  background-color: rgba(243, 237, 226, 0.14);
+}
+
+.pagina-encuesta .progreso-barra {
+  background-color: var(--accent-primary-vivo);
+}
+
+/* --- La tarjeta spotlight --- */
+
+.pagina-encuesta .paso {
+  position: relative;
+  background-color: var(--color-superficie);
+  /* El body de esta página lleva el color de texto claro (para lo poco
+     que vive sobre el fondo oscuro). Adentro de la tarjeta hay que
+     volver al de siempre: sin esto el texto queda hueso sobre hueso. */
+  color: var(--color-texto);
+  border: 1px solid rgba(32, 26, 20, 0.12);
+  border-radius: 20px;
+  padding: var(--espacio-4) var(--espacio-3);
+  /* Tres capas: un filo claro arriba (le da volumen de papel), la
+     sombra que la despega del fondo, y el halo cálido difuso que es
+     el "reflector". El halo va con opacidad baja a propósito: si se
+     nota como efecto, dejó de ser luz. */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 26px 70px -26px rgba(0, 0, 0, 0.9),
+    0 0 100px -45px rgba(217, 143, 82, 0.55);
+}
+
+@media (min-width: 720px) {
+  .pagina-encuesta .paso {
+    padding: var(--espacio-5) var(--espacio-4);
+  }
+}
+
+/* Entrada de cada paso: el fade que ya existía, con un desplazamiento
+   mínimo. 0.42s y 10px: lo suficiente para que se lea como que la luz
+   se corrió a la pregunta siguiente, no como que la página saltó. */
+.pagina-encuesta .paso-entra {
+  animation: pasoSpotlight 0.42s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+@keyframes pasoSpotlight {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --- Tipografía dentro de la tarjeta ---
+   Misma familia que el resto del sitio (Source Serif 4), pero un punto
+   más grande y con más interlineado: acá hay consignas largas que a
+   veces lee alguien de 80 años, y muchas veces desde un celular. */
+
+.pagina-encuesta .paso {
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+
+.pagina-encuesta h1 {
+  font-family: var(--fuente-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: -0.005em;
+  line-height: 1.08;
+  font-size: clamp(1.45rem, 5.2vw, 2.1rem);
+  margin-bottom: var(--espacio-3);
+}
+
+.pagina-encuesta h2 {
+  font-size: 1.25rem;
+  line-height: 1.35;
+}
+
+.pagina-encuesta legend,
+.pagina-encuesta .etiqueta-pregunta {
+  font-size: 1.12rem;
+  line-height: 1.5;
+}
+
+.pagina-encuesta .opcion span,
+.pagina-encuesta .campo label,
+.pagina-encuesta .lista-simple li {
+  font-size: 1.02rem;
+  line-height: 1.5;
+}
+
+.pagina-encuesta .ayuda-pregunta,
+.pagina-encuesta .bajada-bloque {
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+/* En pantallas chicas la tarjeta se come el ancho: el margen lateral
+   lo pone el contenedor, así que el padding interno baja. */
+@media (max-width: 480px) {
+  .pagina-encuesta .paso {
+    padding: var(--espacio-3) var(--espacio-2);
+    border-radius: 16px;
+  }
+}
+
+/* ===========================================================
+   20. MOVIMIENTO REDUCIDO
+   Contrapartida en CSS del corte que hace divulgacion.js.
+   Acá se apaga todo lo declarativo; allá, lo de GSAP.
+   =========================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Cualquier elemento que hubiera quedado en estado de partida
+     vuelve a ser visible, por si el JS no llegó a correr. */
+  .es-animable [data-revelar] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .ficha-flotante:hover {
+    transform: none;
+  }
+
+  /* La entrada de cada paso de la encuesta ya queda en 0.001ms por la
+     regla de arriba, pero eso deja el estado inicial pintado un
+     instante: acá se la saca del todo. */
+  .pagina-encuesta .paso-entra {
+    animation: none;
+  }
+}

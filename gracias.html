@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>¡Gracias! — Vivir juntos en Cosquín</title>
+  <meta name="robots" content="noindex">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Instrument+Serif:ital@0;1&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <!-- Mismo criterio que en index.html: el estado de partida de los
+       reveals se habilita antes del primer pintado. Ver divulgacion.js. -->
+  <script>
+    (function () {
+      try {
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          document.documentElement.classList.add('es-animable');
+        }
+      } catch (e) { /* sin matchMedia, todo queda visible: es el default seguro */ }
+    })();
+  </script>
+</head>
+<body class="tema-oscuro">
+
+  <header class="sitio-header sobre-hero">
+    <div class="contenedor-ancho">
+      <a class="marca" href="index.html">
+        <svg class="marca-icono" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+          <g fill="currentColor">
+            <rect x="0" y="0" width="5" height="5"/><rect x="7.5" y="0" width="5" height="5"/><rect x="15" y="0" width="5" height="5"/>
+            <rect x="0" y="7.5" width="5" height="5"/><rect x="7.5" y="7.5" width="5" height="5"/><rect x="15" y="7.5" width="5" height="5"/>
+            <rect x="0" y="15" width="5" height="5"/><rect x="7.5" y="15" width="5" height="5"/><rect x="15" y="15" width="5" height="5"/>
+          </g>
+        </svg>
+        <span>
+          <span class="marca-nombre">BLATOS</span>
+          <span class="marca-bajada">Vivienda intergeneracional</span>
+        </span>
+      </a>
+
+      <nav class="nav-principal" aria-label="Navegación principal">
+        <a href="index.html">Inicio</a>
+        <a href="el-proyecto.html">El proyecto</a>
+        <a href="resultados-vivienda.html">Resultados</a>
+        <a class="nav-cta" href="encuesta-vivienda.html"><span class="cta-largo">Responder la encuesta</span><span class="cta-corto">Encuesta</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- =========================================================
+         HERO
+         ========================================================= -->
+    <section class="hero-cine hero-corto hero-gracias">
+      <div class="hero-fondo" aria-hidden="true"></div>
+      <div class="hero-velo" aria-hidden="true"></div>
+
+      <div class="contenedor-ancho hero-contenido">
+        <p class="hero-meta">
+          <span>BLATOS — Relevamiento social</span>
+          <span class="derecha">
+            Respuesta registrada<br>
+            De forma anónima
+          </span>
+        </p>
+
+        <h1 class="hero-titulo" aria-label="Gracias por responder">
+          <span class="hero-display" aria-hidden="true">GRACIAS</span>
+          <span class="hero-script" aria-hidden="true">por responder</span>
+        </h1>
+
+        <ul class="hero-tags">
+          <li>— Anónima</li>
+          <li>— Registrada</li>
+          <li>— Parte de la tesis</li>
+        </ul>
+
+        <p class="hero-bajada">
+          Tu respuesta ya quedó registrada de forma anónima y es parte del
+          <strong>relevamiento social</strong> de esta tesis.
+        </p>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         ¿Y AHORA?
+         ========================================================= -->
+    <section class="seccion">
+      <div class="contenedor-ancho">
+        <span class="antetitulo" data-revelar>Y ahora</span>
+        <h2 class="titulo-display" data-revelar-palabras>Qué pasa con lo que respondiste</h2>
+
+        <div class="texto-dos-columnas espacio-arriba" data-revelar="grupo">
+          <p>
+            Se suma al resto de las respuestas y pasa a formar parte de los totales.
+            Los resultados se van actualizando solos: podés verlos cuando quieras, en
+            gráficos simples y <strong>siempre agregados</strong>.
+          </p>
+          <p>
+            Si dejaste tu contacto para una entrevista, esos datos quedaron guardados
+            <em class="acento-script">aparte</em>, sin ninguna conexión con las
+            respuestas que diste.
+          </p>
+        </div>
+
+        <div class="grupo-botones" data-revelar>
+          <a class="boton boton-primario boton-xl" href="resultados-vivienda.html">Ver los resultados</a>
+          <a class="boton boton-secundario" href="index.html">Volver al inicio</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         UNA AYUDA MÁS
+         ========================================================= -->
+    <section class="seccion">
+      <div class="contenedor-ancho">
+        <span class="antetitulo" data-revelar>Una ayuda más</span>
+        <h2 class="titulo-display" data-revelar-palabras>Pasala</h2>
+
+        <div class="texto-dos-columnas espacio-arriba" data-revelar="grupo">
+          <p>
+            Si conocés a alguien de Cosquín o de la zona a quien le pueda interesar
+            —sobre todo <strong>adultos mayores</strong>, o familias que conviven entre
+            varias generaciones— compartirle la encuesta suma muchísimo.
+          </p>
+          <p>
+            Si esa persona necesita ayuda para completarla, se puede responder
+            <strong>de forma asistida</strong>: la encuesta tiene una opción para
+            indicarlo, y eso queda registrado como parte del dato.
+          </p>
+        </div>
+
+        <div class="tarjeta tarjeta-acento espacio-arriba" data-revelar>
+          <p>
+            El link para compartir es
+            <strong>esta misma página de inicio</strong>: desde ahí se llega a la
+            encuesta y también a los resultados.
+          </p>
+          <div class="grupo-botones">
+            <a class="boton boton-secundario" href="el-proyecto.html">Conocer el proyecto</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="sitio-footer">
+    <div class="contenedor-ancho">
+      <div class="footer-grilla">
+        <a class="marca" href="index.html">
+          <svg class="marca-icono" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <g fill="currentColor">
+              <rect x="0" y="0" width="5" height="5"/><rect x="7.5" y="0" width="5" height="5"/><rect x="15" y="0" width="5" height="5"/>
+              <rect x="0" y="7.5" width="5" height="5"/><rect x="7.5" y="7.5" width="5" height="5"/><rect x="15" y="7.5" width="5" height="5"/>
+              <rect x="0" y="15" width="5" height="5"/><rect x="7.5" y="15" width="5" height="5"/><rect x="15" y="15" width="5" height="5"/>
+            </g>
+          </svg>
+          <span>
+            <span class="marca-nombre">BLATOS</span>
+            <span class="marca-bajada">Cosquín · Valle de Punilla</span>
+          </span>
+        </a>
+
+        <nav class="nav-principal" aria-label="Navegación del pie">
+          <a href="index.html">Inicio</a>
+          <a href="el-proyecto.html">El proyecto</a>
+          <a href="encuesta-vivienda.html">Encuesta</a>
+          <a href="resultados-vivienda.html">Resultados</a>
+        </nav>
+      </div>
+
+      <div class="footer-legal">
+        <p>
+          Trabajo Final de Carrera · Arquitectura 6D · FAUD — Universidad Nacional de Córdoba ·
+          <span data-anio-actual></span>
+        </p>
+        <p>Investigación académica sin fines comerciales.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/divulgacion.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+# Dependencias (el sitio no tiene build, pero Railway puede instalar acá)
+node_modules/
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+
+# Logs
+*.log
+npm-debug.log*
+
+# Credenciales — nunca deberían aparecer en el repo.
+# Las de clasp viven en ~/.clasprc.json, no acá; esto es una red por si
+# alguna vez se genera una copia local.
+.clasprc.json
+.env
+.env.*
+
+# NO se ignoran a propósito:
+#   apps-script/Code.gs   → es código, no tiene credenciales
+#   .clasp.json           → solo scriptId y el id de la Sheet (ya están en CLAUDE.md)
+#   assets/img/           → las imágenes del imaginario son parte del sitio

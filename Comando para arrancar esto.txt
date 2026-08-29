@@ -1,0 +1,13 @@
+cd subproyectos/sitio-tesis-encuestas
+claude --dangerously-skip-permissions
+
+--- Para RETOMAR la sesion anterior (mismo directorio) ---
+
+claude --continue --dangerously-skip-permissions
+    Retoma la ultima sesion de esta carpeta, directo.
+
+claude --resume --dangerously-skip-permissions
+    Abre un selector con todas las sesiones anteriores de esta carpeta.
+
+Ojo: hay que estar parado en la misma carpeta, si no no encuentra el historial.
+Si el historial se pierde igual, el estado del proyecto esta en CLAUDE.md.
