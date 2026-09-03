@@ -24,7 +24,10 @@
     B: '#eb6834',
     C: '#1baf7a',
     D1: '#4a3aa7',
-    D2: '#a01f5e'
+    D2: '#a01f5e',
+    /* La encuesta de ciudad no es un trayecto más: va en un ocre que no
+       compite con ninguno de los cinco. */
+    ciudad: '#8a6a12'
   };
 
   var PALETA_OSCURA = {
@@ -32,7 +35,8 @@
     B: '#f0885a',
     C: '#3fc79a',
     D1: '#a795f5',
-    D2: '#f0679f'
+    D2: '#f0679f',
+    ciudad: '#d6b043'
   };
 
   var esOscuro = document.body && document.body.classList.contains('tema-oscuro');
@@ -42,7 +46,7 @@
   /* El relleno es el mismo color a baja opacidad: sobre carbón hace falta
      un poco más para que la barra se despegue del fondo. */
   var TINTE_TRACK = {};
-  ['A', 'B', 'C', 'D1', 'D2'].forEach(function (track) {
+  ['A', 'B', 'C', 'D1', 'D2', 'ciudad'].forEach(function (track) {
     TINTE_TRACK[track] = hexARgba(COLOR_TRACK[track], esOscuro ? 0.22 : 0.12);
   });
 
@@ -359,6 +363,16 @@
             renderTrack(contenedor, track, datos.tracks[track]);
           }
         });
+
+        /* La encuesta de ciudad se dibuja con el mismo render: es un
+           bloque más, solo que no viene de `tracks`. Si el backend
+           todavía no la devuelve —el deploy del Apps Script va aparte
+           del del sitio— la sección simplemente no aparece. */
+        var contCiudad = document.getElementById('contenedor-ciudad');
+        if (contCiudad && datos.ciudad) {
+          renderTrack(contCiudad, 'ciudad', datos.ciudad);
+          contCiudad.classList.add('tiene-datos');
+        }
 
         if (datos.actualizado) {
           var fecha = new Date(datos.actualizado);

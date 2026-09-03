@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Encuesta de vivienda — Vivir juntos en Cosquín</title>
-  <meta name="description" content="Encuesta anónima sobre vivienda y convivencia entre generaciones en Cosquín y el Valle de Punilla.">
+  <title>Encuesta sobre la ciudad — Vivir juntos en Cosquín</title>
+  <meta name="description" content="Encuesta anónima sobre el espacio público de Cosquín: el río, los accesos, la plaza y las propuestas urbanas en estudio.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Instrument+Serif:ital@0;1&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet">
@@ -49,14 +49,19 @@
 
       <!-- ============ PASO 1: CONSENTIMIENTO ============ -->
       <section id="paso-consentimiento" class="paso">
-        <h1>Encuesta sobre vivienda y convivencia</h1>
+        <h1>Encuesta sobre la ciudad</h1>
 
         <div class="consentimiento-texto">
             <h2>Antes de empezar</h2>
             <p>
               Esta encuesta es parte de una investigación académica de la Facultad de
-              Arquitectura (FAUD — UNC) sobre vivienda intergeneracional en Cosquín y
-              el Valle de Punilla. No es un proyecto comercial ni inmobiliario.
+              Arquitectura (FAUD — UNC) sobre Cosquín y el Valle de Punilla. No es un
+              proyecto comercial ni inmobiliario, y no la hace el municipio.
+            </p>
+            <p>
+              Acá preguntamos por <strong>el espacio público</strong>: el río, los
+              accesos, la plaza, los equipamientos que faltan y las propuestas urbanas
+              que estamos estudiando.
             </p>
             <ul class="lista-simple">
               <li>
@@ -79,7 +84,7 @@
                 esos datos se guardan aparte, sin conexión con las respuestas que diste.
               </li>
             </ul>
-          <p>Lleva entre 5 y 8 minutos.</p>
+          <p>Lleva entre 4 y 6 minutos.</p>
         </div>
 
         <label class="opcion" for="consentimiento-check">
@@ -98,10 +103,10 @@
         </div>
       </section>
 
-      <!-- ============ PASO 2: GATING (DOS PANTALLAS) ============
-           "Para empezar" y "Tu convivencia". Como con los bloques, es
-           un solo paso genérico que el JS vuelve a llenar: el título, la
-           bajada y las preguntas salen de GATING_PASOS. -->
+      <!-- ============ PASO 2: GATING ============
+           Una sola pantalla acá (la de vivienda tiene dos, porque la
+           convivencia depende de la edad). El paso es el mismo componente
+           genérico: el motor lo llena desde GATING_PASOS. -->
       <section id="paso-gating" class="paso oculto">
         <h1 class="titulo-bloque" id="titulo-gating"></h1>
         <p class="bajada-bloque" id="bajada-gating"></p>
@@ -115,10 +120,7 @@
         </form>
       </section>
 
-      <!-- ============ PASO 3: BLOQUES TEMÁTICOS ============
-           Un solo paso genérico: el JS lo vuelve a llenar con las
-           preguntas de cada bloque. El botón cambia de "Continuar" a
-           "Enviar respuestas" en el último. -->
+      <!-- ============ PASO 3: BLOQUES TEMÁTICOS ============ -->
       <section id="paso-bloque" class="paso oculto">
         <p class="contador-bloque" id="contador-bloque"></p>
         <h1 class="titulo-bloque" id="titulo-bloque"></h1>
@@ -134,18 +136,18 @@
         </form>
       </section>
 
-      <!-- ============ CORTE: SIN TRAYECTO ============ -->
+      <!-- ============ CORTE: MENORES DE 18 ============ -->
       <section id="paso-corte" class="paso oculto">
         <div class="texto-centrado">
           <h1>¡Gracias por el interés!</h1>
           <p>
-            Esta encuesta está dirigida a personas mayores de 18 años que viven en Cosquín o
-            el Valle de Punilla, o que viven en Córdoba Capital y tienen un vínculo con la zona.
-            Por eso no vamos a seguir con las preguntas.
+            Esta encuesta está dirigida a personas mayores de 18 años, porque no pedimos
+            el consentimiento de un adulto responsable. Por eso no vamos a seguir con
+            las preguntas.
           </p>
           <p>
-            De todas formas te invitamos a conocer el proyecto: si conocés a alguien de Cosquín
-            o de la zona, compartirle la encuesta ayuda muchísimo.
+            De todas formas te invitamos a conocer el proyecto: si se lo compartís a
+            alguien de Cosquín o de la zona, ayuda muchísimo.
           </p>
           <div class="grupo-botones">
             <a class="boton boton-primario" href="el-proyecto.html">Conocer el proyecto</a>
@@ -200,6 +202,6 @@
   <script src="assets/js/config.js"></script>
   <script src="assets/js/main.js"></script>
   <script src="assets/js/encuesta-motor.js"></script>
-  <script src="assets/js/encuesta-vivienda.js"></script>
+  <script src="assets/js/encuesta-ciudad.js"></script>
 </body>
 </html>

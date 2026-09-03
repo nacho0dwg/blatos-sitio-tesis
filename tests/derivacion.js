@@ -1,22 +1,29 @@
 /* ===========================================================
-   Pruebas del esquema de la encuesta de vivienda.
+   Pruebas del esquema de la encuesta de VIVIENDA.
 
    Se corre con:   node tests/derivacion.js
-   Sin dependencias: node y nada más, igual que el resto del proyecto.
+   (o todas juntas: node tests/todos.js)
 
    Cubre lo que NO se puede ver de un vistazo en el navegador:
      · las 6 reglas de derivación, en orden y con sus empates;
      · que partir el gating en dos pantallas no haya perdido, duplicado
        ni cambiado ninguna pregunta;
      · que la lista de convivencias siga dependiendo de la edad;
-     · la cantidad de bloques de cada trayecto y la pregunta extra de A.
+     · la cantidad de bloques de cada trayecto y la pregunta extra de A;
+     · que el ranking de proyectos urbanos ya NO esté acá: se mudó
+       entero a la encuesta de ciudad.
    =========================================================== */
 
 'use strict';
 
 /* encuesta-vivienda.js se ejecuta entero al requerirlo y termina
    registrando un listener: alcanza con un document de mentira. */
-global.document = { addEventListener: function () {} };
+global.document = global.document || { addEventListener: function () {} };
+
+var t = require('./_ayuda.js');
+var ok = t.ok;
+var igual = t.igual;
+var titulo = t.titulo;
 
 var api = require('../assets/js/encuesta-vivienda.js');
 
@@ -25,28 +32,6 @@ var GATING_PASOS = api.GATING_PASOS;
 var derivarTrack = api.derivarTrack;
 var bloquesDeTrack = api.bloquesDeTrack;
 var opcionesConvivencia = api.opcionesConvivencia;
-
-var fallas = 0;
-var corridas = 0;
-
-function ok(condicion, descripcion) {
-  corridas++;
-  if (condicion) return;
-  fallas++;
-  console.log('  ✗ ' + descripcion);
-}
-
-function igual(obtenido, esperado, descripcion) {
-  corridas++;
-  if (obtenido === esperado) return;
-  fallas++;
-  console.log('  ✗ ' + descripcion + '\n      esperado: ' + JSON.stringify(esperado) +
-    '\n      obtenido: ' + JSON.stringify(obtenido));
-}
-
-function titulo(texto) {
-  console.log('\n' + texto);
-}
 
 function valores(preguntaId) {
   var pregunta = GATING.filter(function (p) { return p.id === preguntaId; })[0];
@@ -190,7 +175,7 @@ valores('localidad').forEach(function (localidad) {
         combinaciones++;
         var track = derivar(localidad, edad, conv.valor, vinculo);
         if (VALIDOS.indexOf(track) === -1) {
-          fallas++;
+          t.estado.fallas++;
           console.log('  ✗ trayecto inesperado: ' + track);
         }
         porTrack[track === null ? 'corte' : track]++;
@@ -199,7 +184,7 @@ valores('localidad').forEach(function (localidad) {
   });
 });
 
-corridas++;
+t.estado.corridas++;
 console.log('  · ' + combinaciones + ' combinaciones, todas resueltas: ' +
   JSON.stringify(porTrack));
 
@@ -252,11 +237,85 @@ ok(preguntasDeA('solo').indexOf('a_extra_calidad_convivencia') === -1,
   'A viviendo solo/a no incluye la pregunta extra');
 
 /* =========================================================
-   Resumen
+   El ranking urbano se mudó a la encuesta de ciudad
    ========================================================= */
 
-console.log('\n' + (fallas === 0
-  ? '✓ ' + corridas + ' comprobaciones, todo en verde.'
-  : '✗ ' + fallas + ' de ' + corridas + ' comprobaciones fallaron.'));
+titulo('El bloque de cierre ya no pregunta por la ciudad');
 
-process.exit(fallas === 0 ? 0 : 1);
+var IDS_MUDADOS = ['cierre_urbano_nose', 'cierre_urbano_ranking', 'cierre_urbano_otra'];
+
+function idsDeTrack(track) {
+  return bloquesDeTrack(track, { convivencia: 'padres_abuelos' }).reduce(function (acum, b) {
+    return acum.concat(b.preguntas.map(function (p) { return p.id; }));
+  }, []);
+}
+
+['A', 'B', 'C', 'D1', 'D2'].forEach(function (track) {
+  var ids = idsDeTrack(track);
+  IDS_MUDADOS.forEach(function (id) {
+    ok(ids.indexOf(id) === -1, track + ' ya no incluye ' + id);
+  });
+});
+
+/* Lo que sí tiene que seguir en el cierre. */
+var IDS_CIERRE = api.BLOQUE_CIERRE.preguntas.map(function (p) { return p.id; });
+igual(IDS_CIERRE.join(','), 'cierre_interes_tema,cierre_optin,contacto_nombre,contacto_medio',
+  'el cierre queda con el interés, el opt-in y los dos campos de contacto');
+
+/* Ningún trayecto puede seguir teniendo una pregunta de orden urbana. */
+['A', 'B', 'C', 'D1', 'D2'].forEach(function (track) {
+  var ordenes = bloquesDeTrack(track, { convivencia: 'padres_abuelos' }).reduce(function (acum, b) {
+    return acum.concat(b.preguntas.filter(function (p) { return p.tipo === 'orden'; }));
+  }, []);
+  ok(ordenes.every(function (p) { return p.id.indexOf('urbano') === -1; }),
+    track + ' no tiene ninguna pregunta de orden urbana');
+});
+
+/* =========================================================
+   Config que se le entrega al motor
+   ========================================================= */
+
+titulo('Config del motor');
+
+ok(api.CONFIG.gatingPasos === GATING_PASOS, 'la config pasa los pasos de gating');
+igual(api.CONFIG.bloquesEstimados, 3, 'estima 3 bloques (el trayecto más corto)');
+ok(typeof api.CONFIG.resolver === 'function', 'la config trae un resolver');
+ok(typeof api.CONFIG.armarPayload === 'function', 'la config trae un armarPayload');
+
+igual(api.resolver({ edad: 'menor_18', localidad: 'cosquin' }), null,
+  'resolver devuelve null (corte) para un menor');
+
+var recorridoA = api.resolver({ edad: '75_mas', localidad: 'cosquin', convivencia: 'solo' });
+igual(recorridoA.clave, 'A', 'resolver devuelve el trayecto como clave');
+igual(recorridoA.bloques.length, 5, 'y los bloques que le corresponden');
+
+/* =========================================================
+   Payload
+   ========================================================= */
+
+titulo('Payload de vivienda');
+
+var envio = api.armarPayload({
+  clave: 'A',
+  gating: {},
+  respuestas: { modalidad: 'asistida', a_tenencia: 'propietario' },
+  cierre: { cierre_optin: 'si', contacto_nombre: 'Ana', contacto_medio: 'ana@ejemplo' }
+});
+
+igual(envio.payload.tipo, 'respuesta', 'el payload es de tipo respuesta');
+igual(envio.payload.track, 'A', 'lleva el trayecto en track');
+igual(envio.payload.encuesta, undefined,
+  'y NO lleva campo encuesta: por ahí entra solo la de ciudad');
+igual(envio.payload.modalidad, 'asistida', 'la modalidad sale como campo propio');
+igual(envio.payload.respuestas.modalidad, undefined, 'y ya no está entre las respuestas');
+igual(envio.contacto.nombre, 'Ana', 'el contacto va aparte');
+ok(JSON.stringify(envio.payload).indexOf('Ana') === -1,
+  'el nombre del contacto no aparece por ningún lado en el payload de la respuesta');
+
+var sinContacto = api.armarPayload({
+  clave: 'A', gating: {}, respuestas: {},
+  cierre: { cierre_optin: 'no' }
+});
+igual(sinContacto.contacto, null, 'sin opt-in no se manda contacto');
+
+if (t.esPrincipal(module)) t.resumen();

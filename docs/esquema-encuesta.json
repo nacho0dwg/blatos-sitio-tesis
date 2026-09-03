@@ -1,0 +1,1043 @@
+{
+  "gating": [
+    {
+      "titulo": "Para empezar",
+      "bajada": "Unas preguntas cortas para saber qué parte de la encuesta te corresponde.",
+      "n": 4,
+      "preguntas": [
+        {
+          "id": "localidad",
+          "tipo": "radio",
+          "etiqueta": "¿Dónde vivís actualmente?",
+          "opcional": false,
+          "condicional": false,
+          "extra": false,
+          "campoExtra": {
+            "id": "localidad_valle_cual",
+            "etiqueta": "¿En cuál?"
+          }
+        },
+        {
+          "id": "vinculo",
+          "tipo": "radio",
+          "etiqueta": "¿Qué vínculo tenés con Cosquín?",
+          "opcional": false,
+          "condicional": true,
+          "extra": false,
+          "campoExtra": null
+        },
+        {
+          "id": "edad",
+          "tipo": "radio",
+          "etiqueta": "¿Qué edad tenés?",
+          "opcional": false,
+          "condicional": false,
+          "extra": false,
+          "campoExtra": null
+        },
+        {
+          "id": "modalidad",
+          "tipo": "radio",
+          "etiqueta": "¿Quién está completando la encuesta?",
+          "opcional": false,
+          "condicional": false,
+          "extra": false,
+          "campoExtra": null
+        }
+      ]
+    },
+    {
+      "titulo": "Tu convivencia",
+      "bajada": "Con quién compartís la casa hoy.",
+      "n": 1,
+      "preguntas": [
+        {
+          "id": "convivencia",
+          "tipo": "radio",
+          "etiqueta": "¿Con quién vivís hoy?",
+          "opcional": false,
+          "condicional": false,
+          "extra": false,
+          "campoExtra": null
+        }
+      ]
+    }
+  ],
+  "tracks": {
+    "A": {
+      "nombre": "Adultos mayores de Cosquín y el Valle",
+      "bloques": [
+        {
+          "titulo": "Su casa hoy",
+          "preguntas": [
+            {
+              "id": "a_anios_casa",
+              "tipo": "radio",
+              "etiqueta": "¿Hace cuántos años vive en su casa actual?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "a_tenencia",
+              "tipo": "radio",
+              "etiqueta": "¿La casa es propia o alquila?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "a_accesibilidad",
+              "tipo": "escala",
+              "etiqueta": "¿Qué tan fácil le resulta moverse dentro de su casa?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "a_orientacion",
+              "tipo": "checkbox",
+              "etiqueta": "¿Hay algo en su casa que lo/la ayude a sentirse ubicado/a y en confianza?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "a_orientacion_otro",
+              "tipo": "textarea",
+              "etiqueta": "¿Hay alguna otra cosa que la ayude a ubicarse en su casa?",
+              "opcional": true,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            }
+          ]
+        },
+        {
+          "titulo": "Su día a día",
+          "preguntas": [
+            {
+              "id": "a_soledad",
+              "tipo": "escala",
+              "etiqueta": "¿Qué tan seguido se siente solo/a?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "a_ayuda_cerca",
+              "tipo": "radio",
+              "etiqueta": "Si necesita ayuda en el día a día, ¿tiene a alguien cerca?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "a_servicios",
+              "tipo": "checkbox",
+              "etiqueta": "¿Qué cosas considera indispensables para poder vivir de forma autónoma?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "a_extra_calidad_convivencia",
+              "tipo": "escala",
+              "etiqueta": "¿Cómo calificaría la convivencia con su familia hoy?",
+              "opcional": false,
+              "condicional": false,
+              "extra": true,
+              "campoExtra": null
+            }
+          ]
+        },
+        {
+          "titulo": "Cómo se imagina vivir",
+          "preguntas": [
+            {
+              "id": "a_preferencia_convivencia",
+              "tipo": "radio",
+              "etiqueta": "Si pudiera elegir, ¿cómo preferiría vivir?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "a_espacio_propio",
+              "tipo": "escala",
+              "etiqueta": "Si compartiera el lugar con otras personas, ¿qué tan importante sería tener un espacio propio?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "a_interes_modelo",
+              "tipo": "radio",
+              "etiqueta": "¿Le interesaría vivir en un lugar con su propia vivienda, pero con espacios comunes compartidos (patio, comedor, talleres)?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "a_preocupaciones",
+              "tipo": "orden",
+              "etiqueta": "De un lugar así, ¿qué es lo que más le preocuparía?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "a_actividades_ninguna",
+              "tipo": "checkbox",
+              "etiqueta": "Pensando en actividades para hacer con otras personas del lugar…",
+              "opcional": true,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "a_actividades",
+              "tipo": "orden",
+              "etiqueta": "¿Cuáles le gustaría más?",
+              "opcional": false,
+              "condicional": true,
+              "extra": false,
+              "campoExtra": null
+            }
+          ]
+        },
+        {
+          "titulo": "Qué compartiría y qué no",
+          "preguntas": [
+            {
+              "id": "a_compartir",
+              "tipo": "checkbox",
+              "etiqueta": "¿Qué cosas estaría dispuesto/a a compartir?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "a_no_compartir",
+              "tipo": "checkbox",
+              "etiqueta": "¿Y qué preferiría NO compartir?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            }
+          ]
+        },
+        {
+          "titulo": "Para cerrar",
+          "preguntas": [
+            {
+              "id": "cierre_interes_tema",
+              "tipo": "escala",
+              "etiqueta": "¿Qué tanto te interesa el tema de la vivienda entre generaciones?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "cierre_optin",
+              "tipo": "radio",
+              "etiqueta": "¿Te interesaría una entrevista más profunda, o recibir novedades del proyecto?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "contacto_nombre",
+              "tipo": "texto",
+              "etiqueta": "Tu nombre",
+              "opcional": false,
+              "condicional": true,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "contacto_medio",
+              "tipo": "texto",
+              "etiqueta": "Un mail o teléfono para contactarte",
+              "opcional": false,
+              "condicional": true,
+              "extra": false,
+              "campoExtra": null
+            }
+          ]
+        }
+      ]
+    },
+    "B": {
+      "nombre": "Familias que conviven entre generaciones",
+      "bloques": [
+        {
+          "titulo": "Quiénes conviven",
+          "preguntas": [
+            {
+              "id": "b_generaciones",
+              "tipo": "checkbox",
+              "etiqueta": "¿Quiénes viven en la casa?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "b_hace_cuanto",
+              "tipo": "radio",
+              "etiqueta": "¿Hace cuánto conviven así?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "b_motivo",
+              "tipo": "radio",
+              "etiqueta": "¿La convivencia fue una decisión o se dio por necesidad?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            }
+          ]
+        },
+        {
+          "titulo": "Cómo funciona hoy",
+          "preguntas": [
+            {
+              "id": "b_calidad_convivencia",
+              "tipo": "escala",
+              "etiqueta": "¿Cómo calificarían la convivencia hoy?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "b_dificultades",
+              "tipo": "checkbox",
+              "etiqueta": "¿Qué es lo más difícil de convivir así?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "b_rediseno",
+              "tipo": "orden",
+              "etiqueta": "Si pudieran rediseñar la vivienda, ¿qué cambiarían primero?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            }
+          ]
+        },
+        {
+          "titulo": "Para cerrar",
+          "preguntas": [
+            {
+              "id": "cierre_interes_tema",
+              "tipo": "escala",
+              "etiqueta": "¿Qué tanto te interesa el tema de la vivienda entre generaciones?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "cierre_optin",
+              "tipo": "radio",
+              "etiqueta": "¿Te interesaría una entrevista más profunda, o recibir novedades del proyecto?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "contacto_nombre",
+              "tipo": "texto",
+              "etiqueta": "Tu nombre",
+              "opcional": false,
+              "condicional": true,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "contacto_medio",
+              "tipo": "texto",
+              "etiqueta": "Un mail o teléfono para contactarte",
+              "opcional": false,
+              "condicional": true,
+              "extra": false,
+              "campoExtra": null
+            }
+          ]
+        }
+      ]
+    },
+    "C": {
+      "nombre": "Personas en Córdoba Capital con vínculo a Cosquín",
+      "bloques": [
+        {
+          "titulo": "Por qué te fuiste",
+          "preguntas": [
+            {
+              "id": "c_motivo_partida",
+              "tipo": "checkbox",
+              "etiqueta": "¿Por qué te fuiste de Cosquín o la zona?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "c_hace_cuanto_capital",
+              "tipo": "radio",
+              "etiqueta": "¿Hace cuánto vivís en Córdoba Capital?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            }
+          ]
+        },
+        {
+          "titulo": "Tu familia en la zona",
+          "preguntas": [
+            {
+              "id": "c_familiares_mayores",
+              "tipo": "radio",
+              "etiqueta": "¿Tenés familiares mayores que siguen viviendo en Cosquín o la zona?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "c_acompanamiento",
+              "tipo": "radio",
+              "etiqueta": "¿Cómo es el acompañamiento a esa distancia?",
+              "opcional": false,
+              "condicional": true,
+              "extra": false,
+              "campoExtra": null
+            }
+          ]
+        },
+        {
+          "titulo": "¿Volverías?",
+          "preguntas": [
+            {
+              "id": "c_volveria",
+              "tipo": "radio",
+              "etiqueta": "¿Considerarías volver a vivir en Cosquín o la zona?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "c_condiciones_volver",
+              "tipo": "checkbox",
+              "etiqueta": "¿Qué haría falta para que vuelvas?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "c_interes_modelo",
+              "tipo": "radio",
+              "etiqueta": "¿Te interesaría un modelo de vivienda donde convivan distintas generaciones, con unidades privadas y espacios comunes?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            }
+          ]
+        },
+        {
+          "titulo": "Para cerrar",
+          "preguntas": [
+            {
+              "id": "cierre_interes_tema",
+              "tipo": "escala",
+              "etiqueta": "¿Qué tanto te interesa el tema de la vivienda entre generaciones?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "cierre_optin",
+              "tipo": "radio",
+              "etiqueta": "¿Te interesaría una entrevista más profunda, o recibir novedades del proyecto?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "contacto_nombre",
+              "tipo": "texto",
+              "etiqueta": "Tu nombre",
+              "opcional": false,
+              "condicional": true,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "contacto_medio",
+              "tipo": "texto",
+              "etiqueta": "Un mail o teléfono para contactarte",
+              "opcional": false,
+              "condicional": true,
+              "extra": false,
+              "campoExtra": null
+            }
+          ]
+        }
+      ]
+    },
+    "D1": {
+      "nombre": "Vecinos y vecinas de 18 a 39",
+      "bloques": [
+        {
+          "titulo": "Tu zona hoy",
+          "preguntas": [
+            {
+              "id": "d_hace_cuanto_zona",
+              "tipo": "radio",
+              "etiqueta": "¿Hace cuánto vivís en la zona?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "d_impacto_turismo",
+              "tipo": "radio",
+              "etiqueta": "¿Notás que el turismo o la temporada afectan los alquileres y los precios en tu zona?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "d_mayores_solos",
+              "tipo": "radio",
+              "etiqueta": "¿Conocés casos cercanos de adultos mayores que vivan solos?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            }
+          ]
+        },
+        {
+          "titulo": "Cómo ves la idea",
+          "preguntas": [
+            {
+              "id": "d_beneficios",
+              "tipo": "checkbox",
+              "etiqueta": "¿Qué beneficios le ves a que convivan distintas generaciones?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "d_beneficios_otro",
+              "tipo": "texto",
+              "etiqueta": "¿Algún otro beneficio que no esté en la lista?",
+              "opcional": true,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "d_preocupaciones",
+              "tipo": "orden",
+              "etiqueta": "¿Y qué es lo que más te preocuparía?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            }
+          ]
+        },
+        {
+          "titulo": "Vos, en un lugar así",
+          "preguntas": [
+            {
+              "id": "d_compartir",
+              "tipo": "checkbox",
+              "etiqueta": "¿Qué cosas estarías dispuesto/a a compartir?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "d_no_compartir",
+              "tipo": "checkbox",
+              "etiqueta": "¿Y qué preferirías NO compartir?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "d_viviria",
+              "tipo": "radio",
+              "etiqueta": "¿Vivirías en un modelo así en el futuro?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "d_recomendaria",
+              "tipo": "radio",
+              "etiqueta": "¿Se lo recomendarías a un familiar?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            }
+          ]
+        },
+        {
+          "titulo": "Para cerrar",
+          "preguntas": [
+            {
+              "id": "cierre_interes_tema",
+              "tipo": "escala",
+              "etiqueta": "¿Qué tanto te interesa el tema de la vivienda entre generaciones?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "cierre_optin",
+              "tipo": "radio",
+              "etiqueta": "¿Te interesaría una entrevista más profunda, o recibir novedades del proyecto?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "contacto_nombre",
+              "tipo": "texto",
+              "etiqueta": "Tu nombre",
+              "opcional": false,
+              "condicional": true,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "contacto_medio",
+              "tipo": "texto",
+              "etiqueta": "Un mail o teléfono para contactarte",
+              "opcional": false,
+              "condicional": true,
+              "extra": false,
+              "campoExtra": null
+            }
+          ]
+        }
+      ]
+    },
+    "D2": {
+      "nombre": "Vecinos y vecinas de 40 a 59",
+      "bloques": [
+        {
+          "titulo": "Tu zona hoy",
+          "preguntas": [
+            {
+              "id": "d_hace_cuanto_zona",
+              "tipo": "radio",
+              "etiqueta": "¿Hace cuánto vivís en la zona?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "d_impacto_turismo",
+              "tipo": "radio",
+              "etiqueta": "¿Notás que el turismo o la temporada afectan los alquileres y los precios en tu zona?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "d_mayores_solos",
+              "tipo": "radio",
+              "etiqueta": "¿Conocés casos cercanos de adultos mayores que vivan solos?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            }
+          ]
+        },
+        {
+          "titulo": "Cómo ves la idea",
+          "preguntas": [
+            {
+              "id": "d_beneficios",
+              "tipo": "checkbox",
+              "etiqueta": "¿Qué beneficios le ves a que convivan distintas generaciones?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "d_beneficios_otro",
+              "tipo": "texto",
+              "etiqueta": "¿Algún otro beneficio que no esté en la lista?",
+              "opcional": true,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "d_preocupaciones",
+              "tipo": "orden",
+              "etiqueta": "¿Y qué es lo que más te preocuparía?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            }
+          ]
+        },
+        {
+          "titulo": "Vos, en un lugar así",
+          "preguntas": [
+            {
+              "id": "d_compartir",
+              "tipo": "checkbox",
+              "etiqueta": "¿Qué cosas estarías dispuesto/a a compartir?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "d_no_compartir",
+              "tipo": "checkbox",
+              "etiqueta": "¿Y qué preferirías NO compartir?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "d_viviria",
+              "tipo": "radio",
+              "etiqueta": "¿Vivirías en un modelo así en el futuro?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "d_recomendaria",
+              "tipo": "radio",
+              "etiqueta": "¿Se lo recomendarías a un familiar?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "d2_familiar_mayor",
+              "tipo": "radio",
+              "etiqueta": "¿Tenés hoy algún familiar mayor (60+) al que te gustaría tener cerca en un lugar así?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            }
+          ]
+        },
+        {
+          "titulo": "Para cerrar",
+          "preguntas": [
+            {
+              "id": "cierre_interes_tema",
+              "tipo": "escala",
+              "etiqueta": "¿Qué tanto te interesa el tema de la vivienda entre generaciones?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "cierre_optin",
+              "tipo": "radio",
+              "etiqueta": "¿Te interesaría una entrevista más profunda, o recibir novedades del proyecto?",
+              "opcional": false,
+              "condicional": false,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "contacto_nombre",
+              "tipo": "texto",
+              "etiqueta": "Tu nombre",
+              "opcional": false,
+              "condicional": true,
+              "extra": false,
+              "campoExtra": null
+            },
+            {
+              "id": "contacto_medio",
+              "tipo": "texto",
+              "etiqueta": "Un mail o teléfono para contactarte",
+              "opcional": false,
+              "condicional": true,
+              "extra": false,
+              "campoExtra": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "ciudad": {
+    "gating": [
+      {
+        "titulo": "Para empezar",
+        "bajada": "Tres preguntas cortas de contexto y arrancamos.",
+        "n": 3,
+        "preguntas": [
+          {
+            "id": "localidad",
+            "tipo": "radio",
+            "etiqueta": "¿Dónde vivís actualmente?",
+            "opcional": false,
+            "condicional": false,
+            "extra": false,
+            "campoExtra": {
+              "id": "localidad_valle_cual",
+              "etiqueta": "¿En cuál?"
+            }
+          },
+          {
+            "id": "edad",
+            "tipo": "radio",
+            "etiqueta": "¿Qué edad tenés?",
+            "opcional": false,
+            "condicional": false,
+            "extra": false,
+            "campoExtra": null
+          },
+          {
+            "id": "modalidad",
+            "tipo": "radio",
+            "etiqueta": "¿Quién está completando la encuesta?",
+            "opcional": false,
+            "condicional": false,
+            "extra": false,
+            "campoExtra": null
+          }
+        ]
+      }
+    ],
+    "bloques": [
+      {
+        "titulo": "La ciudad que ves",
+        "bajada": "Cómo ves Cosquín hoy.",
+        "preguntas": [
+          {
+            "id": "ciudad_sector_potencial",
+            "tipo": "textarea",
+            "etiqueta": "¿Qué sector de la ciudad te parece que tiene más potencial y hoy está abandonado o subutilizado?",
+            "opcional": true,
+            "condicional": false,
+            "extra": false,
+            "campoExtra": null
+          },
+          {
+            "id": "ciudad_relacion_rio",
+            "tipo": "radio",
+            "etiqueta": "¿Cómo calificarías la relación de la ciudad con el río?",
+            "opcional": false,
+            "condicional": false,
+            "extra": false,
+            "campoExtra": {
+              "id": "ciudad_relacion_rio_por_que",
+              "etiqueta": "¿Por qué? (opcional)"
+            }
+          },
+          {
+            "id": "ciudad_problematica",
+            "tipo": "radio",
+            "etiqueta": "¿Cuál de estas problemáticas te preocupa más?",
+            "opcional": false,
+            "condicional": false,
+            "extra": false,
+            "campoExtra": {
+              "id": "ciudad_problematica_otra",
+              "etiqueta": "¿Cuál?"
+            }
+          }
+        ]
+      },
+      {
+        "titulo": "Dónde pasa la vida",
+        "bajada": "Cosquín cambia mucho entre la temporada y el resto del año.",
+        "preguntas": [
+          {
+            "id": "ciudad_falta_equipamiento",
+            "tipo": "textarea",
+            "etiqueta": "Pensando en Cosquín fuera de temporada estival, ¿qué tipo de espacios públicos o equipamientos comunitarios sentís que le faltan a la ciudad?",
+            "opcional": true,
+            "condicional": false,
+            "extra": false,
+            "campoExtra": null
+          },
+          {
+            "id": "ciudad_motor_alternativo",
+            "tipo": "textarea",
+            "etiqueta": "Más allá del festival y el circuito tradicional del folclore, ¿qué otro aspecto de la ciudad podría ser un gran motor para Cosquín si se lo trabajara mejor?",
+            "opcional": true,
+            "condicional": false,
+            "extra": false,
+            "campoExtra": null
+          },
+          {
+            "id": "ciudad_donde_se_reune",
+            "tipo": "radio",
+            "etiqueta": "¿Dónde transcurre habitualmente la vida social de la gente de tu edad en la ciudad?",
+            "opcional": false,
+            "condicional": false,
+            "extra": false,
+            "campoExtra": {
+              "id": "ciudad_donde_se_reune_otro",
+              "etiqueta": "¿Dónde?"
+            }
+          },
+          {
+            "id": "ciudad_proyecto_deseado",
+            "tipo": "textarea",
+            "etiqueta": "Si se anunciara un gran proyecto de arquitectura para mejorar la calidad de vida de los residentes de Cosquín, ¿qué te gustaría que fuera?",
+            "opcional": true,
+            "condicional": false,
+            "extra": false,
+            "campoExtra": null
+          }
+        ]
+      },
+      {
+        "titulo": "Qué haría falta primero",
+        "bajada": "Siete propuestas para Cosquín. Nos interesa el orden, no la nota.",
+        "preguntas": [
+          {
+            "id": "ciudad_propuestas_nose",
+            "tipo": "checkbox",
+            "etiqueta": "Estas son las siete propuestas que estamos estudiando. Abajo se ordenan de la más urgente a la menos urgente.",
+            "opcional": true,
+            "condicional": false,
+            "extra": false,
+            "campoExtra": null
+          },
+          {
+            "id": "ciudad_propuestas_ranking",
+            "tipo": "orden",
+            "etiqueta": "Ordená las siete propuestas: la más urgente arriba",
+            "opcional": false,
+            "condicional": true,
+            "extra": false,
+            "campoExtra": null
+          },
+          {
+            "id": "ciudad_otra_propuesta",
+            "tipo": "textarea",
+            "etiqueta": "¿Hay algún otro proyecto o problemática urgente que no esté en la lista?",
+            "opcional": true,
+            "condicional": false,
+            "extra": false,
+            "campoExtra": null
+          }
+        ]
+      },
+      {
+        "titulo": "Para cerrar",
+        "bajada": "Una pregunta más y listo.",
+        "preguntas": [
+          {
+            "id": "ciudad_algo_mas",
+            "tipo": "textarea",
+            "etiqueta": "¿Hay algo más que quieras contarnos sobre cómo es vivir en Cosquín que deberíamos tener en cuenta para nuestro trabajo?",
+            "opcional": true,
+            "condicional": false,
+            "extra": false,
+            "campoExtra": null
+          },
+          {
+            "id": "ciudad_interes_tema",
+            "tipo": "escala",
+            "etiqueta": "¿Qué tanto te interesa lo que pase con el espacio público de Cosquín?",
+            "opcional": false,
+            "condicional": false,
+            "extra": false,
+            "campoExtra": null
+          },
+          {
+            "id": "cierre_optin",
+            "tipo": "radio",
+            "etiqueta": "¿Te interesaría una entrevista más profunda, o recibir novedades del proyecto?",
+            "opcional": false,
+            "condicional": false,
+            "extra": false,
+            "campoExtra": null
+          },
+          {
+            "id": "contacto_nombre",
+            "tipo": "texto",
+            "etiqueta": "Tu nombre",
+            "opcional": false,
+            "condicional": true,
+            "extra": false,
+            "campoExtra": null
+          },
+          {
+            "id": "contacto_medio",
+            "tipo": "texto",
+            "etiqueta": "Un mail o teléfono para contactarte",
+            "opcional": false,
+            "condicional": true,
+            "extra": false,
+            "campoExtra": null
+          }
+        ]
+      }
+    ]
+  }
+}

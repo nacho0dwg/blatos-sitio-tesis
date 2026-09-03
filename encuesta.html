@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Resultados — Vivir juntos en Cosquín</title>
-  <meta name="description" content="Resultados agregados de la encuesta sobre vivienda intergeneracional en Cosquín y el Valle de Punilla.">
+  <title>Las encuestas — Vivir juntos en Cosquín</title>
+  <meta name="description" content="Dos encuestas anónimas del TFC: una sobre vivienda entre generaciones y otra sobre el espacio público de Cosquín.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,7 +45,7 @@
         <a href="index.html">Inicio</a>
         <a href="el-proyecto.html">El proyecto</a>
         <a href="resultados-vivienda.html">Resultados</a>
-        <a class="nav-cta" href="encuesta.html"><span class="cta-largo">Responder una encuesta</span><span class="cta-corto">Encuesta</span></a>
+        <a href="encuesta.html">Encuesta</a>
       </nav>
     </div>
   </header>
@@ -55,7 +55,7 @@
     <!-- =========================================================
          HERO
          ========================================================= -->
-    <section class="hero-cine hero-corto hero-resultados">
+    <section class="hero-cine hero-corto hero-encuestas">
       <div class="hero-fondo" aria-hidden="true"></div>
       <div class="hero-velo" aria-hidden="true"></div>
 
@@ -63,114 +63,86 @@
         <p class="hero-meta">
           <span>BLATOS — Relevamiento social</span>
           <span class="derecha">
-            Datos agregados<br>
-            Siempre anónimos
+            Anónimas<br>
+            5 minutos cada una
           </span>
         </p>
 
-        <h1 class="hero-titulo" aria-label="Resultados en vivo de la encuesta">
-          <span class="hero-display" aria-hidden="true">RESULTADOS</span>
-          <span class="hero-script" aria-hidden="true">en vivo</span>
+        <!-- A diferencia del resto de las páginas oscuras, acá el título
+             NO se parte en display + itálica: va como un solo bloque en
+             Archivo Black. Es el único hero del sitio con esta forma. -->
+        <h1 class="hero-titulo">
+          <span class="hero-display">LAS ENCUESTAS</span>
         </h1>
 
         <ul class="hero-tags">
-          <li>— Agregados</li>
-          <li>— Anónimos</li>
-          <li>— Abiertos</li>
+          <li>— Anónimas</li>
+          <li>— Independientes</li>
+          <li>— Parte de la tesis</li>
         </ul>
 
         <p class="hero-bajada">
-          Lo que va respondiendo la gente, actualizado solo a medida que llegan
-          respuestas nuevas. <strong>Nunca hay respuestas individuales</strong>:
-          todo lo que se ve acá son totales.
+          Una pregunta por <strong>la ciudad</strong> y otra por <strong>la casa</strong>.
+          Son independientes: podés responder la que quieras, o las dos.
         </p>
       </div>
     </section>
 
     <!-- =========================================================
-         CÓMO LEER ESTOS DATOS
+         LAS DOS ENCUESTAS
          ========================================================= -->
     <section class="seccion">
       <div class="contenedor-ancho">
-        <span class="antetitulo" data-revelar>Antes de mirar</span>
-        <h2 class="titulo-display" data-revelar-palabras>Cómo leer estos datos</h2>
+        <span class="antetitulo" data-revelar>Elegí una</span>
+        <h2 class="titulo-display" data-revelar-palabras>¿De qué querés hablar?</h2>
 
-        <dl class="texto-dos-columnas espacio-arriba" data-revelar="grupo">
-          <div class="dato">
-            <dt>Dos encuestas</dt>
-            <dd>
-              Primero la de <strong>vivienda</strong>, separada en cinco grupos de
-              personas que respondieron preguntas distintas —no son promedios de todo
-              junto—, y después la de <strong>la ciudad</strong>, que es una sola.
-            </dd>
-          </div>
-          <div class="dato">
-            <dt>Mirá siempre el n</dt>
-            <dd>
-              Al lado de cada gráfico está el <strong>n</strong>, la cantidad de personas
-              que respondieron esa pregunta. Con pocas respuestas, un gráfico dice poco.
-            </dd>
-          </div>
-          <div class="dato">
-            <dt>Mínimo de 5</dt>
-            <dd>
-              Una pregunta con <strong>menos de 5 respuestas no se muestra</strong>, para
-              que no se pueda deducir quién contestó qué.
-            </dd>
-          </div>
-          <div class="dato">
-            <dt>Sin comentarios</dt>
-            <dd>
-              Las respuestas escritas a mano alzada <strong>no se publican nunca</strong>:
-              se usan solo para el análisis de la tesis.
-            </dd>
-          </div>
-        </dl>
-      </div>
-    </section>
+        <div class="elector-encuestas espacio-arriba" data-revelar="grupo">
 
-    <!-- =========================================================
-         LOS GRÁFICOS (los dibuja dashboard.js)
-         ========================================================= -->
-    <section class="seccion">
-      <div class="contenedor-ancho">
-        <p id="estado-carga" role="status" aria-live="polite">
-          Cargando resultados…
-        </p>
+          <article class="tarjeta-encuesta">
+            <p class="tarjeta-encuesta-meta">Encuesta 1 · 4 a 6 minutos</p>
+            <h3 class="tarjeta-encuesta-titulo">Sobre la ciudad</h3>
+            <p class="tarjeta-encuesta-bajada">
+              El río, los accesos, la plaza, lo que falta fuera de temporada. Y un orden
+              de urgencia para las siete propuestas urbanas que estamos estudiando.
+            </p>
+            <ul class="tarjeta-encuesta-lista">
+              <li>La relación de la ciudad con el río</li>
+              <li>Qué equipamiento falta el resto del año</li>
+              <li>Dónde se junta la gente</li>
+              <li>Las siete propuestas, ordenadas por urgencia</li>
+            </ul>
+            <a class="boton boton-primario boton-xl" href="encuesta-ciudad.html">
+              Responder sobre la ciudad
+            </a>
+          </article>
 
-        <p class="mensaje mensaje-error oculto" id="error-dashboard" role="alert"></p>
+          <article class="tarjeta-encuesta">
+            <p class="tarjeta-encuesta-meta">Encuesta 2 · 5 a 8 minutos</p>
+            <h3 class="tarjeta-encuesta-titulo">Sobre vivienda intergeneracional</h3>
+            <p class="tarjeta-encuesta-bajada">
+              Cómo vivís hoy, con quién, y qué pensás de compartir la vida cotidiana
+              entre generaciones. Las preguntas cambian según tu edad y tu situación.
+            </p>
+            <ul class="tarjeta-encuesta-lista">
+              <li>Adultos mayores de Cosquín y el Valle</li>
+              <li>Familias que conviven entre generaciones</li>
+              <li>Quienes se fueron a Córdoba Capital</li>
+              <li>Vecinos y vecinas de la zona</li>
+            </ul>
+            <a class="boton boton-primario boton-xl" href="encuesta-vivienda.html">
+              Responder sobre vivienda
+            </a>
+          </article>
 
-        <h3 class="titulo-encuesta" id="titulo-vivienda">Encuesta sobre vivienda</h3>
-        <div id="contenedor-tracks"></div>
-
-        <!-- La encuesta de ciudad es plana: un solo bloque, sin trayectos.
-             Se dibuja igual que uno de ellos, con su propio color, y su
-             propio título ya la nombra: acá no va otra divisoria encima
-             o el nombre quedaría escrito dos veces seguidas. -->
-        <div id="contenedor-ciudad" class="encuesta-aparte"></div>
-
-        <p class="solo-lectura-visual espacio-arriba" id="pie-actualizado"></p>
-      </div>
-    </section>
-
-    <!-- =========================================================
-         CTA
-         ========================================================= -->
-    <section class="seccion">
-      <div class="contenedor-ancho">
-        <span class="antetitulo" data-revelar>Sumar una respuesta</span>
-        <h2 class="titulo-display" data-revelar-palabras>¿Todavía no respondiste?</h2>
-
-        <div class="texto-dos-columnas espacio-arriba" data-revelar="grupo">
-          <p>
-            Cada respuesta hace que estos gráficos digan algo más. Lleva entre 5 y 8
-            minutos y es <strong>anónima</strong>.
-          </p>
         </div>
 
-        <div class="grupo-botones" data-revelar>
-          <a class="boton boton-primario boton-xl" href="encuesta.html">Responder una encuesta</a>
-          <a class="boton boton-secundario" href="el-proyecto.html">Conocer el proyecto</a>
+        <div class="tarjeta tarjeta-acento espacio-arriba" data-revelar>
+          <p>
+            Las dos son <strong>anónimas</strong> y las dos se pueden completar
+            <strong>de forma asistida</strong>: cada una tiene una pregunta para
+            indicar si te está ayudando otra persona. Si querés compartir una sola,
+            cada encuesta tiene su propio link y se abre directo, sin pasar por acá.
+          </p>
         </div>
       </div>
     </section>
@@ -207,16 +179,14 @@
           Trabajo Final de Carrera · Arquitectura 6D · FAUD — Universidad Nacional de Córdoba ·
           <span data-anio-actual></span>
         </p>
+        <p>Investigación académica sin fines comerciales.</p>
       </div>
     </div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
-  <script src="assets/js/config.js" defer></script>
   <script src="assets/js/main.js" defer></script>
-  <script src="assets/js/dashboard.js" defer></script>
   <script src="assets/js/divulgacion.js" defer></script>
 </body>
 </html>

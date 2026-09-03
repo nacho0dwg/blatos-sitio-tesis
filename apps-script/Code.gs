@@ -37,6 +37,13 @@ var HOJAS = {
   D2: 'track_d2'
 };
 
+/* La encuesta de ciudad no tiene trayectos: una sola hoja para todas
+   las respuestas. */
+var HOJA_CIUDAD = 'ciudad';
+
+/* Compartida por las dos encuestas: los contactos no se duplican por
+   cuestionario, van todos acá y sin ningún id en común con la fila de
+   respuestas. */
 var HOJA_CONTACTOS = 'contactos_interes';
 
 /* ===========================================================
@@ -58,12 +65,41 @@ var COLUMNAS_GATING = [
   'vinculo'
 ];
 
-/** Campos del cierre que se guardan en todas las hojas de trayecto. */
+/** Campos del cierre que se guardan en todas las hojas de trayecto.
+    El ranking de proyectos urbanos vivía acá y se mudó a la hoja
+    `ciudad`: las hojas que ya tengan esas columnas las conservan (los
+    encabezados nunca se borran con datos cargados), simplemente dejan
+    de recibir valores. */
 var COLUMNAS_CIERRE = [
-  'cierre_interes_tema',
-  'cierre_urbano_nose',
-  'cierre_urbano_ranking',
-  'cierre_urbano_otra'
+  'cierre_interes_tema'
+];
+
+/**
+ * Columnas de la hoja `ciudad`.
+ *
+ * `edad` va en su propia columna, igual que en las hojas de trayecto:
+ * no filtra ni deriva nada, está para poder leer cualquier respuesta
+ * por rango etario desde la planilla, a mano y sin tocar código.
+ */
+var COLUMNAS_CIUDAD = [
+  'localidad',
+  'localidad_valle_cual',
+  'edad',
+  'ciudad_sector_potencial',
+  'ciudad_relacion_rio',
+  'ciudad_relacion_rio_por_que',
+  'ciudad_problematica',
+  'ciudad_problematica_otra',
+  'ciudad_falta_equipamiento',
+  'ciudad_motor_alternativo',
+  'ciudad_donde_se_reune',
+  'ciudad_donde_se_reune_otro',
+  'ciudad_proyecto_deseado',
+  'ciudad_propuestas_nose',
+  'ciudad_propuestas_ranking',
+  'ciudad_otra_propuesta',
+  'ciudad_algo_mas',
+  'ciudad_interes_tema'
 ];
 
 /** Espacios de la lista de 12: los mismos ids en A, D1 y D2. */
@@ -155,15 +191,43 @@ var ETIQUETAS = {
     plaza: 'Plaza o espacio verde cerca',
     cuidado: 'Atención o cuidado cerca'
   },
-  cierre_urbano_ranking: {
-    movilidad_terminal: 'Movilidad en terminal y estación',
-    pozo_patos: 'Paisaje en el Pozo de los Patos',
-    balneario_la_toma: 'Paisaje en el Balneario La Toma',
-    azud_nivelador: 'Balneario Azud Nivelador',
-    ingreso_geronico: 'Ingreso por calle Gerónico'
+  /* --- Encuesta de ciudad --- */
+  ciudad_relacion_rio: {
+    excelente: 'Excelente', buena: 'Buena',
+    regular: 'Regular', deficiente: 'Deficiente'
   },
-  cierre_urbano_nose: {
-    no_conozco: 'No conoce lo suficiente para opinar'
+  ciudad_problematica: {
+    incendios: 'Incendios',
+    infraestructura: 'Infraestructura (agua, gas, cloacas, electricidad)',
+    areas_inseguras: 'Áreas inseguras',
+    accesibilidad: 'Accesibilidad a ciertas zonas',
+    transporte_turistico: 'Transporte turístico',
+    congestion_transito: 'Congestión de tránsito',
+    espacios_verdes: 'Falta de espacios verdes',
+    basura: 'Recolección/tratamiento de basura',
+    otra: 'Otra'
+  },
+  ciudad_donde_se_reune: {
+    plaza: 'Plaza',
+    mercado_feria: 'Mercado o feria',
+    parada_transporte: 'Parada de transporte',
+    escuela: 'Escuela',
+    taller_oficio: 'Taller de oficio',
+    costanera: 'Costanera del río',
+    vivienda_privada: 'Vivienda privada',
+    otro: 'Otro'
+  },
+  ciudad_propuestas_ranking: {
+    terminal_tren: 'Terminal y estación de tren',
+    balnearios_rio: 'Balnearios del río',
+    prevencion_incendios: 'Prevención de incendios',
+    habitat_intergeneracional: 'Hábitat intergeneracional',
+    plaza_folklore: 'Plaza Nacional del Folklore',
+    accesos_ciudad: 'Sistema de accesos a la ciudad',
+    escuela_artesanias: 'Escuela de artesanías'
+  },
+  ciudad_propuestas_nose: {
+    no_conozco: 'No conoce los proyectos lo suficiente para opinar'
   },
 
   /* --- Track A --- */
@@ -306,9 +370,27 @@ var ETIQUETAS = {
  *   grafico: sugerencia para el dashboard ('torta' | 'barra' | 'escala')
  */
 var PUBLICAS_CIERRE = [
-  { id: 'cierre_interes_tema', etiqueta: 'Interés en el tema (1 nada – 5 mucho)', tipo: 'simple', grafico: 'escala', etiquetas: 'escala5' },
-  { id: 'cierre_urbano_nose', etiqueta: 'No conoce los lugares lo suficiente como para opinar', tipo: 'multiple', grafico: 'barra', etiquetas: 'cierre_urbano_nose' },
-  { id: 'cierre_urbano_ranking', etiqueta: 'Intervención urbana más urgente', tipo: 'ranking', grafico: 'barra', etiquetas: 'cierre_urbano_ranking' }
+  { id: 'cierre_interes_tema', etiqueta: 'Interés en el tema (1 nada – 5 mucho)', tipo: 'simple', grafico: 'escala', etiquetas: 'escala5' }
+];
+
+/**
+ * Publicables de la encuesta de ciudad.
+ * Como siempre: lo que no está acá NO sale nunca por doGet. Quedan
+ * afuera la localidad (desglose geográfico) y todas las abiertas
+ * (`ciudad_sector_potencial`, `ciudad_relacion_rio_por_que`,
+ * `ciudad_problematica_otra`, `ciudad_falta_equipamiento`,
+ * `ciudad_motor_alternativo`, `ciudad_donde_se_reune_otro`,
+ * `ciudad_proyecto_deseado`, `ciudad_otra_propuesta`,
+ * `ciudad_algo_mas`).
+ */
+var PUBLICAS_CIUDAD = [
+  { id: 'edad', etiqueta: 'Edad', tipo: 'simple', grafico: 'barra', etiquetas: 'edad' },
+  { id: 'ciudad_relacion_rio', etiqueta: 'Relación de la ciudad con el río', tipo: 'simple', grafico: 'barra', etiquetas: 'ciudad_relacion_rio' },
+  { id: 'ciudad_problematica', etiqueta: 'Problemática que más preocupa', tipo: 'simple', grafico: 'barra', etiquetas: 'ciudad_problematica' },
+  { id: 'ciudad_donde_se_reune', etiqueta: 'Dónde transcurre la vida social', tipo: 'simple', grafico: 'barra', etiquetas: 'ciudad_donde_se_reune' },
+  { id: 'ciudad_propuestas_nose', etiqueta: 'No conoce los proyectos lo suficiente como para opinar', tipo: 'multiple', grafico: 'barra', etiquetas: 'ciudad_propuestas_nose' },
+  { id: 'ciudad_propuestas_ranking', etiqueta: 'Propuesta más urgente', tipo: 'ranking', grafico: 'barra', etiquetas: 'ciudad_propuestas_ranking' },
+  { id: 'ciudad_interes_tema', etiqueta: 'Interés en el espacio público (1 nada – 5 mucho)', tipo: 'simple', grafico: 'escala', etiquetas: 'escala5' }
 ];
 
 /** Bloque publicable de los espacios: idéntico en A, D1 y D2 salvo el prefijo. */
@@ -381,6 +463,8 @@ var PREGUNTAS_PUBLICAS = {
   ]).concat(PUBLICAS_CIERRE)
 };
 
+var NOMBRE_CIUDAD = 'Encuesta sobre la ciudad';
+
 var NOMBRES_TRACK = {
   A: 'Adultos mayores de Cosquín y el Valle',
   B: 'Familias que conviven entre generaciones',
@@ -415,6 +499,14 @@ function doPost(e) {
       return jsonResponse({ ok: true });
     }
 
+    /* La encuesta de ciudad se identifica con `encuesta: 'ciudad'`. La
+       de vivienda sigue mandando `track`, sin campo `encuesta`: así los
+       payloads viejos entran por el mismo camino de siempre. */
+    if (payload.encuesta === 'ciudad') {
+      guardarRespuestaCiudad(payload.modalidad, payload.respuestas || {});
+      return jsonResponse({ ok: true });
+    }
+
     var track = payload.track;
     if (!track || !HOJAS[track]) {
       return jsonResponse({ ok: false, error: 'track_invalido' });
@@ -446,6 +538,11 @@ function doGet(e) {
       salida.tracks[track] = agregarTrack(track);
     });
 
+    /* La encuesta de ciudad va en su propia clave, al lado de `tracks`:
+       no es un trayecto más y un cliente viejo que solo mire `tracks`
+       sigue funcionando igual. */
+    salida.ciudad = agregarHoja(HOJA_CIUDAD, PUBLICAS_CIUDAD, NOMBRE_CIUDAD);
+
     return jsonResponse(salida);
   } catch (error) {
     return jsonResponse({ error: 'No se pudieron calcular los resultados.' });
@@ -467,6 +564,10 @@ function columnasDeTrack(track) {
     .concat(COLUMNAS_GATING)
     .concat(COLUMNAS_TRACK[track])
     .concat(COLUMNAS_CIERRE);
+}
+
+function columnasDeCiudad() {
+  return ['timestamp', 'modalidad'].concat(COLUMNAS_CIUDAD);
 }
 
 /** Devuelve la hoja, creándola y poniéndole los encabezados si hace falta. */
@@ -517,12 +618,14 @@ function sincronizarEncabezados(hoja, encabezados) {
   hoja.getRange(1, ultimaCol + 1, 1, faltantes.length).setValues([faltantes]);
 }
 
-function guardarRespuesta(track, modalidad, respuestas) {
-  var hoja = getHoja(HOJAS[track], columnasDeTrack(track));
-
-  /* La fila se arma contra el encabezado REAL de la hoja, no contra el
-     esquema. Así, si alguna vez quedan desalineados, cada dato igual
-     cae en su columna en vez de correrse en bloque. */
+/**
+ * Agrega una fila a una hoja de respuestas.
+ *
+ * La fila se arma contra el encabezado REAL de la hoja, no contra el
+ * esquema. Así, si alguna vez quedan desalineados, cada dato igual cae
+ * en su columna en vez de correrse en bloque.
+ */
+function agregarFila(hoja, modalidad, respuestas) {
   var encabezados = hoja.getRange(1, 1, 1, hoja.getLastColumn()).getValues()[0].map(String);
 
   var fila = encabezados.map(function (col) {
@@ -538,6 +641,14 @@ function guardarRespuesta(track, modalidad, respuestas) {
   });
 
   hoja.appendRow(fila);
+}
+
+function guardarRespuesta(track, modalidad, respuestas) {
+  agregarFila(getHoja(HOJAS[track], columnasDeTrack(track)), modalidad, respuestas);
+}
+
+function guardarRespuestaCiudad(modalidad, respuestas) {
+  agregarFila(getHoja(HOJA_CIUDAD, columnasDeCiudad()), modalidad, respuestas);
 }
 
 /**
@@ -566,11 +677,20 @@ function guardarContacto(contacto) {
    =========================================================== */
 
 function agregarTrack(track) {
+  return agregarHoja(HOJAS[track], PREGUNTAS_PUBLICAS[track], NOMBRES_TRACK[track]);
+}
+
+/**
+ * Agrega una hoja de respuestas a partir de su lista de publicables.
+ * Es el mismo cálculo para los cinco trayectos de vivienda y para la
+ * hoja de ciudad: lo único que cambia es qué preguntas pueden salir.
+ */
+function agregarHoja(nombreHoja, publicas, nombre) {
   var ss = getSpreadsheet();
-  var hoja = ss.getSheetByName(HOJAS[track]);
+  var hoja = ss.getSheetByName(nombreHoja);
 
   var resultado = {
-    nombre: NOMBRES_TRACK[track],
+    nombre: nombre,
     n: 0,
     preguntas: {}
   };
@@ -586,7 +706,7 @@ function agregarTrack(track) {
   var indice = {};
   encabezados.forEach(function (nombre, i) { indice[nombre] = i; });
 
-  PREGUNTAS_PUBLICAS[track].forEach(function (pregunta) {
+  publicas.forEach(function (pregunta) {
     var col = indice[pregunta.id];
     if (col === undefined) return;
 
@@ -676,6 +796,7 @@ function configurarHojas() {
   Object.keys(HOJAS).forEach(function (track) {
     getHoja(HOJAS[track], columnasDeTrack(track));
   });
+  getHoja(HOJA_CIUDAD, columnasDeCiudad());
   getHoja(HOJA_CONTACTOS, ['fecha', 'nombre', 'contacto']);
 }
 

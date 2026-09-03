@@ -7,6 +7,18 @@ Sitio web simple que:
 1. Divulga el TFC (vivienda intergeneracional, Cosquín) para público general y potenciales entrevistados/encuestados.
 2. Aloja encuestas como instrumento de relevamiento social (Etapa 1 - Relevamiento social / in-situ del TFC), dirigidas a adultos mayores, familias y vecinos de Cosquín.
 
+Hoy hay **dos encuestas**, independientes entre sí:
+
+| | Página | Forma | Tema |
+|---|---|---|---|
+| **Vivienda** | `encuesta-vivienda.html` | árbol de 5 trayectos | la casa, la convivencia entre generaciones |
+| **Ciudad** | `encuesta-ciudad.html` | plana, un solo recorrido | el espacio público, el río, las 7 propuestas |
+
+`encuesta.html` es el selector: dos tarjetas, una por encuesta. Es a donde
+apunta el link "Encuesta" del nav en todo el sitio. **Cada encuesta conserva su
+URL propia y se abre directo sin pasar por el selector**, que es lo que hace
+falta para difundir una sola por WhatsApp con adultos mayores.
+
 ## Stack
 - Sitio estático: HTML/CSS/JS vanilla, **sin frameworks ni build step**.
 - Backend: **Google Apps Script** como Web App escribiendo a una Google Sheet. Sin servidor propio, sin base de datos.
@@ -19,24 +31,45 @@ Sitio web simple que:
 ```
 index.html                  divulgación / landing
 el-proyecto.html            sobre la tesis (a completar a mano)
-encuesta-vivienda.html      cascarón de la encuesta (los pasos)
-resultados-vivienda.html    dashboard público
-gracias.html                confirmación post-envío
+encuesta.html               selector: dos tarjetas, una por encuesta
+encuesta-vivienda.html      cascarón de la encuesta de vivienda (los pasos)
+encuesta-ciudad.html        cascarón de la encuesta de ciudad (mismos ids)
+resultados-vivienda.html    dashboard público (las dos encuestas)
+gracias.html                confirmación post-envío (compartida)
 assets/css/style.css
 assets/js/config.js         ← ÚNICO lugar donde va la URL del Apps Script
 assets/js/main.js           nav + año del footer
 assets/js/divulgacion.js    hero, parallax y reveals (GSAP) de las páginas oscuras
 assets/js/galeria.js        grilla del imaginario + lightbox (solo el-proyecto)
 assets/js/portada-encuesta.js  contador en vivo + preview de gráfico (solo index)
-assets/js/encuesta-vivienda.js   esquema de preguntas + árbol + envío
+assets/js/encuesta-motor.js      MOTOR compartido: render, validación, flujo, envío
+assets/js/encuesta-vivienda.js   esquema de vivienda + las 6 reglas de derivación
+assets/js/encuesta-ciudad.js     esquema de ciudad (plano)
 assets/js/dashboard.js      fetch de agregados + gráficos
 assets/img/imaginarios/     13 imágenes del imaginario (1600×900)
 assets/img/imaginarios/thumb/  las mismas a 800×450 para la grilla
-tests/derivacion.js         pruebas del esquema (node tests/derivacion.js)
+tests/todos.js              corre las cuatro suites (node tests/todos.js)
+tests/_ayuda.js             ok/igual/titulo compartidos
+tests/derivacion.js         esquema y derivación de vivienda
+tests/ciudad.js             esquema de ciudad, escape del ranking, privacidad
+tests/backend.js            Code.gs evaluado en un sandbox: columnas y publicables
+tests/contraste.js          WCAG y jerarquía de las tarjetas del ranking
+tools/dump-esquema.js       vuelca el esquema de LAS DOS encuestas a JSON
+tools/_lienzo.py            paleta y primitivas compartidas por los dos diagramas
+tools/arbol-encuesta.py     dibuja docs/arbol-encuesta.png desde ese JSON
+tools/arbol-ciudad.py       dibuja docs/arbol-ciudad.png desde ese JSON
+docs/arbol-encuesta.png     el árbol de vivienda entero, para mirar de un vistazo
+docs/arbol-ciudad.png       el recorrido de ciudad entero, ídem
 apps-script/Code.gs         backend (fuente de verdad; se sube con clasp push)
 apps-script/appsscript.json  manifest: fija los permisos del Web App y la zona horaria
 .clasp.json                 ata esta carpeta al proyecto de Apps Script (scriptId + rootDir)
 ```
+
+**Orden de los `<script>` en las páginas de encuesta**: `config.js`, `main.js`,
+`encuesta-motor.js` y recién después el archivo de la encuesta. El motor deja
+`window.TFC_ENCUESTA`; el esquema lo llama en `DOMContentLoaded`. Al revés no
+arranca (y falla en silencio: el `if (window.TFC_ENCUESTA)` simplemente no
+entra).
 
 ## Hosting: GitHub + Railway
 
@@ -92,6 +125,19 @@ tocar: el Web App está publicado con acceso "cualquier usuario".
 
 El backend se sube y deploya con `clasp` (CLI oficial de Apps Script, v3). Ya está
 creado, deployado y enganchado al sitio: **`config.js` no se toca más**.
+
+Un solo Web App atiende a las dos encuestas y a los contactos. `doPost` rutea
+por el cuerpo del pedido:
+
+| Payload | Va a |
+|---|---|
+| `tipo: 'contacto'` | hoja `contactos_interes` (compartida) |
+| `encuesta: 'ciudad'` | hoja `ciudad` |
+| `track: 'A'…'D2'` | hoja `track_a` … `track_d2` |
+
+La encuesta de vivienda **no** manda campo `encuesta`, así que su camino es
+exactamente el de siempre. `doGet` devuelve `tracks` como antes y suma
+`ciudad` como clave hermana: un cliente que solo mire `tracks` sigue andando.
 
 Flujo para cualquier cambio futuro a `apps-script/Code.gs`:
 ```
@@ -165,13 +211,20 @@ ve sucio.
   `<body class="tema-oscuro">`, fondo carbón cálido, Archivo Black + itálica
   Instrument Serif, hero con imagen y parallax, reveals al scrollear.
   Las cuatro cargan GSAP + ScrollTrigger por CDN y `divulgacion.js`.
-- **`encuesta-vivienda.html`** (`<body class="pagina-encuesta">`): **spotlight**.
+- **`encuesta.html`**: mismo lenguaje oscuro que el resto de divulgación
+  (`.hero-cine.hero-corto.hero-encuestas` + dos `.tarjeta-encuesta` en
+  `.elector-encuestas`, que pasa a una columna abajo de 860px).
+- **`encuesta-vivienda.html` y `encuesta-ciudad.html`**
+  (`<body class="pagina-encuesta">`): **spotlight**.
   La página tiene el fondo oscuro del sitio —imagen ambiental al 10%, viñeta y un
   halo cálido— pero **no cambia de tema**: los tokens semánticos siguen siendo los
   claros, así que la tarjeta donde se lee y se responde conserva los mismos
   colores y contrastes de siempre (texto 16.9:1, título 9.35:1, borde de control
   3.78:1). Cada `.paso` ES la tarjeta: fondo hueso, sombra que la despega del
   fondo y un halo difuso, con entrada de 0.42s.
+
+  Las dos páginas de encuesta comparten esta clase y todo su CSS: no hay nada
+  específico de una sola.
 
   Lo que NO cambia: targets de 56px, sin parallax, sin GSAP, y la única animación
   sigue siendo la entrada del paso —apagada por el corte de movimiento reducido—.
@@ -216,8 +269,9 @@ abrió.
 
 ## Contador en vivo de la portada
 
-`portada-encuesta.js` suma `tracks[X].n` de los cinco trayectos del mismo
-`doGet` que usa el tablero (`window.TFC_DASHBOARD.pedirDatos`) y lo anima
+`portada-encuesta.js` suma `tracks[X].n` de los cinco trayectos **más
+`ciudad.n`** —el contador es del relevamiento entero, no de una encuesta— del
+mismo `doGet` que usa el tablero (`window.TFC_DASHBOARD.pedirDatos`) y lo anima
 contando hacia arriba cuando la sección entra en pantalla. Tres estados, y
 ninguno es un cero pelado:
 
@@ -234,7 +288,14 @@ una tarjeta del tablero reusando `renderGrafico`.
 
 `dashboard.js` tiene **dos paletas** de trayecto —la original para fondo claro
 y una aclarada para el carbón— porque Chart.js dibuja en canvas y no hereda
-ninguna variable CSS.
+ninguna variable CSS. La encuesta de ciudad tiene su propia entrada `ciudad` en
+las dos, en un ocre que no compite con los cinco trayectos.
+
+En `resultados-vivienda.html`, la de ciudad se dibuja con el mismo `renderTrack`
+en `#contenedor-ciudad`, separada por una línea. **No lleva divisoria con texto
+encima**: su único bloque ya se llama "Encuesta sobre la ciudad" y el nombre
+quedaría escrito dos veces seguidas. Si el backend todavía no devuelve la clave
+`ciudad`, la sección no se dibuja y la página queda como antes.
 
 ## Encuesta de vivienda: árbol de trayectos
 
@@ -286,7 +347,12 @@ pantallas de gating más los bloques del trayecto (`porcentajeDe`).
 
 ### Bloques temáticos
 Cada trayecto se recorre en bloques cortos, uno por pantalla, con indicador
-"Bloque N de M" y barra de progreso. El último bloque es siempre el cierre común.
+"Bloque N de M" y barra de progreso. El último bloque es siempre el cierre común:
+interés en el tema, opt-in de contacto y los dos campos de contacto.
+
+El cierre **ya no incluye el ranking de proyectos urbanos**: eso se mudó entero
+a la encuesta de ciudad. Preguntar por la ciudad al final de una encuesta sobre
+la casa mezclaba dos temas y alargaba un cuestionario que ya era largo.
 
 | Trayecto | Bloques |
 |---|---|
@@ -310,6 +376,9 @@ si la convivencia declarada es intergeneracional.
   tocarla al menos una vez** para poder seguir: si arrancara en el orden escrito,
   quien no la toca dejaría ese orden como respuesta. El porqué está en
   `docs/encuesta-vivienda-fundamentacion.md`.
+  Una opción de `orden` puede ser una etiqueta corta (`texto` sola) o una
+  **tarjeta de tres niveles**, si además trae `propuesta` y `detalle`. Se usa
+  en el ranking de ciudad; ver "Las siete propuestas" más abajo.
 - **`presentacion: 'grilla'`** dibuja las opciones como tarjetas con ícono en dos
   columnas (una sola en celular). Se usa para la lista de 12 espacios.
 - **`grupos`** parte una lista larga en sub-bloques con subtítulo, cada uno con
@@ -322,20 +391,175 @@ respuestas es el dato. En el dashboard se grafican **por trayecto separado, sin
 comparativa cruzada** entre A y D1/D2 (aunque los datos sean comparables para el
 análisis propio).
 
+## Encuesta de ciudad: plana
+
+`encuesta-ciudad.js`. **No hay árbol**: `resolver()` devuelve siempre el mismo
+recorrido de cuatro bloques. El gating existe solo para tomar contexto.
+
+### Gating (una sola pantalla)
+`localidad` (+ "¿cuál?" si es del Valle) · `edad` · `modalidad`.
+
+No hay convivencia ni vínculo. La de vivienda parte el gating en dos pantallas
+porque las opciones de convivencia dependen de la edad; acá no hay nada que
+dependa de nada, así que va todo junto.
+
+**El único corte son los menores de 18**, por la misma razón que en vivienda: el
+sitio se presenta como dirigido a mayores de edad y no pide el consentimiento de
+un adulto responsable. `resolver()` devuelve `null` y no se guarda nada.
+
+**`edad` es una columna propia de la hoja `ciudad`** y no filtra ni deriva
+ninguna pregunta: está para poder leer cualquier respuesta por rango etario
+desde la planilla, a mano y sin tocar código. Usa los mismos códigos que las
+hojas de trayecto (`18_29`, `30_39`, …), así un filtro sirve para las dos
+encuestas. `tests/backend.js` lo verifica.
+
+### Los cuatro bloques
+
+| Bloque | Preguntas |
+|---|---|
+| **La ciudad que ves** (3) | sector con más potencial hoy abandonado (abierta) · relación con el río (+ "¿por qué?" colgado) · problemática que más preocupa, 8 opciones + "otra" |
+| **Dónde pasa la vida** (4) | qué equipamiento falta fuera de temporada (abierta) · qué otro motor tendría la ciudad (abierta) · dónde transcurre la vida social, 7 opciones + "otro" · qué gran proyecto de arquitectura te gustaría (abierta) |
+| **Qué haría falta primero** (3) | casilla de escape · ranking de las 7 propuestas · otro proyecto o problemática (abierta) |
+| **Para cerrar** (5) | catch-all general (abierta) · interés en el espacio público · opt-in + los dos campos de contacto |
+
+La relación con el río va como **`radio`, no como `escala`**: son cuatro
+etiquetas de palabra entera (Excelente / Buena / Regular / Deficiente) y la
+escala del sitio se dibuja en una fila `nowrap` pensada para los números 1 a 5;
+en un celular de 390px esas cuatro palabras no se leen. Sigue siendo ordinal:
+el orden de las opciones es el que manda en la Sheet y en el tablero.
+
+### Los dos catch-all son distintos a propósito
+`ciudad_otra_propuesta` cierra el bloque del ranking y pregunta por
+**proyectos** ("¿algún otro proyecto o problemática urgente que no esté en la
+lista?"). `ciudad_algo_mas` abre el cierre y pregunta por **vivir acá** ("¿algo
+más sobre cómo es vivir en Cosquín?"). Son dos columnas separadas en la hoja:
+juntarlas mezclaría una lista de obras con testimonio.
+
+`ciudad_proyecto_deseado` cierra el bloque 2 y hace de puente: pide el proyecto
+propio **antes** de que aparezca la lista de las siete, para no contaminar la
+respuesta con las opciones que vienen después.
+
+### El "¿por qué?" del río no es una pregunta aparte
+Va como **`campoExtra` sin `siValor`** de la pregunta del río, así se dibuja
+dentro de la misma tarjeta —debajo de las opciones, con una línea y un
+sangrado— en vez de llevarse un número propio del bloque. El bloque 1 tiene 3
+preguntas, no 4.
+
+Para eso el motor aprendió dos cosas en `campoExtra`, que antes solo servía
+para el "¿cuál?" condicional:
+
+| Campo | Qué hace |
+|---|---|
+| sin `siValor` | el campo está **siempre a la vista** (no depende de qué opción se marque) |
+| `tipo: 'textarea'` | dibuja un `<textarea>` en vez de un renglón |
+
+Los dos son opcionales y compatibles hacia atrás: el "¿en cuál?" del Valle y el
+"¿cuál?" de la problemática siguen siendo `input` condicionales, sin tocar.
+La clase `.campo-anidado` es la que lo despega visualmente, con la etiqueta en
+peso 400 y color suave para que no compita con el enunciado de la pregunta
+(18,4px contra 20,2px medidos en el navegador).
+
+**El texto de un `campoExtra` es texto libre igual que cualquier abierta**: es
+opcional y no sale nunca por el endpoint público. `tests/ciudad.js` lo verifica
+para los cuatro que hay, y `tests/backend.js` los saca del esquema en vez de
+tenerlos escritos a mano.
+
+### Escape del ranking
+La casilla "No conozco lo suficiente estos proyectos como para opinar" tiene la
+misma mecánica que tenía en vivienda: es la `condicion` del ranking. Marcarla
+lo esconde, y como el motor solo valida lo que está visible, esconderlo también
+lo desobliga. **No conocer los proyectos es un dato**, por eso la casilla se
+guarda y se publica.
+
+Sin marcarla, hay que **tocar la lista al menos una vez** para poder seguir: la
+lista arranca mezclada al azar y un orden que nadie eligió no es un dato.
+
+### Las siete propuestas: tres niveles tipográficos
+Cada tarjeta del ranking se lee en tres niveles, y los tres se separan por
+tamaño **y** peso **y** color a la vez —apoyarse en una sola señal se rompe al
+agrandar la tipografía del sistema o al mirar la pantalla al sol—:
+
+| Nivel | Campo | CSS | Token | Contraste |
+|---|---|---|---|---|
+| Nombre | `texto` | `.orden-nombre` 1.08rem/700 | `--color-texto` | 16.94:1 |
+| Propuesta | `propuesta` | `.orden-propuesta` 0.94rem/600 | `--color-primario-oscuro` | 9.35:1 |
+| Explicación | `detalle` | `.orden-detalle` 0.85rem/400 | `--color-texto-suave` | 7.63:1 |
+
+Los tres pasan **AAA** sobre la tarjeta de la encuesta (`--color-superficie`,
+#fffdf8). `tests/contraste.js` lo recalcula leyendo el CSS de verdad, así que si
+alguien cambia un token la prueba avisa.
+
+`texto` es además el **nombre corto**: es lo que se lee en el `aria-label` de
+las flechas y lo que anuncia el `role="status"` al mover un ítem ("Escuela de
+artesanías: posición 1 de 7"). Si ahí se leyeran los tres niveles, nadie podría
+seguir el reordenamiento sin ver la pantalla.
+
+**En celular los controles pasan a una fila propia** (`@media (max-width: 620px)`
+sobre `.item-orden:has(.orden-nombre)`): con el agarre, el número y las dos
+flechas en la misma fila que el texto, a 390px al texto le quedaban 169px y la
+explicación se partía en quince renglones. Con los controles arriba pasa a
+~275px y la tarjeta más alta baja de 428 a 351px.
+
+La lista igual mide ~2100px en un celular: **arrastrar de la posición 7 a la 1
+no es práctico ahí, las flechas ↑ ↓ son el camino real**. Es el costo de mostrar
+los tres niveles completos, que es lo que se pidió.
+
+## Los dos diagramas de `docs/`
+
+Dos PNG de referencia rápida, con **todas las preguntas** de cada encuesta:
+
+```
+node tools/dump-esquema.js > docs/esquema-encuesta.json
+python tools/arbol-encuesta.py     # vivienda: el árbol de 5 trayectos
+python tools/arbol-ciudad.py       # ciudad: el recorrido plano de 4 bloques
+```
+
+Los datos salen de los esquemas por `module.exports`, no de una transcripción:
+**si se agrega una pregunta, el diagrama la muestra al regenerarlo**. El alto de
+cada caja se calcula desde el texto que le toca, así que el layout se reacomoda
+solo. Lo único escrito a mano en cada script es el texto de las reglas
+(`REGLAS`), que hay que actualizar si cambian `derivarTrack()` o `resolver()`.
+
+`_lienzo.py` tiene la paleta, los cuerpos de tipografía y las primitivas de
+dibujo, para que los dos se vean como el mismo material. Requiere `matplotlib`
+(no hay Graphviz en la máquina).
+
+Regenerarlos después de tocar un esquema: el de ciudad fue el que hizo notar que
+la bajada del bloque 1 decía "Tres preguntas" y eran cuatro.
+
 ## Pruebas
 
 ```
-node tests/derivacion.js
+node tests/todos.js
 ```
 
-Sin dependencias. Cubre las reglas de derivación (incluido un barrido de las
-1100 combinaciones posibles del gating), que partir el gating en dos pantallas
-no haya perdido ni duplicado preguntas, el filtrado de convivencias por edad y
-la cantidad de bloques de cada trayecto. `encuesta-vivienda.js` exporta lo
-necesario con un `typeof module !== 'undefined'` al final del IIFE, que en el
-navegador no hace nada.
+Sin dependencias: node y nada más. Cuatro suites, ~460 comprobaciones, y cada
+una se puede correr sola (`node tests/ciudad.js`).
 
-Correrlo después de tocar el esquema o las reglas.
+| Suite | Qué cubre |
+|---|---|
+| `derivacion.js` | las 6 reglas de vivienda (con un barrido de las 1100 combinaciones del gating), el gating en dos pantallas, las convivencias por edad, los bloques de cada trayecto, y que el ranking urbano ya no esté en el cierre |
+| `ciudad.js` | el gating de ciudad, el corte de menores, los cuatro bloques, el "¿por qué?" colgado del río, el escape del ranking, las siete propuestas con sus tres niveles, y la privacidad (abiertas y campos colgados opcionales, contacto fuera del payload) |
+| `backend.js` | **evalúa `Code.gs` de verdad** en un sandbox de `vm` y lo cruza contra los dos esquemas: que toda pregunta que se manda tenga columna, que ninguna columna quede sin llenar, que `edad` esté en columna propia, y que lo publicable no incluya abiertas ni localidad |
+| `contraste.js` | lee `style.css` y calcula el contraste WCAG real de los tres niveles de la tarjeta del ranking, que la jerarquía no dependa de una sola señal, y que los targets táctiles sigan en 40/48/56px |
+
+`backend.js` es el que más paga: si se agrega una pregunta al esquema y se
+olvida la columna en `Code.gs`, falla ahí en vez de perderse el dato en
+producción.
+
+Los tres archivos de encuesta exportan lo necesario con un
+`typeof module !== 'undefined'` al final del IIFE, que en el navegador no hace
+nada.
+
+Correrlo después de tocar cualquier esquema, las reglas o `Code.gs`.
+
+### Lo que las pruebas NO cubren
+El arrastre con Pointer Events y el layout responsive no se pueden verificar en
+node. Eso se mira en el navegador, sirviendo la carpeta
+(`python -m http.server 8777`) y abriendo las páginas. Al mover el ranking a
+tarjetas de tres niveles, medir a 390px fue lo que encontró que al texto le
+quedaban 169px de ancho: ver el comentario del `@media (max-width: 620px)` de
+`.item-orden:has(.orden-nombre)`.
 
 ## Reglas de privacidad (no negociables)
 - Las preguntas abiertas son **siempre opcionales** y **nunca** salen por el endpoint público. Solo viven en la Sheet.
@@ -343,20 +567,98 @@ Correrlo después de tocar el esquema o las reglas.
 - Una pregunta con **menos de 5 respuestas** no se incluye en el JSON de salida: la clave directamente no existe (no se manda "oculta").
 - El JSON público nunca incluye desglose por localidad/barrio, ni texto libre, ni nada de `contactos_interes`.
 - Los contactos van en **dos POST separados**, sin ningún ID en común con la respuesta. Además la hoja de contactos guarda **fecha sin hora**, para que no se pueda cruzar por timestamp con la fila de la encuesta.
-- Lo que sí es publicable está declarado en `PREGUNTAS_PUBLICAS` en `Code.gs`. **Lo que no esté ahí no puede salir nunca**: para publicar una pregunta nueva hay que agregarla explícitamente.
+- Lo que sí es publicable está declarado en `PREGUNTAS_PUBLICAS` (vivienda) y `PUBLICAS_CIUDAD` (ciudad), en `Code.gs`. **Lo que no esté ahí no puede salir nunca**: para publicar una pregunta nueva hay que agregarla explícitamente.
+- Los dos POST y su orden importan: primero la respuesta, y **el contacto solo si esa primera llamada salió bien**. Si el contacto falla, la respuesta ya está guardada y no se molesta a la persona; al revés se guardaría un contacto sin la respuesta que lo justifica.
 
 ## Para agregar otra encuesta más adelante
-(espacio público/seguridad, alquiler/festival — todavía no construidas)
+(alquiler/festival, seguridad — todavía no construidas)
 
-El motor de `encuesta-vivienda.js` está separado del contenido: las preguntas son datos (`GATING`, `BLOQUES_A`…, `BLOQUE_CIERRE`) y el render, la validación, la navegación por bloques y el envío son genéricos. Para una encuesta nueva: copiar el archivo, reemplazar el esquema, y sumar en `Code.gs` las hojas + su bloque en `PREGUNTAS_PUBLICAS`.
+**El motor vive aparte y no se copia.** `encuesta-motor.js` tiene todo lo que no
+cambia entre una encuesta y otra: el render de los seis tipos de pregunta, las
+condiciones, las opciones dinámicas, los topes de selección, el arrastre, la
+lectura del DOM, la validación, el gating, los bloques, el botón de atrás y los
+dos POST. El archivo de cada encuesta es solo contenido más una config.
+
+> Antes acá decía "copiar el archivo y reemplazar el esquema". Al aparecer la
+> segunda encuesta eso hubiera dejado ~900 líneas de motor duplicadas, con el
+> arrastre y la validación en dos lugares. Se extrajo el motor en su lugar.
+
+Para una encuesta nueva:
+
+1. Escribir `assets/js/encuesta-<tema>.js` con el esquema y esta config:
+
+```js
+window.TFC_ENCUESTA.iniciar({
+  gatingPasos: [ { titulo, bajada, preguntas: [...] }, ... ],
+  bloquesEstimados: 4,      // para la barra durante el gating
+  iconos: { … },            // opcional (solo si se usa presentacion: 'grilla')
+  resolver: function (gating) {
+    // { clave, bloques } | null   ← null es el corte: no se guarda nada
+  },
+  armarPayload: function (ctx) {
+    // ctx = { clave, gating, respuestas, cierre }
+    // { payload, contacto }       ← contacto puede ser null
+  }
+});
+```
+
+2. Copiar `encuesta-ciudad.html` (es el cascarón más simple) y cambiar el copy
+   del consentimiento, el del corte y el último `<script>`. **Los ids del HTML
+   no se tocan**: el motor busca `paso-consentimiento`, `paso-gating`,
+   `paso-bloque`, `paso-corte`, `paso-enviando`, `contenedor-gating`,
+   `contenedor-bloque`, `form-gating`, `form-bloque`, `btn-siguiente`,
+   `btn-atras`, `btn-atras-gating`, `progreso`, `progreso-barra` y
+   `anuncio-paso`. `paso-corte` es opcional: si la encuesta no corta a nadie,
+   se puede omitir.
+
+3. En `Code.gs`: una hoja nueva con sus columnas, el ruteo en `doPost`, su
+   bloque en `PUBLICAS_*` y las etiquetas de sus opciones. `agregarHoja()` ya es
+   genérico: no hay que escribir agregación nueva.
+
+4. Sumar una suite en `tests/` y engancharla en `tests/todos.js`.
+
+5. Sumar la tarjeta en `encuesta.html`.
+
+`Code.gs` es autocontenido: crea las hojas que falten y sincroniza los
+encabezados solo. Con la hoja vacía los reescribe enteros; con respuestas
+cargadas solo **agrega al final** las columnas nuevas, nunca inserta en el
+medio. Además cada fila se arma contra el encabezado real de la hoja, no contra
+el esquema, así un desfasaje no corre todos los datos un lugar.
+
+**Ojo con eso último**: sacar una columna del esquema **no** la borra de una
+hoja que ya tiene datos. Al mudar el ranking urbano de vivienda a ciudad, las
+hojas `track_*` que tuvieran filas conservan las columnas
+`cierre_urbano_*` vacías. Es a propósito: borrarlas correría los datos viejos.
 
 `Code.gs` es autocontenido: crea las hojas que falten y sincroniza los encabezados solo. Con la hoja vacía los reescribe enteros; con respuestas cargadas solo **agrega al final** las columnas nuevas, nunca inserta en el medio. Además cada fila se arma contra el encabezado real de la hoja, no contra el esquema, así un desfasaje no corre todos los datos un lugar.
 
 ## Pendientes
+- **El backend de la encuesta de ciudad todavía no está deployado.** El código
+  está en `apps-script/Code.gs` y las pruebas pasan, pero a Google hay que
+  mandarlo a mano:
+
+  ```
+  clasp push
+  clasp deploy -i AKfycbz4ADkzPwXcUroimeqC4FcT1PItIcSXwfyJT4DM9L2uSf2Edle66fHEdkhM0R9epNtJ
+  ```
+
+  Hasta que eso pase, `encuesta-ciudad.html` **no puede guardar respuestas**
+  (el `doPost` viejo no conoce `encuesta: 'ciudad'` y responde `track_invalido`).
+  El resto del sitio funciona igual: el tablero degrada solo —si el `doGet` no
+  devuelve la clave `ciudad`, esa sección no se dibuja, verificado en el
+  navegador—. **Conviene no difundir el link de la encuesta de ciudad antes
+  del push.**
+
+  Después del deploy, ejecutar `configurarHojas()` una vez desde el editor para
+  que quede creada la hoja `ciudad` con sus encabezados (o dejar que la cree
+  sola la primera respuesta).
 - **Todavía no hay datos de producción**: el esquema se puede seguir cambiando sin cuidado por compatibilidad.
 
   La zona horaria de la planilla ya quedó en Buenos Aires y las filas de prueba
   del deploy ya se borraron: lo que haya en la Sheet de acá en adelante es dato.
+- `gracias.html` es compartida por las dos encuestas y su copy todavía habla
+  solo de vivienda ("adultos mayores, familias que conviven entre varias
+  generaciones"). No molesta, pero conviene generalizarlo.
 - Favicon (hoy da 404).
 - Completar el contenido de `el-proyecto.html` (la estructura y la galería ya
   están; falta el material propio de la tesis a medida que avance).

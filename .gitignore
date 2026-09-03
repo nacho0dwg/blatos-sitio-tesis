@@ -7,6 +7,10 @@ Thumbs.db
 desktop.ini
 *.swp
 
+# Cache de Python (los scripts de tools/ no son un paquete)
+__pycache__/
+*.pyc
+
 # Logs
 *.log
 npm-debug.log*

@@ -112,17 +112,27 @@
   function elegirPregunta(datos) {
     var mejor = null;
 
-    (window.TFC_DASHBOARD.ORDEN_TRACKS || []).forEach(function (track) {
-      var info = datos.tracks && datos.tracks[track];
+    function considerar(clave, info) {
       if (!info) return;
 
       var ids = Object.keys(info.preguntas || {});
       if (!ids.length) return;
 
       if (!mejor || info.n > mejor.n) {
-        mejor = { track: track, n: info.n, id: ids[0], pregunta: info.preguntas[ids[0]] };
+        mejor = {
+          track: clave,
+          nombre: info.nombre,
+          n: info.n,
+          id: ids[0],
+          pregunta: info.preguntas[ids[0]]
+        };
       }
+    }
+
+    (window.TFC_DASHBOARD.ORDEN_TRACKS || []).forEach(function (track) {
+      considerar(track, datos.tracks && datos.tracks[track]);
     });
+    considerar('ciudad', datos.ciudad);
 
     return mejor;
   }
@@ -135,7 +145,7 @@
 
     var titulo = document.createElement('p');
     titulo.className = 'antetitulo';
-    titulo.textContent = 'Un dato: ' + datos.tracks[elegida.track].nombre;
+    titulo.textContent = 'Un dato: ' + elegida.nombre;
     preview.appendChild(titulo);
 
     window.TFC_DASHBOARD.renderGrafico(preview, elegida.track, elegida.id, elegida.pregunta);
@@ -155,11 +165,14 @@
     .then(function (datos) {
       var minimo = datos.minimo_publicacion || MINIMO_POR_DEFECTO;
 
+      /* El contador es del relevamiento entero, no de una encuesta:
+         suma los cinco trayectos de vivienda más la hoja de ciudad. */
       var suma = 0;
       (window.TFC_DASHBOARD.ORDEN_TRACKS || []).forEach(function (track) {
         var info = datos.tracks && datos.tracks[track];
         if (info && typeof info.n === 'number') suma += info.n;
       });
+      if (datos.ciudad && typeof datos.ciudad.n === 'number') suma += datos.ciudad.n;
 
       /* Debajo del mínimo el número no se muestra: "3 respuestas" en la
          portada desalienta más de lo que invita, y además es el mismo
