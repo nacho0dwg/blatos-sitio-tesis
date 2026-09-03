@@ -633,25 +633,13 @@ hojas `track_*` que tuvieran filas conservan las columnas
 `Code.gs` es autocontenido: crea las hojas que falten y sincroniza los encabezados solo. Con la hoja vacía los reescribe enteros; con respuestas cargadas solo **agrega al final** las columnas nuevas, nunca inserta en el medio. Además cada fila se arma contra el encabezado real de la hoja, no contra el esquema, así un desfasaje no corre todos los datos un lugar.
 
 ## Pendientes
-- **El backend de la encuesta de ciudad todavía no está deployado.** El código
-  está en `apps-script/Code.gs` y las pruebas pasan, pero a Google hay que
-  mandarlo a mano:
-
-  ```
-  clasp push
-  clasp deploy -i AKfycbz4ADkzPwXcUroimeqC4FcT1PItIcSXwfyJT4DM9L2uSf2Edle66fHEdkhM0R9epNtJ
-  ```
-
-  Hasta que eso pase, `encuesta-ciudad.html` **no puede guardar respuestas**
-  (el `doPost` viejo no conoce `encuesta: 'ciudad'` y responde `track_invalido`).
-  El resto del sitio funciona igual: el tablero degrada solo —si el `doGet` no
-  devuelve la clave `ciudad`, esa sección no se dibuja, verificado en el
-  navegador—. **Conviene no difundir el link de la encuesta de ciudad antes
-  del push.**
-
-  Después del deploy, ejecutar `configurarHojas()` una vez desde el editor para
-  que quede creada la hoja `ciudad` con sus encabezados (o dejar que la cree
-  sola la primera respuesta).
+- **Falta probar un envío real de la encuesta de ciudad.** El backend ya está
+  deployado (el `doGet` de producción devuelve la clave `ciudad`, con `n: 0`, así
+  que la hoja existe y se lee bien), pero el `doPost` de ciudad **todavía no se
+  ejerció contra la Sheet real**: no se mandó ninguna respuesta de prueba, a
+  propósito, porque lo que entre en la planilla de acá en adelante es dato.
+  Conviene responderla una vez entera —y borrar esa fila— antes de difundir el
+  link.
 - **Todavía no hay datos de producción**: el esquema se puede seguir cambiando sin cuidado por compatibilidad.
 
   La zona horaria de la planilla ya quedó en Buenos Aires y las filas de prueba
