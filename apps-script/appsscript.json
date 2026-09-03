@@ -1,7 +1,6 @@
 {
   "timeZone": "America/Argentina/Cordoba",
-  "dependencies": {
-  },
+  "dependencies": {},
   "webapp": {
     "executeAs": "USER_DEPLOYING",
     "access": "ANYONE_ANONYMOUS"

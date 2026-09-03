@@ -495,7 +495,14 @@ function doPost(e) {
     lock.waitLock(20000);
 
     if (payload.tipo === 'contacto') {
-      guardarContacto(payload.contacto);
+      /* `guardarContacto` no escribe si el contacto viene vacío o con
+         otra forma. Antes eso igual respondía ok y el contacto se perdía
+         sin que nadie se enterara —pasó en la prueba del deploy, con el
+         payload mandado plano en vez de envuelto—. Un contacto perdido
+         es una entrevista perdida: mejor que grite. */
+      if (!guardarContacto(payload.contacto)) {
+        return jsonResponse({ ok: false, error: 'contacto_vacio' });
+      }
       return jsonResponse({ ok: true });
     }
 
@@ -659,7 +666,7 @@ function guardarRespuestaCiudad(modalidad, respuestas) {
  * el anonimato. Con fecha sola, esa correlación no se puede hacer.
  */
 function guardarContacto(contacto) {
-  if (!contacto || (!contacto.nombre && !contacto.medio)) return;
+  if (!contacto || (!contacto.nombre && !contacto.medio)) return false;
 
   var hoja = getHoja(HOJA_CONTACTOS, ['fecha', 'nombre', 'contacto']);
   var hoy = new Date();
@@ -670,6 +677,52 @@ function guardarContacto(contacto) {
     String(contacto.nombre || '').substring(0, 120),
     String(contacto.medio || '').substring(0, 120)
   ]);
+  return true;
+}
+
+/**
+ * Borra las filas de prueba de TODAS las hojas.
+ *
+ * Se corre a mano desde el editor después de probar un deploy de punta a
+ * punta. Una prueba real es la única forma de verificar permisos, CORS y
+ * el mapeo a columnas contra el /exec de verdad, pero la fila que deja no
+ * es un dato y no puede quedar mezclada con las respuestas.
+ *
+ * Solo toca filas donde alguna celda contenga el centinela, así que es
+ * inofensiva si no hay ninguna: nunca borra una respuesta real, porque
+ * nadie escribe esa frase por casualidad.
+ *
+ * Devuelve cuántas borró por hoja, que es lo que se ve en el registro de
+ * ejecución.
+ */
+var CENTINELA_PRUEBA = 'PRUEBA TECNICA DEL DEPLOY';
+
+function borrarFilasDePrueba() {
+  var libro = SpreadsheetApp.getActiveSpreadsheet();
+  var informe = {};
+
+  libro.getSheets().forEach(function (hoja) {
+    var datos = hoja.getDataRange().getValues();
+    var borradas = 0;
+
+    /* De abajo hacia arriba: borrar de arriba corre los índices de las
+       filas que faltan mirar. */
+    for (var i = datos.length - 1; i >= 1; i--) {
+      var esPrueba = datos[i].some(function (celda) {
+        return String(celda).indexOf(CENTINELA_PRUEBA) !== -1;
+      });
+      if (esPrueba) {
+        hoja.deleteRow(i + 1);
+        borradas++;
+      }
+    }
+
+    if (borradas) informe[hoja.getName()] = borradas;
+  });
+
+  var texto = JSON.stringify(informe);
+  Logger.log('Filas de prueba borradas: ' + texto);
+  return texto;
 }
 
 /* ===========================================================

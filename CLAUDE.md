@@ -187,6 +187,62 @@ El script es **container-bound** a esa Sheet (`getActiveSpreadsheet()`), no hay
 Si `config.js` quedara sin URL, la encuesta y el dashboard muestran un mensaje de
 "todavía no está conectado" en vez de fallar en silencio.
 
+## Difusión: la vista previa del link
+
+La encuesta se reparte por WhatsApp, muchas veces a adultos mayores. Un link sin
+vista previa llega como una URL pelada de `railway.app` que no dice qué es ni de
+quién es —y que con razón nadie abre—. Las siete páginas llevan Open Graph con
+imagen propia:
+
+| Página | Imagen |
+|---|---|
+| `index`, `el-proyecto`, `resultados`, `gracias` | `og-general.jpg` |
+| `encuesta.html` | `og-encuestas.jpg` |
+| `encuesta-ciudad.html` | `og-ciudad.jpg` |
+| `encuesta-vivienda.html` | `og-vivienda.jpg` |
+
+```
+python tools/hacer-og.py
+```
+
+Genera las cuatro tarjetas de 1200×630 —el formato que piden WhatsApp y
+Facebook— más `favicon.svg` y `favicon-180.png`. Salen de las **mismas imágenes
+del imaginario que usa cada hero**, así la tarjeta del chat y la página que se
+abre después muestran lo mismo.
+
+Dos cosas para no tropezar:
+
+- **`og:image` tiene que ser una URL absoluta.** Los scrapers no resuelven rutas
+  relativas: si se pasa a relativa, la preview queda sin imagen y no avisa nadie.
+  El dominio está escrito en las etiquetas; si el sitio cambia de dominio hay que
+  rehacerlas.
+- El título y la bajada de cada tarjeta salen del `<title>` y del
+  `<meta name="description">` que la página ya tenía, así el copy vive en un solo
+  lugar.
+
+`gracias.html` además va con `noindex`: es una confirmación, no tiene sentido que
+la indexe un buscador.
+
+## Probar un deploy de punta a punta
+
+`tests/backend.js` evalúa `Code.gs` en un sandbox, pero **no prueba el `/exec`
+real**: permisos, CORS y autorización de scopes solo se verifican mandando una
+respuesta de verdad. Para eso hay un centinela y una función de limpieza:
+
+1. Mandar una respuesta con el texto `PRUEBA TECNICA DEL DEPLOY` en las abiertas
+   (y el contacto, que es el segundo POST y el que más fácil pasa desapercibido).
+2. Verificar la Sheet y el `doGet`.
+3. Ejecutar **`borrarFilasDePrueba()`** una vez desde el editor. Recorre todas las
+   hojas y borra las filas que contengan el centinela; es inofensiva si no hay
+   ninguna, y nunca toca una respuesta real porque nadie escribe esa frase por
+   casualidad.
+
+**No hay forma de ejecutar funciones del script sin abrir el editor.** `clasp run`
+necesita que el proyecto esté atado a un proyecto de GCP propio con su OAuth
+client; con la configuración actual responde *"Unable to run script function"*.
+Se probó agregando `executionApi` al manifest y no alcanza. Ese paso 3 es un clic
+manual y no hay atajo.
+
 ## Tipografías
 
 | Rol | Familia | Token |
@@ -613,6 +669,7 @@ quedaban 169px de ancho: ver el comentario del `@media (max-width: 620px)` de
 - Los contactos van en **dos POST separados**, sin ningún ID en común con la respuesta. Además la hoja de contactos guarda **fecha sin hora**, para que no se pueda cruzar por timestamp con la fila de la encuesta.
 - Lo que sí es publicable está declarado en `PREGUNTAS_PUBLICAS` (vivienda) y `PUBLICAS_CIUDAD` (ciudad), en `Code.gs`. **Lo que no esté ahí no puede salir nunca**: para publicar una pregunta nueva hay que agregarla explícitamente.
 - Los dos POST y su orden importan: primero la respuesta, y **el contacto solo si esa primera llamada salió bien**. Si el contacto falla, la respuesta ya está guardada y no se molesta a la persona; al revés se guardaría un contacto sin la respuesta que lo justifica.
+- El contacto viaja **envuelto**: `{ tipo: 'contacto', contacto: { nombre, medio } }`, no plano. Mandarlo plano hacía que `doPost` respondiera `ok: true` **sin guardar nada** —pasó en la prueba del deploy—. Ahora ese caso devuelve `contacto_vacio`: un contacto perdido es una entrevista perdida, así que tiene que gritar en vez de fallar en silencio.
 
 ## Para agregar otra encuesta más adelante
 (alquiler/festival, seguridad — todavía no construidas)
@@ -677,21 +734,20 @@ hojas `track_*` que tuvieran filas conservan las columnas
 `Code.gs` es autocontenido: crea las hojas que falten y sincroniza los encabezados solo. Con la hoja vacía los reescribe enteros; con respuestas cargadas solo **agrega al final** las columnas nuevas, nunca inserta en el medio. Además cada fila se arma contra el encabezado real de la hoja, no contra el esquema, así un desfasaje no corre todos los datos un lugar.
 
 ## Pendientes
-- **Falta probar un envío real de la encuesta de ciudad.** El backend ya está
-  deployado (el `doGet` de producción devuelve la clave `ciudad`, con `n: 0`, así
-  que la hoja existe y se lee bien), pero el `doPost` de ciudad **todavía no se
-  ejerció contra la Sheet real**: no se mandó ninguna respuesta de prueba, a
-  propósito, porque lo que entre en la planilla de acá en adelante es dato.
-  Conviene responderla una vez entera —y borrar esa fila— antes de difundir el
-  link.
+- **Correr `borrarFilasDePrueba()` una vez desde el editor.** El deploy de ciudad
+  se probó de punta a punta contra el `/exec` real (respuesta + contacto, los dos
+  `200 {ok:true}`, columnas verificadas en la Sheet), y eso dejó **dos filas de
+  prueba**: una en `ciudad` y una en `contactos_interes`, marcadas con el texto
+  `PRUEBA TECNICA DEL DEPLOY`. Hay que borrarlas antes de que lleguen respuestas
+  reales, o van a contar en los agregados. Es un clic; no hay forma de
+  automatizarlo (ver "Probar un deploy de punta a punta").
 - **Todavía no hay datos de producción**: el esquema se puede seguir cambiando sin cuidado por compatibilidad.
 
-  La zona horaria de la planilla ya quedó en Buenos Aires y las filas de prueba
-  del deploy ya se borraron: lo que haya en la Sheet de acá en adelante es dato.
-- `gracias.html` es compartida por las dos encuestas y su copy todavía habla
-  solo de vivienda ("adultos mayores, familias que conviven entre varias
-  generaciones"). No molesta, pero conviene generalizarlo.
-- Favicon (hoy da 404).
+  La zona horaria de la planilla ya quedó en Buenos Aires. Salvo las dos filas de
+  prueba de arriba, lo que haya en la Sheet es dato.
+- Sistema de incentivo para quienes dejan contacto: sigue **sin definir**. El
+  flujo de `contactos_interes` está listo y verificado contra la Sheet real, pero
+  no hay lógica de sorteo ni nada que ofrecerles todavía.
 - Completar el contenido de `el-proyecto.html` (la estructura y la galería ya
   están; falta el material propio de la tesis a medida que avance).
 - Definir si las respuestas se exportan a la carpeta de Drive del TFC (`01_Etapa 1/04_Relevamiento social`).

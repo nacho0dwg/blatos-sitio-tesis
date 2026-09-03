@@ -5,6 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Encuesta sobre la ciudad — Vivir juntos en Cosquín</title>
   <meta name="description" content="Encuesta anónima sobre el espacio público de Cosquín: el río, los accesos, la plaza y las propuestas urbanas en estudio.">
+  <!-- Vista previa al compartir el link (WhatsApp, Facebook, Telegram).
+       Sin esto la encuesta llega como una URL pelada de railway.app, que
+       no dice qué es ni de quién es: difundirla entre vecinos y adultos
+       mayores depende de que la tarjeta se entienda sin abrirla.
+       Las imágenes se regeneran con `python tools/hacer-og.py`. -->
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/img/favicon-180.png">
+  <link rel="canonical" href="https://blatos-sitio-production.up.railway.app/encuesta-ciudad.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BLATOS — Vivienda intergeneracional">
+  <meta property="og:locale" content="es_AR">
+  <meta property="og:title" content="Encuesta sobre la ciudad — Vivir juntos en Cosquín">
+  <meta property="og:description" content="Encuesta anónima sobre el espacio público de Cosquín: el río, los accesos, la plaza y las propuestas urbanas en estudio.">
+  <meta property="og:url" content="https://blatos-sitio-production.up.railway.app/encuesta-ciudad.html">
+  <!-- og:image tiene que ser absoluta: los scrapers no resuelven rutas
+       relativas. -->
+  <meta property="og:image" content="https://blatos-sitio-production.up.railway.app/assets/img/og/og-ciudad.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Encuesta sobre la ciudad — Vivir juntos en Cosquín">
+  <meta name="twitter:card" content="summary_large_image">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Instrument+Serif:ital@0;1&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet">

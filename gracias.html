@@ -4,6 +4,32 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>¡Gracias! — Vivir juntos en Cosquín</title>
+  <meta name="description" content="Tu respuesta ya quedó registrada de forma anónima y es parte del relevamiento social de esta tesis.">
+  <!-- Vista previa al compartir el link (WhatsApp, Facebook, Telegram).
+       Sin esto la encuesta llega como una URL pelada de railway.app, que
+       no dice qué es ni de quién es: difundirla entre vecinos y adultos
+       mayores depende de que la tarjeta se entienda sin abrirla.
+       Las imágenes se regeneran con `python tools/hacer-og.py`. -->
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/img/favicon-180.png">
+  <link rel="canonical" href="https://blatos-sitio-production.up.railway.app/gracias.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BLATOS — Vivienda intergeneracional">
+  <meta property="og:locale" content="es_AR">
+  <meta property="og:title" content="¡Gracias! — Vivir juntos en Cosquín">
+  <meta property="og:description" content="Tu respuesta ya quedó registrada de forma anónima y es parte del relevamiento social de esta tesis.">
+  <meta property="og:url" content="https://blatos-sitio-production.up.railway.app/gracias.html">
+  <!-- og:image tiene que ser absoluta: los scrapers no resuelven rutas
+       relativas. -->
+  <meta property="og:image" content="https://blatos-sitio-production.up.railway.app/assets/img/og/og-general.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="¡Gracias! — Vivir juntos en Cosquín">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Es una página de confirmación: no tiene sentido que la indexe un buscador. -->
+  <meta name="robots" content="noindex">
   <meta name="robots" content="noindex">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -109,6 +135,7 @@
 
         <div class="grupo-botones" data-revelar>
           <a class="boton boton-primario boton-xl" href="resultados-vivienda.html">Ver los resultados</a>
+          <a class="boton boton-secundario" href="encuesta.html">Responder la otra encuesta</a>
           <a class="boton boton-secundario" href="index.html">Volver al inicio</a>
         </div>
       </div>
@@ -124,9 +151,11 @@
 
         <div class="texto-dos-columnas espacio-arriba" data-revelar="grupo">
           <p>
-            Si conocés a alguien de Cosquín o de la zona a quien le pueda interesar
-            —sobre todo <strong>adultos mayores</strong>, o familias que conviven entre
-            varias generaciones— compartirle la encuesta suma muchísimo.
+            Si conocés a alguien de Cosquín o de la zona a quien le pueda interesar,
+            compartirle la encuesta suma muchísimo. Son dos y muy distintas: una
+            pregunta por <strong>la casa</strong> y la convivencia entre generaciones,
+            la otra por <strong>la ciudad</strong> —el río, los accesos, la plaza, lo
+            que falta fuera de temporada—.
           </p>
           <p>
             Si esa persona necesita ayuda para completarla, se puede responder
@@ -137,11 +166,13 @@
 
         <div class="tarjeta tarjeta-acento espacio-arriba" data-revelar>
           <p>
-            El link para compartir es
-            <strong>esta misma página de inicio</strong>: desde ahí se llega a la
-            encuesta y también a los resultados.
+            Para compartir las dos juntas, el link es
+            <strong>la página de las encuestas</strong>. Cada una tiene además su
+            propio link y se abre directo, sin pasar por ahí: es lo que conviene
+            cuando querés mandar una sola.
           </p>
           <div class="grupo-botones">
+            <a class="boton boton-primario" href="encuesta.html">Ver las dos encuestas</a>
             <a class="boton boton-secundario" href="el-proyecto.html">Conocer el proyecto</a>
           </div>
         </div>
