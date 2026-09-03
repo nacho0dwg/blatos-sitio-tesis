@@ -213,7 +213,34 @@ ve sucio.
   Las cuatro cargan GSAP + ScrollTrigger por CDN y `divulgacion.js`.
 - **`encuesta.html`**: mismo lenguaje oscuro que el resto de divulgación
   (`.hero-cine.hero-corto.hero-encuestas` + dos `.tarjeta-encuesta` en
-  `.elector-encuestas`, que pasa a una columna abajo de 860px).
+  `.elector-encuestas`). Es la única página del sitio cuyo título **no se
+  parte en display + itálica**: va como un solo bloque en Archivo Black
+  (`LAS ENCUESTAS`).
+
+  **Las dos tarjetas se acomodan con `auto-fit`, no con un breakpoint**:
+
+  ```css
+  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+  ```
+
+  Antes había un `@media (min-width: 860px)` y eso falló en una máquina
+  real: **una pantalla de 1280 en Windows al 150% mide 853px CSS**, o sea
+  que una notebook común caía en columna única. `auto-fit` mide el ancho
+  que la grilla tiene de verdad, así que no hay ningún viewport al que
+  haya que acertarle. El corte efectivo queda cerca de los 730px.
+
+  Ojo con la unidad: **el `rem` de este sitio son 18px, no 16** — las
+  18rem son 324px, apenas menos que los 354px que mide la tarjeta en un
+  celular de 390px, que es el ancho más angosto donde ya se sabe que se lee
+  bien.
+
+  El título de la segunda tarjeta lleva un **`&shy;`**
+  (`inter&shy;generacional`): "INTERGENERACIONAL" no tiene espacios y en
+  dos columnas se salía de la tarjeta a *cualquier* ancho —372px de
+  palabra contra 322px de caja útil—. El guion suave marca el corte a
+  mano porque el diccionario de guionado del navegador no llegó a actuar;
+  por eso el CSS va con `hyphens: manual`, que es el modo que respeta ese
+  guion y ningún otro.
 - **`encuesta-vivienda.html` y `encuesta-ciudad.html`**
   (`<body class="pagina-encuesta">`): **spotlight**.
   La página tiene el fondo oscuro del sitio —imagen ambiental al 10%, viñeta y un

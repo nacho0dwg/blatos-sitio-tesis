@@ -194,14 +194,14 @@ summary:focus-visible,
      scroll horizontal de toda la página. Primero se intenta cortar con
      guión; break-word es la red por si el idioma no permite guionado. */
   overflow-wrap: break-word;
-  hyphens: auto;
+  hyphens: manual;
 }
 
 /* Los <span> que arma divulgacion.js para escalonar el título son
    inline-block: sin esto, el corte de arriba no los alcanza. */
 .palabra {
   overflow-wrap: break-word;
-  hyphens: auto;
+  hyphens: manual;
 }
 
 .acento-script {
@@ -1712,15 +1712,27 @@ textarea {
    es una bifurcación para quien llega por el nav, no un peaje.
    =========================================================== */
 
+/* Las dos tarjetas van lado a lado apenas entren dos de 18rem, y se
+   apilan solas cuando no. Va con `auto-fit` y NO con un breakpoint de
+   viewport a propósito: el corte anterior estaba en `min-width: 860px`,
+   y una pantalla de 1280 en Windows al 150% mide 853px CSS —o sea, una
+   notebook común caía en columna única—. `auto-fit` mide el espacio que
+   la grilla tiene de verdad, así que no hay ningún ancho de pantalla al
+   que haya que acertarle.
+
+   **Ojo con las unidades**: el `rem` de este sitio son 18px, no 16. Las
+   18rem son 324px, apenas menos que los 354px que mide la tarjeta en un
+   celular de 390px, que es el ancho más angosto en el que ya se sabe que
+   se lee bien. En la práctica el corte queda cerca de los 730px de
+   ventana. */
 .elector-encuestas {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
   gap: var(--espacio-3);
 }
 
 @media (min-width: 860px) {
   .elector-encuestas {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--espacio-4);
   }
 }
@@ -1744,6 +1756,14 @@ textarea {
   color: var(--accent-secondary);
 }
 
+/* "INTERGENERACIONAL" son 17 caracteres en Archivo Black y no tiene
+   espacios por donde cortarse: en dos columnas se salía de la tarjeta a
+   cualquier ancho (medido: 372px de palabra contra 322px de caja útil).
+   El punto de corte lo marca un `&shy;` en el HTML, no el diccionario
+   del navegador —que en Chrome no llegó a actuar—: `hyphens: manual`
+   es justamente el modo que respeta ese guion suave y ningún otro.
+   `overflow-wrap` queda de red última: si ni con eso entra, antes que
+   desbordar la tarjeta, corta. */
 .tarjeta-encuesta-titulo {
   margin: 0;
   font-family: var(--fuente-display);
@@ -1752,6 +1772,8 @@ textarea {
   line-height: 1.1;
   letter-spacing: -0.01em;
   font-size: clamp(1.25rem, 3.4vw, 1.7rem);
+  hyphens: manual;
+  overflow-wrap: break-word;
 }
 
 .tarjeta-encuesta-bajada {
