@@ -152,10 +152,41 @@ ok(pesos[0] > pesos[1] && pesos[1] > pesos[2],
 
 igual(new Set(colores).size, 3, 'los tres colores son distintos entre sí');
 
-/* Que se note "a simple vista": un escalón de menos de 0.05rem entre
-   dos niveles no se ve. */
-ok(tams[0] - tams[1] >= 0.05, 'hay un escalón visible entre nombre y propuesta');
-ok(tams[1] - tams[2] >= 0.05, 'hay un escalón visible entre propuesta y explicación');
+/* Que se note "a simple vista".
+
+   Antes esto pedía una diferencia ABSOLUTA de 0.05rem y ese umbral no
+   sirvió: 0.05rem son 0.9px. La primera versión de la tarjeta iba
+   1.08 / 0.94 / 0.85rem, pasaba esta prueba, y en pantalla los tres
+   niveles se leían como un solo párrafo —entre propuesta y explicación
+   había 1,6px de diferencia—.
+
+   El ojo compara tamaños de tipografía en proporción, no en píxeles
+   sueltos, así que el escalón se mide como razón. 1.12 es el piso que
+   deja ver un cambio de nivel sin mirar dos veces. */
+var ESCALON_MINIMO = 1.12;
+
+ok(tams[0] / tams[1] >= ESCALON_MINIMO,
+  'el nombre es al menos un ' + Math.round((ESCALON_MINIMO - 1) * 100) +
+  '% más grande que la propuesta (' +
+  (Math.round(tams[0] / tams[1] * 100) / 100) + '×)');
+
+ok(tams[1] / tams[2] >= ESCALON_MINIMO,
+  'la propuesta es al menos un ' + Math.round((ESCALON_MINIMO - 1) * 100) +
+  '% más grande que la explicación (' +
+  (Math.round(tams[1] / tams[2] * 100) / 100) + '×)');
+
+/* La otra mitad de la jerarquía es el aire: tres bloques pegados se
+   leen como un párrafo por más que cambien de cuerpo. */
+var caja = reglaDe('.orden-texto');
+ok(parseFloat(propiedad(caja, 'gap')) >= 0.3,
+  'los tres niveles se separan al menos 0.3rem entre sí (' +
+  propiedad(caja, 'gap') + ')');
+
+/* El nivel más atenuado sigue teniendo que poder leerse en un celular,
+   a veces a los 80 años: la jerarquía se gana agrandando el nombre, no
+   achicando la explicación hasta que no se vea. */
+ok(tams[2] >= 0.8,
+  'la explicación no baja de 0.8rem (' + tams[2] + 'rem)');
 
 /* ---------- El resto de la tarjeta sigue siendo usable ---------- */
 

@@ -508,13 +508,30 @@ agrandar la tipografía del sistema o al mirar la pantalla al sol—:
 
 | Nivel | Campo | CSS | Token | Contraste |
 |---|---|---|---|---|
-| Nombre | `texto` | `.orden-nombre` 1.08rem/700 | `--color-texto` | 16.94:1 |
-| Propuesta | `propuesta` | `.orden-propuesta` 0.94rem/600 | `--color-primario-oscuro` | 9.35:1 |
-| Explicación | `detalle` | `.orden-detalle` 0.85rem/400 | `--color-texto-suave` | 7.63:1 |
+| Nombre | `texto` | `.orden-nombre` 1.28rem/700 | `--color-texto` | 16.94:1 |
+| Propuesta | `propuesta` | `.orden-propuesta` 0.95rem/600 | `--color-primario-oscuro` | 9.35:1 |
+| Explicación | `detalle` | `.orden-detalle` 0.82rem/400 | `--color-texto-suave` | 7.63:1 |
 
 Los tres pasan **AAA** sobre la tarjeta de la encuesta (`--color-superficie`,
 #fffdf8). `tests/contraste.js` lo recalcula leyendo el CSS de verdad, así que si
 alguien cambia un token la prueba avisa.
+
+**Los escalones se miden en proporción, no en rem sueltos.** La primera versión
+iba 1.08 / 0.94 / 0.85rem: sobre el papel bajaba, y en pantalla eran 19,4 / 16,9
+/ 15,3px —los dos últimos separados por 1,6px—, así que la tarjeta se leía como
+un párrafo corrido. `tests/contraste.js` la dejaba pasar porque pedía una
+diferencia absoluta de 0.05rem, que son 0.9px: un umbral que no significa nada.
+Ahora la prueba exige un **factor de 1.12 entre nivel y nivel** (el nombre es
+~35% más grande que la propuesta, la propuesta ~16% más que el detalle) y
+verifica dos cosas más que la primera versión no miraba:
+
+- que `.orden-texto` separe los niveles **al menos 0.3rem** —el aire es la otra
+  mitad de la jerarquía: tres bloques pegados se leen como un párrafo por más que
+  cambien de cuerpo—;
+- que la explicación **no baje de 0.8rem**. Es el nivel más atenuado, pero esta
+  encuesta se completa a veces de forma asistida con adultos mayores: la
+  jerarquía se gana agrandando el nombre, no achicando el contexto hasta que no
+  se lea.
 
 `texto` es además el **nombre corto**: es lo que se lee en el `aria-label` de
 las flechas y lo que anuncia el `role="status"` al mover un ítem ("Escuela de
@@ -527,7 +544,7 @@ flechas en la misma fila que el texto, a 390px al texto le quedaban 169px y la
 explicación se partía en quince renglones. Con los controles arriba pasa a
 ~275px y la tarjeta más alta baja de 428 a 351px.
 
-La lista igual mide ~2100px en un celular: **arrastrar de la posición 7 a la 1
+La lista igual mide ~2200px en un celular: **arrastrar de la posición 7 a la 1
 no es práctico ahí, las flechas ↑ ↓ son el camino real**. Es el costo de mostrar
 los tres niveles completos, que es lo que se pidió.
 
