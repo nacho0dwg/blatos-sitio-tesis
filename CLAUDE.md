@@ -46,6 +46,7 @@ assets/js/encuesta-motor.js      MOTOR compartido: render, validación, flujo, e
 assets/js/encuesta-vivienda.js   esquema de vivienda + las 6 reglas de derivación
 assets/js/encuesta-ciudad.js     esquema de ciudad (plano)
 assets/js/dashboard.js      fetch de agregados + gráficos
+assets/img/guarda-coscoina.svg  la guarda de Cosquín, un tile, como esténcil
 assets/img/imaginarios/     13 imágenes del imaginario (1600×900)
 assets/img/imaginarios/thumb/  las mismas a 800×450 para la grilla
 tests/todos.js              corre las cuatro suites (node tests/todos.js)
@@ -403,6 +404,65 @@ el de la galería). Todo respeta `prefers-reduced-motion`, y si GSAP no carga
 **`[hidden]` está forzado con `!important`** en el CSS base: varias clases
 propias declaran `display`, y sin eso el atributo no oculta nada (el contador
 de la portada aparecía en cero mientras cargaba).
+
+## La guarda coscoína
+
+Una franja angosta con la guarda de Cosquín corre por el borde
+izquierdo de las páginas oscuras. Es marca de lugar: la única pieza del
+sitio que no es ni tipografía ni foto y que igual dice Cosquín.
+
+El dibujo está en `assets/img/guarda-coscoina.svg`, **recreado como
+geometría propia**: la referencia se leyó como una grilla y cada celda
+se volvió a dibujar en cuatro paths de coordenadas enteras. No es un
+trazado automático del archivo de la municipalidad.
+
+Tres decisiones que no son obvias:
+
+- **El tile va girado 90°.** La guarda original es una banda
+  horizontal; acá se apila hacia abajo. La grilla es de 7 × 13
+  unidades —7 de ancho, que es el alto de la banda original— y las
+  diagonales entran por arriba y salen por abajo corridas una unidad,
+  así que el tile empalma consigo mismo sin costura al repetirse.
+- **Entra como `mask-image`, no como imagen de fondo.** El SVG es un
+  esténcil negro y el color lo pone el CSS (`--accent-primary-vivo`,
+  que es el terracota en su variante para fondo oscuro). Así no queda
+  un hex de marca suelto en un archivo aparte. Como resguardo,
+  `--guarda-tinta` arranca en `transparent` y solo se enciende dentro
+  de un `@supports`: un navegador sin máscaras no muestra nada, en vez
+  de mostrar una barra terracota maciza.
+- **Son dos capas, no una.** Una en el `body` y otra en
+  `.hero-cine::after`. El hero es opaco, a sangre y tiene
+  `isolation: isolate`, así que tapa cualquier cosa del body: sin la
+  segunda capa la franja arrancaría recién debajo del hero. Las dos son
+  `position: fixed` con la misma geometría y la misma variable, así que
+  se leen como una sola franja continua.
+
+| | |
+|---|---|
+| Ancho | 56px, y 24px abajo de 720px |
+| Opacidad | 0.10 |
+| Velocidad del parallax | 0.35 de lo que scrollea la página |
+
+Los tres números están medidos en pantalla, no elegidos de memoria:
+a 0.13 la guarda le ganaba al texto sobre el carbón plano de las
+secciones, a 0.085 desaparecía sobre las partes claras de la foto del
+hero. Y en celular el margen izquierdo mide **18px**: con 34px la
+guarda le pasaba por debajo a la primera letra de cada renglón.
+
+**El movimiento sale de correr el patrón, no el elemento.** La franja
+es `position: fixed`: por sí sola no se mueve nunca. `animarGuarda()`
+en `divulgacion.js` escribe `--guarda-y` con el scroll y eso desplaza
+la máscara al 35% de la velocidad de la página. Como el tile se repite,
+el recorrido no tiene final visible. Un `transform` no serviría:
+dejaría el borde de arriba vacío apenas pasara un tile.
+
+Con **movimiento reducido** —o sin GSAP, o sin JS— la variable queda en
+0 y la franja se ve igual, quieta. Nunca desaparece por no haberse
+animado.
+
+En `encuesta-vivienda.html` y `encuesta-ciudad.html` no aparece: el
+enganche es la clase `.tema-oscuro`, que esas dos no llevan. Sí está en
+`encuesta.html`, que es el selector y sí es una página de divulgación.
 
 ## Galería del imaginario (el-proyecto.html)
 

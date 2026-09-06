@@ -2458,7 +2458,94 @@ textarea {
 }
 
 /* ===========================================================
-   20. MOVIMIENTO REDUCIDO
+   20. GUARDA COSCOÍNA (franja de fondo, solo divulgación)
+
+   Una franja angosta pegada al borde izquierdo con la guarda de
+   Cosquín repetida hacia abajo. Es marca de lugar, no decoración
+   para mirar: tiene que notarse si uno la busca y desaparecer si
+   uno está leyendo.
+
+   El dibujo vive en `assets/img/guarda-coscoina.svg` y entra como
+   MÁSCARA, no como imagen: así el color sale del token de la paleta
+   y no queda un hex suelto en un archivo aparte. El SVG es un
+   esténcil negro; lo que se ve es este `background-color` recortado
+   por él.
+
+   Dos capas con la misma regla, porque el hero es opaco y a sangre:
+   una en el `body` (queda debajo de todo el contenido) y otra dentro
+   del hero, que tiene `isolation: isolate` y por eso tapa cualquier
+   cosa del body. Las dos son `position: fixed` con la misma geometría
+   y la misma variable, así que se ven como una sola franja continua
+   de punta a punta de la página.
+   =========================================================== */
+
+.tema-oscuro {
+  /* El ancho manda: el tile es de 7 × 13 unidades y el alto sale solo
+     (`mask-size: … auto`). Para cambiar la escala se toca SOLO acá. */
+  --guarda-ancho: 56px;
+
+  /* Corrimiento vertical del patrón. Lo escribe divulgacion.js con el
+     scroll. En 0 la franja queda quieta, que es exactamente lo que
+     tiene que pasar sin JS y con movimiento reducido. */
+  --guarda-y: 0px;
+
+  /* La tinta arranca transparente y solo se enciende si el navegador
+     soporta máscaras. Sin ese resguardo, un navegador sin `mask-image`
+     mostraría la franja como una barra terracota maciza: peor que no
+     mostrar nada. */
+  --guarda-tinta: transparent;
+}
+
+@supports (mask-image: url("../img/guarda-coscoina.svg")) or
+          (-webkit-mask-image: url("../img/guarda-coscoina.svg")) {
+  .tema-oscuro {
+    --guarda-tinta: var(--accent-primary-vivo);
+  }
+}
+
+.tema-oscuro::before,
+.tema-oscuro .hero-cine::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--guarda-ancho);
+  background-color: var(--guarda-tinta);
+  /* Medido en pantalla, no elegido de memoria: a 0.13 sobre el carbón
+     plano de las secciones la guarda se lee como un borde decorado y
+     le gana al texto; a 0.085 desaparece sobre las partes claras de la
+     foto del hero. 0.10 es el punto donde se ve en los dos fondos sin
+     pedir atención en ninguno. */
+  opacity: 0.10;
+  /* Nunca intercepta un clic ni un tap, esté donde esté. */
+  pointer-events: none;
+  z-index: -1;
+
+  -webkit-mask-image: url("../img/guarda-coscoina.svg");
+  mask-image: url("../img/guarda-coscoina.svg");
+  -webkit-mask-repeat: repeat-y;
+  mask-repeat: repeat-y;
+  -webkit-mask-size: var(--guarda-ancho) auto;
+  mask-size: var(--guarda-ancho) auto;
+  -webkit-mask-position: 0 var(--guarda-y);
+  mask-position: 0 var(--guarda-y);
+}
+
+/* En celular la franja se achica a un tercio. Al ser `fixed` no le
+   quita ni un pixel de ancho al contenido —eso no depende del tamaño—,
+   pero el margen izquierdo ahí mide 18px: medido a 390px, con 34px la
+   guarda le pasaba por debajo a la primera letra de cada renglón y a
+   las viñetas, y eso se lee como suciedad y no como marca. Con 24px
+   queda como una cinta fina al borde y el texto la ignora. */
+@media (max-width: 720px) {
+  .tema-oscuro {
+    --guarda-ancho: 24px;
+  }
+}
+
+/* ===========================================================
+   21. MOVIMIENTO REDUCIDO
    Contrapartida en CSS del corte que hace divulgacion.js.
    Acá se apaga todo lo declarativo; allá, lo de GSAP.
    =========================================================== */

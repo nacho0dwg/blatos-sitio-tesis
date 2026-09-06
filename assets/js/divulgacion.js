@@ -44,6 +44,7 @@
 
     partirEnPalabras();
     animarHero();
+    animarGuarda();
     animarRevelados();
 
     /* Las fuentes del CDN cambian la altura de los títulos display
@@ -193,6 +194,35 @@
     }
   }
 
+  /* ---------- Guarda coscoína: desplazamiento continuo ----------
+     La franja del borde izquierdo es `position: fixed`, así que por sí
+     sola no se mueve nunca. Lo que le da la sensación de recorrido sin
+     fin es correr el PATRÓN a otra velocidad que la página: mientras el
+     contenido sube 1, la guarda sube 0.35. Como el tile se repite en Y,
+     ese desplazamiento no tiene final visible.
+
+     Se mueve la máscara y no el elemento: un transform dejaría el borde
+     de arriba vacío apenas el recorrido pasara un tile.
+
+     Si esta función no corre —GSAP caído, movimiento reducido— la
+     variable queda en 0 y la franja se ve igual, quieta. Nunca
+     desaparece por no haberse animado. */
+  function animarGuarda() {
+    var cuerpo = document.body;
+    if (!cuerpo.classList.contains('tema-oscuro')) return;
+
+    var VELOCIDAD = 0.35;
+
+    ScrollTrigger.create({
+      start: 0,
+      end: 'max',
+      onUpdate: function (recorrido) {
+        cuerpo.style.setProperty(
+          '--guarda-y', (-recorrido.scroll() * VELOCIDAD).toFixed(1) + 'px');
+      }
+    });
+  }
+
   /* ---------- Reveals al entrar en viewport ---------- */
   function animarRevelados() {
     /* Títulos partidos en palabras: entran escalonadas. */
@@ -263,6 +293,9 @@
         gsap.set('[data-revelar], [data-revelar] > *, .palabra', { opacity: 1, y: 0, yPercent: 0, scale: 1 });
         gsap.set('.hero-fondo, .hero-display, .hero-script, .ficha-flotante', { clearProps: 'transform' });
       }
+      /* La guarda no la maneja GSAP sino una variable CSS: hay que
+         devolverla a cero a mano o queda corrida donde estaba. */
+      document.body.style.setProperty('--guarda-y', '0px');
       mostrarTodo();
     }
 

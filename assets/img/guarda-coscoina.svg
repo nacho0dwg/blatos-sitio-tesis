@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 7 13" width="7" height="13">
+  <!--
+    GUARDA COSCOÍNA — un tile, recreado como geometría propia.
+
+    No es un trazado automático del archivo de la municipalidad: la
+    referencia se leyó como una grilla y cada celda se volvió a dibujar
+    acá. El motivo es el meandro escalonado (una greca que gira sobre sí
+    misma) con las dos diagonales que lo cruzan de esquina a esquina.
+
+    Va GIRADO 90°: la guarda original es una banda horizontal y esta
+    versión se apila hacia abajo. La grilla es de 7 × 13 unidades —7 de
+    ancho, que es el alto de la banda original— y las diagonales entran
+    por un lado y salen por el otro corridas una unidad, así que el tile
+    empalma consigo mismo sin costura visible al repetirse en Y.
+
+    Es un ESTÉNCIL, no una imagen: se usa como `mask-image` y el color
+    lo pone el CSS con el token `accent-primary-vivo`. Por eso el
+    relleno es negro opaco (alfa 1 = se pinta) y no hay ningún color de
+    marca escrito acá.
+  -->
+  <defs>
+    <pattern id="guarda-coscoina" width="7" height="13" patternUnits="userSpaceOnUse">
+      <g fill="#000">
+        <path d="M5 1L6 1L6 0L7 0L7 3L4 3L4 2L5 2Z"/>
+        <path d="M7 4L7 11L6 11L6 12L5 12L5 13L3 13L3 12L4 12L4 11L5 11L5 10L6 10L6 5L3 5L3 7L2 7L2 4Z"/>
+        <path d="M4 6L5 6L5 9L0 9L0 2L1 2L1 1L2 1L2 0L4 0L4 1L3 1L3 2L2 2L2 3L1 3L1 8L4 8Z"/>
+        <path d="M0 10L3 10L3 11L2 11L2 12L1 12L1 13L0 13Z"/>
+      </g>
+    </pattern>
+  </defs>
+  <!-- El rect toma el alto que tenga el SVG: con `height="100%"` el
+       patrón se sigue repitiendo aunque se lo estire, no queda atado a
+       un solo tile. -->
+  <rect width="100%" height="100%" fill="url(#guarda-coscoina)"/>
+</svg>
