@@ -358,20 +358,29 @@
         estado.classList.add('oculto');
         error.classList.add('oculto');
 
+        /* La encuesta de ciudad va primero, arriba de la de vivienda:
+           es la que se está difundiendo. Se dibuja con el mismo render
+           —es un bloque más, solo que no viene de `tracks`—. Si el
+           backend todavía no la devuelve —el deploy del Apps Script va
+           aparte del del sitio— la sección simplemente no aparece. */
+        var contCiudad = document.getElementById('contenedor-ciudad');
+        var hayCiudad = !!(contCiudad && datos.ciudad);
+        if (hayCiudad) renderTrack(contCiudad, 'ciudad', datos.ciudad);
+
+        var hayVivienda = false;
         ORDEN_TRACKS.forEach(function (track) {
           if (datos.tracks && datos.tracks[track]) {
             renderTrack(contenedor, track, datos.tracks[track]);
+            hayVivienda = true;
           }
         });
 
-        /* La encuesta de ciudad se dibuja con el mismo render: es un
-           bloque más, solo que no viene de `tracks`. Si el backend
-           todavía no la devuelve —el deploy del Apps Script va aparte
-           del del sitio— la sección simplemente no aparece. */
-        var contCiudad = document.getElementById('contenedor-ciudad');
-        if (contCiudad && datos.ciudad) {
-          renderTrack(contCiudad, 'ciudad', datos.ciudad);
-          contCiudad.classList.add('tiene-datos');
+        /* La línea divisoria separa una encuesta de la otra, así que
+           solo tiene sentido si están las dos: con una sola es una raya
+           suelta que no separa nada. */
+        var bloqueVivienda = document.getElementById('bloque-vivienda');
+        if (bloqueVivienda && hayCiudad && hayVivienda) {
+          bloqueVivienda.classList.add('tiene-datos');
         }
 
         if (datos.actualizado) {

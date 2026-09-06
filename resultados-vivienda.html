@@ -111,48 +111,6 @@
     </section>
 
     <!-- =========================================================
-         CÓMO LEER ESTOS DATOS
-         ========================================================= -->
-    <section class="seccion">
-      <div class="contenedor-ancho">
-        <span class="antetitulo" data-revelar>Antes de mirar</span>
-        <h2 class="titulo-display" data-revelar-palabras>Cómo leer estos datos</h2>
-
-        <dl class="texto-dos-columnas espacio-arriba" data-revelar="grupo">
-          <div class="dato">
-            <dt>Dos encuestas</dt>
-            <dd>
-              Primero la de <strong>vivienda</strong>, separada en cinco grupos de
-              personas que respondieron preguntas distintas —no son promedios de todo
-              junto—, y después la de <strong>la ciudad</strong>, que es una sola.
-            </dd>
-          </div>
-          <div class="dato">
-            <dt>Mirá siempre el n</dt>
-            <dd>
-              Al lado de cada gráfico está el <strong>n</strong>, la cantidad de personas
-              que respondieron esa pregunta. Con pocas respuestas, un gráfico dice poco.
-            </dd>
-          </div>
-          <div class="dato">
-            <dt>Mínimo de 5</dt>
-            <dd>
-              Una pregunta con <strong>menos de 5 respuestas no se muestra</strong>, para
-              que no se pueda deducir quién contestó qué.
-            </dd>
-          </div>
-          <div class="dato">
-            <dt>Sin comentarios</dt>
-            <dd>
-              Las respuestas escritas a mano alzada <strong>no se publican nunca</strong>:
-              se usan solo para el análisis de la tesis.
-            </dd>
-          </div>
-        </dl>
-      </div>
-    </section>
-
-    <!-- =========================================================
          LOS GRÁFICOS (los dibuja dashboard.js)
          ========================================================= -->
     <section class="seccion">
@@ -163,14 +121,21 @@
 
         <p class="mensaje mensaje-error oculto" id="error-dashboard" role="alert"></p>
 
-        <h3 class="titulo-encuesta" id="titulo-vivienda">Encuesta sobre vivienda</h3>
-        <div id="contenedor-tracks"></div>
+        <!-- La encuesta de ciudad va primero: es la que se está
+             difundiendo hoy y la que trae las respuestas. Es plana —un
+             solo bloque, sin trayectos— y se dibuja igual que uno de
+             ellos, con su propio color. No lleva divisoria con texto
+             encima porque su propio título ya la nombra, y el nombre
+             quedaría escrito dos veces seguidas. -->
+        <div id="contenedor-ciudad"></div>
 
-        <!-- La encuesta de ciudad es plana: un solo bloque, sin trayectos.
-             Se dibuja igual que uno de ellos, con su propio color, y su
-             propio título ya la nombra: acá no va otra divisoria encima
-             o el nombre quedaría escrito dos veces seguidas. -->
-        <div id="contenedor-ciudad" class="encuesta-aparte"></div>
+        <!-- La de vivienda queda debajo, y por eso es la que ahora lleva
+             la línea que separa una encuesta de la otra: `tiene-datos`
+             se la pone dashboard.js solo si arriba se dibujó ciudad. -->
+        <div id="bloque-vivienda" class="encuesta-aparte">
+          <h3 class="titulo-encuesta" id="titulo-vivienda">Encuesta sobre vivienda</h3>
+          <div id="contenedor-tracks"></div>
+        </div>
 
         <p class="solo-lectura-visual espacio-arriba" id="pie-actualizado"></p>
       </div>

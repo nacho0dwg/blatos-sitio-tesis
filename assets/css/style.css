@@ -1527,10 +1527,10 @@ textarea {
   margin-top: 0;
 }
 
-/* La encuesta de ciudad no lleva divisoria con texto —su único bloque
-   ya se llama igual— así que la separación la hace la línea. Solo
-   cuando hay datos: sin ellos el contenedor está vacío y una línea
-   suelta al pie de la página no significa nada. */
+/* La segunda encuesta de la página no lleva divisoria con texto: la
+   separación la hace esta línea. `tiene-datos` la pone dashboard.js
+   solo cuando arriba se dibujó la otra encuesta; con una sola en
+   pantalla sería una raya suelta que no separa nada. */
 .encuesta-aparte.tiene-datos {
   margin-top: var(--espacio-5);
   padding-top: var(--espacio-4);
