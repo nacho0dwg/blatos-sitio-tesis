@@ -250,7 +250,7 @@ Qué hace, en las seis hojas de respuestas más `contactos_interes`:
 | | |
 |---|---|
 | Encabezado | negrita, texto blanco, un color por bloque temático |
-| Congelado | fila 1 **y** columna A: al scrollear a la derecha se sigue viendo qué columna es y de qué respuesta |
+| Congelado | fila 1 **y** columna A, que es `edad`: al scrollear a la derecha se sigue viendo qué columna es y de qué edad es la respuesta |
 | Anchos | 300px con ajuste de texto para párrafos y listas, 210px para los "¿cuál?", 150px sin ajuste para los códigos |
 | Alineación | arriba, no al medio: si no, una celda de dos palabras al lado de un párrafo de diez renglones queda flotando |
 | Bandas | blanco / hueso, el mismo par de la tarjeta de la encuesta |
@@ -266,6 +266,15 @@ Dos decisiones que no son obvias:
   el color del bloque en el que cayó. Y una columna agregada al final —que
   es donde las pone `sincronizarEncabezados` cuando ya hay datos— hereda el
   color del cierre, que es lo correcto.
+- **`edad` se mueve a la primera columna.** Sheets solo congela un bloque
+  **desde la izquierda**, no una columna suelta: dejar `edad` en su lugar
+  obligaría a congelar también timestamp, modalidad y localidad, y eso se come
+  media pantalla. Mover la columna es seguro porque **nada depende del orden
+  físico**: `agregarFila` arma cada fila contra el encabezado real de la hoja y
+  `agregarHoja` indexa por nombre. El orden del esquema solo decide cómo se crea
+  una hoja vacía, así que a partir de acá el esquema y la planilla difieren en el
+  orden y está bien. Por lo mismo, el formato de fecha se busca por nombre y no
+  por posición.
 - **Los altos de fila quedan en automático.** Fijarlos cortaría las
   respuestas largas, y las filas nuevas que escribe `doPost` heredarían ese
   alto fijo. Lo que mantiene la fila en un alto razonable es el tope de

@@ -343,6 +343,26 @@ verificarGrupos('ciudad', gs.columnasDeCiudad(), gs.GRUPOS_CIUDAD);
 
 verificarGrupos('contactos', ['fecha', 'nombre', 'contacto'], gs.GRUPOS_CONTACTOS);
 
+/* `formatearHoja` mueve `edad` a la primera columna para poder congelarla
+   sola —Sheets solo congela un bloque desde la izquierda—. El color se
+   pinta sobre el encabezado REAL, así que hay que ver ese orden movido y
+   no el del esquema: `edad` tiene que seguir leyéndose como metadata, no
+   abrir un bloque nuevo. */
+function conEdadAdelante(columnas) {
+  return ['edad'].concat(columnas.filter(function (c) { return c !== 'edad'; }));
+}
+
+[['ciudad', gs.columnasDeCiudad(), gs.GRUPOS_CIUDAD]]
+  .concat(['A', 'B', 'C', 'D1', 'D2'].map(function (track) {
+    return [track, gs.columnasDeTrack(track), gs.gruposDeTrack(track)];
+  }))
+  .forEach(function (caso) {
+    var movidas = conEdadAdelante(caso[1]);
+    var colores = gs.coloresDeEncabezado(movidas, caso[2]);
+    igual(colores[0], colores[movidas.indexOf('timestamp')],
+      caso[0] + ': con `edad` adelante queda del color de la metadata');
+  });
+
 /* Los cinco colores del encabezado llevan texto blanco encima: si
    alguien aclara uno, el encabezado se vuelve ilegible sin que nadie
    avise. AA sobre blanco es 4.5:1. */

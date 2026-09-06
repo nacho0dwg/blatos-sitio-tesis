@@ -1043,6 +1043,24 @@ function formatearHoja(hoja, grupos) {
   var encabezados = hoja.getRange(1, 1, 1, nCols).getValues()[0].map(String);
   var filas = hoja.getMaxRows() - 1;
 
+  /* La columna congelada es `edad`, así que tiene que ser la primera:
+     Sheets solo congela un bloque desde la izquierda, no una columna
+     suelta. Dejarla en su lugar obligaría a congelar también todo lo
+     que tiene a la izquierda —timestamp, modalidad, localidad— y eso
+     se come media pantalla.
+
+     Mover la columna es seguro porque nada del backend depende del
+     orden físico: `agregarFila` arma cada fila contra el encabezado
+     real de la hoja y `agregarHoja` indexa por nombre de columna. El
+     orden del esquema solo decide cómo se crea una hoja vacía.
+
+     Es idempotente: si ya está primera, no se toca. */
+  var iEdad = encabezados.indexOf('edad');
+  if (iEdad > 0) {
+    hoja.moveColumns(hoja.getRange(1, iEdad + 1, hoja.getMaxRows(), 1), 1);
+    encabezados = hoja.getRange(1, 1, 1, nCols).getValues()[0].map(String);
+  }
+
   /* --- Encabezado --- */
   hoja.getRange(1, 1, 1, nCols)
     .setBackgrounds([coloresDeEncabezado(encabezados, grupos)])
@@ -1053,8 +1071,10 @@ function formatearHoja(hoja, grupos) {
     .setHorizontalAlignment('left');
   hoja.setRowHeight(1, 42);
 
-  /* Congelar encabezado y timestamp: al scrollear a la derecha hay que
-     seguir viendo qué columna es y de qué respuesta. */
+  /* Congelar encabezado y primera columna: al scrollear a la derecha
+     hay que seguir viendo qué columna es y de quién es la respuesta.
+     En las hojas de respuestas la primera es `edad`; en la de
+     contactos, `fecha`. */
   hoja.setFrozenRows(1);
   hoja.setFrozenColumns(1);
 
@@ -1074,8 +1094,10 @@ function formatearHoja(hoja, grupos) {
           : SpreadsheetApp.WrapStrategy.WRAP);
     });
 
-    if (encabezados[0] === 'timestamp') {
-      hoja.getRange(2, 1, filas, 1).setNumberFormat('dd/MM/yyyy HH:mm');
+    /* Por nombre, no por posición: `edad` pasó a ser la primera. */
+    var iFecha = encabezados.indexOf('timestamp');
+    if (iFecha !== -1) {
+      hoja.getRange(2, iFecha + 1, filas, 1).setNumberFormat('dd/MM/yyyy HH:mm');
     }
 
     /* El medio de contacto va como texto plano. Sin esto Sheets ve
