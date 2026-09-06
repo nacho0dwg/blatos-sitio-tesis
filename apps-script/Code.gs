@@ -102,6 +102,101 @@ var COLUMNAS_CIUDAD = [
   'ciudad_interes_tema'
 ];
 
+/* ===========================================================
+   FORMATO VISUAL DE LA PLANILLA
+   Solo lo usa formatearVisual(), que se corre a mano. Nada de esto
+   cambia lo que se guarda ni lo que se publica.
+   =========================================================== */
+
+/**
+ * Columnas que guardan un párrafo o una lista larga: van anchas y con
+ * ajuste de texto, para que la respuesta se lea en varios renglones en
+ * vez de en una fila kilométrica de un solo renglón.
+ *
+ * Son las abiertas más las de selección múltiple y las de orden, que se
+ * guardan unidas con " | " y por eso también son largas.
+ */
+var COLUMNAS_ANCHAS = [
+  'ciudad_sector_potencial',
+  'ciudad_relacion_rio_por_que',
+  'ciudad_falta_equipamiento',
+  'ciudad_motor_alternativo',
+  'ciudad_proyecto_deseado',
+  'ciudad_otra_propuesta',
+  'ciudad_algo_mas',
+  'ciudad_propuestas_ranking',
+  'a_orientacion',
+  'a_orientacion_otro',
+  'a_servicios',
+  'a_actividades',
+  'a_preocupaciones',
+  'a_compartir',
+  'a_no_compartir',
+  'b_generaciones',
+  'b_dificultades',
+  'b_rediseno',
+  'c_motivo_partida',
+  'c_condiciones_volver',
+  'd_beneficios',
+  'd_preocupaciones',
+  'd_compartir',
+  'd_no_compartir'
+];
+
+/**
+ * Columnas de un renglón: los "¿cuál?" y los "otra", que son texto
+ * libre pero corto, y las casillas sueltas. Van a media asta: con
+ * ajuste de texto, pero sin robarle pantalla a las demás.
+ */
+var COLUMNAS_MEDIAS = [
+  'localidad_valle_cual',
+  'ciudad_problematica_otra',
+  'ciudad_donde_se_reune_otro',
+  'ciudad_propuestas_nose',
+  'a_actividades_ninguna',
+  'd_beneficios_otro',
+  'nombre',
+  'contacto'
+];
+
+var ANCHO_CORTO = 150;
+var ANCHO_MEDIO = 210;
+var ANCHO_ANCHO = 300;
+
+/* Blanco y hueso: el mismo par que usa la tarjeta de la encuesta. */
+var BANDA_IMPAR = '#ffffff';
+var BANDA_PAR = '#faf5ec';
+var TINTA_ENCABEZADO = '#ffffff';
+
+/**
+ * Grupos de columnas del encabezado, uno por bloque temático.
+ *
+ * Cada grupo declara SOLO su primera columna: el color se pinta desde
+ * ahí hasta la columna anterior al grupo siguiente. Así, agregar una
+ * pregunta en el medio de un bloque no obliga a tocar esta tabla —la
+ * columna nueva hereda el color del bloque en el que cayó—.
+ *
+ * Los cinco colores salen de la paleta del sitio y todos pasan AA
+ * sobre el texto blanco del encabezado (el más flojo da 5.06:1).
+ */
+var GRUPOS_CIUDAD = [
+  { desde: 'timestamp', color: '#5f5347' },                 /* pardo: contexto, no respuesta */
+  { desde: 'ciudad_sector_potencial', color: '#8f4a22' },   /* terracota: La ciudad que ves */
+  { desde: 'ciudad_falta_equipamiento', color: '#2e6b5e' }, /* verde: Dónde pasa la vida */
+  { desde: 'ciudad_propuestas_nose', color: '#8a6a12' },    /* ocre: Qué haría falta primero */
+  { desde: 'ciudad_algo_mas', color: '#6d3718' }            /* terracota profunda: Para cerrar */
+];
+
+function gruposDeTrack(track) {
+  return [
+    { desde: 'timestamp', color: '#5f5347' },
+    { desde: COLUMNAS_TRACK[track][0], color: '#8f4a22' },
+    { desde: COLUMNAS_CIERRE[0], color: '#6d3718' }
+  ];
+}
+
+var GRUPOS_CONTACTOS = [{ desde: 'fecha', color: '#5f5347' }];
+
 /** Espacios de la lista de 12: los mismos ids en A, D1 y D2. */
 var COLUMNAS_ESPACIOS_A = ['a_compartir', 'a_no_compartir'];
 var COLUMNAS_ESPACIOS_D = ['d_compartir', 'd_no_compartir'];
@@ -851,6 +946,162 @@ function configurarHojas() {
   });
   getHoja(HOJA_CIUDAD, columnasDeCiudad());
   getHoja(HOJA_CONTACTOS, ['fecha', 'nombre', 'contacto']);
+}
+
+/* ===========================================================
+   FORMATO VISUAL (se corre a mano, como configurarHojas)
+   =========================================================== */
+
+/**
+ * Menú propio en la planilla.
+ *
+ * El selector de funciones del editor de Apps Script es incómodo de
+ * usar —hay que buscar la función en una lista larga de todo lo que
+ * exporta el archivo, endpoints incluidos—, y esto hay que rehacerlo
+ * cada vez que se agregan columnas. Desde la Sheet es un clic, y sin
+ * riesgo de ejecutar `doPost` por error.
+ *
+ * `onOpen` es un disparador simple: se ejecuta solo al abrir la
+ * planilla, no hay que instalar nada.
+ */
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu('TFC')
+    .addItem('Formatear la planilla', 'formatearVisual')
+    .addItem('Crear/actualizar las hojas', 'configurarHojas')
+    .addSeparator()
+    .addItem('Borrar filas de prueba', 'borrarFilasDePrueba')
+    .addToUi();
+}
+
+/**
+ * Deja las seis hojas de respuestas y la de contactos legibles.
+ *
+ * Se ejecuta desde el editor, igual que configurarHojas(), y es
+ * idempotente: se puede volver a correr cada vez que se agregan
+ * columnas sin rehacer nada a mano. No toca doPost ni doGet.
+ *
+ * Devuelve, por hoja, cuántas columnas formateó.
+ */
+function formatearVisual() {
+  var informe = {};
+
+  Object.keys(HOJAS).forEach(function (track) {
+    informe[HOJAS[track]] = formatearHoja(
+      getHoja(HOJAS[track], columnasDeTrack(track)), gruposDeTrack(track));
+  });
+
+  informe[HOJA_CIUDAD] = formatearHoja(
+    getHoja(HOJA_CIUDAD, columnasDeCiudad()), GRUPOS_CIUDAD);
+
+  informe[HOJA_CONTACTOS] = formatearHoja(
+    getHoja(HOJA_CONTACTOS, ['fecha', 'nombre', 'contacto']), GRUPOS_CONTACTOS);
+
+  var texto = JSON.stringify(informe);
+  Logger.log('Formato aplicado: ' + texto);
+  return texto;
+}
+
+/** El ancho que le toca a una columna según lo que guarda. */
+function anchoDeColumna(col) {
+  if (COLUMNAS_ANCHAS.indexOf(col) !== -1) return ANCHO_ANCHO;
+  if (COLUMNAS_MEDIAS.indexOf(col) !== -1) return ANCHO_MEDIO;
+  return ANCHO_CORTO;
+}
+
+/**
+ * Un color por columna del encabezado.
+ *
+ * Recorre los encabezados REALES de la hoja, no el esquema: si un
+ * grupo declara una columna que todavía no existe, simplemente no
+ * abre grupo. Una columna agregada al final —que es donde las agrega
+ * sincronizarEncabezados cuando ya hay datos— hereda el color del
+ * último bloque, que es lo correcto para el cierre.
+ */
+function coloresDeEncabezado(encabezados, grupos) {
+  var actual = grupos[0].color;
+  return encabezados.map(function (col) {
+    grupos.forEach(function (g) {
+      if (g.desde === col) actual = g.color;
+    });
+    return actual;
+  });
+}
+
+/**
+ * Formatea una hoja de respuestas entera.
+ *
+ * Los altos de fila quedan en automático a propósito: con el ajuste de
+ * texto activado, cada fila crece hasta donde necesita. Fijarlos haría
+ * que una respuesta larga se viera cortada, y las filas nuevas que
+ * escribe doPost heredarían ese alto fijo.
+ */
+function formatearHoja(hoja, grupos) {
+  var nCols = hoja.getLastColumn();
+  if (!nCols) return 0;
+
+  var encabezados = hoja.getRange(1, 1, 1, nCols).getValues()[0].map(String);
+  var filas = hoja.getMaxRows() - 1;
+
+  /* --- Encabezado --- */
+  hoja.getRange(1, 1, 1, nCols)
+    .setBackgrounds([coloresDeEncabezado(encabezados, grupos)])
+    .setFontColor(TINTA_ENCABEZADO)
+    .setFontWeight('bold')
+    .setWrap(true)
+    .setVerticalAlignment('middle')
+    .setHorizontalAlignment('left');
+  hoja.setRowHeight(1, 42);
+
+  /* Congelar encabezado y timestamp: al scrollear a la derecha hay que
+     seguir viendo qué columna es y de qué respuesta. */
+  hoja.setFrozenRows(1);
+  hoja.setFrozenColumns(1);
+
+  /* --- Cuerpo --- */
+  if (filas > 0) {
+    /* Arriba, no al medio: con el ajuste de texto, una celda de dos
+       palabras al lado de un párrafo de diez renglones queda flotando
+       en el aire si se centra. */
+    hoja.getRange(2, 1, filas, nCols).setVerticalAlignment('top');
+
+    encabezados.forEach(function (col, i) {
+      var ancho = anchoDeColumna(col);
+      hoja.setColumnWidth(i + 1, ancho);
+      hoja.getRange(2, i + 1, filas, 1).setWrapStrategy(
+        ancho === ANCHO_CORTO
+          ? SpreadsheetApp.WrapStrategy.CLIP
+          : SpreadsheetApp.WrapStrategy.WRAP);
+    });
+
+    if (encabezados[0] === 'timestamp') {
+      hoja.getRange(2, 1, filas, 1).setNumberFormat('dd/MM/yyyy HH:mm');
+    }
+
+    /* El medio de contacto va como texto plano. Sin esto Sheets ve
+       "3541567555" y lo guarda como numero: un telefono escrito
+       "03541 456789" perderia el cero de adelante y quedaria
+       inutilizable, que es perder la entrevista. */
+    var iContacto = encabezados.indexOf('contacto');
+    if (iContacto !== -1) {
+      hoja.getRange(2, iContacto + 1, filas, 1).setNumberFormat('@');
+    }
+
+    /* --- Bandas --- */
+    /* Hay que sacar la anterior: Sheets rechaza dos bandas superpuestas,
+       así que sin esto la función solo se podría correr una vez. */
+    hoja.getBandings().forEach(function (banda) { banda.remove(); });
+    hoja.getRange(2, 1, filas, nCols)
+      .applyRowBanding(SpreadsheetApp.BandingTheme.LIGHT_GREY, false, false)
+      .setFirstRowColor(BANDA_IMPAR)
+      .setSecondRowColor(BANDA_PAR);
+  }
+
+  /* Reajusta el alto de las filas con datos, por si quedó alguno fijo
+     de una corrida anterior. */
+  if (hoja.getLastRow() > 1) hoja.autoResizeRows(2, hoja.getLastRow() - 1);
+
+  return nCols;
 }
 
 /**

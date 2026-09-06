@@ -223,6 +223,66 @@ Dos cosas para no tropezar:
 `gracias.html` además va con `noindex`: es una confirmación, no tiene sentido que
 la indexe un buscador.
 
+## Leer la planilla: el menú TFC
+
+La Sheet se abre a mano para leer las respuestas abiertas, que son la
+mitad del valor de la encuesta y no salen nunca por el endpoint público.
+Con las columnas al ancho por defecto eso es ilegible: un párrafo de diez
+renglones entra en una celda de una línea.
+
+`formatearVisual()` lo arregla y **es idempotente**: se vuelve a correr
+cada vez que se agregan columnas, sin rehacer nada a mano. Está en el menú
+**TFC** de la planilla, junto a `configurarHojas()` y
+`borrarFilasDePrueba()`:
+
+```
+TFC ▸ Formatear la planilla
+```
+
+Ese menú lo arma `onOpen()`, un disparador simple que corre solo al abrir
+la Sheet. Existe porque **el selector de funciones del editor de Apps
+Script no se puede manejar bien**: la lista trae todo lo que exporta el
+archivo —`doPost` incluido— y la selección se pierde con facilidad. Desde
+la planilla es un clic y no hay forma de ejecutar un endpoint por error.
+
+Qué hace, en las seis hojas de respuestas más `contactos_interes`:
+
+| | |
+|---|---|
+| Encabezado | negrita, texto blanco, un color por bloque temático |
+| Congelado | fila 1 **y** columna A: al scrollear a la derecha se sigue viendo qué columna es y de qué respuesta |
+| Anchos | 300px con ajuste de texto para párrafos y listas, 210px para los "¿cuál?", 150px sin ajuste para los códigos |
+| Alineación | arriba, no al medio: si no, una celda de dos palabras al lado de un párrafo de diez renglones queda flotando |
+| Bandas | blanco / hueso, el mismo par de la tarjeta de la encuesta |
+| `timestamp` | `dd/MM/yyyy HH:mm` |
+| `contacto` | **texto plano** |
+
+Dos decisiones que no son obvias:
+
+- **Los grupos de color declaran solo su primera columna.** El color se
+  pinta desde ahí hasta la columna anterior al grupo siguiente, recorriendo
+  el encabezado real de la hoja. Así, agregar una pregunta en el medio de
+  un bloque no obliga a tocar la tabla de grupos: la columna nueva hereda
+  el color del bloque en el que cayó. Y una columna agregada al final —que
+  es donde las pone `sincronizarEncabezados` cuando ya hay datos— hereda el
+  color del cierre, que es lo correcto.
+- **Los altos de fila quedan en automático.** Fijarlos cortaría las
+  respuestas largas, y las filas nuevas que escribe `doPost` heredarían ese
+  alto fijo. Lo que mantiene la fila en un alto razonable es el tope de
+  300px de ancho, no un alto forzado.
+
+**`contacto` va como texto plano (`@`)**: sin eso Sheets ve `3541567555` y
+lo guarda como número, así que un teléfono escrito `03541 456789` perdería
+el cero de adelante y quedaría inutilizable. Es la misma clase de problema
+que el `contacto_vacio`: un contacto roto es una entrevista perdida.
+
+`tests/backend.js` cruza los anchos y los grupos contra los dos esquemas:
+toda columna que pueda guardar un párrafo o una lista unida con " | " tiene
+que estar declarada en `COLUMNAS_ANCHAS` o `COLUMNAS_MEDIAS`, los grupos
+tienen que venir en orden, y los cinco colores tienen que pasar AA contra
+el texto blanco del encabezado. Si se agrega una abierta y se olvida el
+ancho, falla la prueba y no la planilla.
+
 ## Probar un deploy de punta a punta
 
 `tests/backend.js` evalúa `Code.gs` en un sandbox, pero **no prueba el `/exec`
@@ -731,24 +791,21 @@ hoja que ya tiene datos. Al mudar el ranking urbano de vivienda a ciudad, las
 hojas `track_*` que tuvieran filas conservan las columnas
 `cierre_urbano_*` vacías. Es a propósito: borrarlas correría los datos viejos.
 
-`Code.gs` es autocontenido: crea las hojas que falten y sincroniza los encabezados solo. Con la hoja vacía los reescribe enteros; con respuestas cargadas solo **agrega al final** las columnas nuevas, nunca inserta en el medio. Además cada fila se arma contra el encabezado real de la hoja, no contra el esquema, así un desfasaje no corre todos los datos un lugar.
-
 ## Pendientes
-- **Correr `borrarFilasDePrueba()` una vez desde el editor.** El deploy de ciudad
-  se probó de punta a punta contra el `/exec` real (respuesta + contacto, los dos
-  `200 {ok:true}`, columnas verificadas en la Sheet), y eso dejó **dos filas de
-  prueba**: una en `ciudad` y una en `contactos_interes`, marcadas con el texto
-  `PRUEBA TECNICA DEL DEPLOY`. Hay que borrarlas antes de que lleguen respuestas
-  reales, o van a contar en los agregados. Es un clic; no hay forma de
-  automatizarlo (ver "Probar un deploy de punta a punta").
-- **Todavía no hay datos de producción**: el esquema se puede seguir cambiando sin cuidado por compatibilidad.
+- **Proteger la pestaña `contactos_interes`.** Ya tiene teléfonos y mails de
+  personas reales. Si la planilla se comparte con alguien más —un compañero de
+  grupo, la cátedra—, esa pestaña se ve entera. Se acota con *Datos ▸ Hojas y
+  rangos protegidos*, restringiendo la hoja a la cuenta propia. Es un cambio de
+  permisos, así que no se hizo solo.
+- **Ya hay datos de producción.** El esquema todavía se puede cambiar —`Code.gs`
+  nunca inserta columnas en el medio de una hoja con datos, las agrega al final—,
+  pero sacar una columna del esquema **no** la borra de la hoja.
 
-  La zona horaria de la planilla ya quedó en Buenos Aires. Salvo las dos filas de
-  prueba de arriba, lo que haya en la Sheet es dato.
+  La zona horaria de la planilla está en Buenos Aires y las filas de prueba del
+  deploy ya se borraron: todo lo que hay en la Sheet es dato.
 - Sistema de incentivo para quienes dejan contacto: sigue **sin definir**. El
   flujo de `contactos_interes` está listo y verificado contra la Sheet real, pero
   no hay lógica de sorteo ni nada que ofrecerles todavía.
 - Completar el contenido de `el-proyecto.html` (la estructura y la galería ya
   están; falta el material propio de la tesis a medida que avance).
 - Definir si las respuestas se exportan a la carpeta de Drive del TFC (`01_Etapa 1/04_Relevamiento social`).
-- Sistema de incentivo/beneficio para quienes dejan contacto: **sin definir**, el flujo de `contactos_interes` quedó listo y desacoplado pero sin lógica de sorteo.

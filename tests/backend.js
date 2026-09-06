@@ -251,4 +251,121 @@ titulo('Hoja de contactos');
 igual(gs.HOJA_CONTACTOS, 'contactos_interes', 'sigue siendo la misma hoja');
 ok(gs.HOJA_CONTACTOS !== gs.HOJA_CIUDAD, 'y no se duplicó una por encuesta');
 
+/* =========================================================
+   7. Formato visual: que ninguna respuesta larga quede angosta
+   ========================================================= */
+
+titulo('Anchos de columna de la planilla');
+
+/* formatearVisual() reparte tres anchos, y el corto va sin ajuste de
+   texto: una columna larga clasificada como corta se ve cortada en la
+   Sheet. Las que pueden guardar un párrafo o una lista unida con " | "
+   se sacan de los dos esquemas, no de una lista escrita acá: si mañana
+   se agrega una abierta y se olvida el ancho, falla en esta prueba y no
+   al abrir la planilla. */
+function largasDe(preguntas) {
+  var ids = [];
+  preguntas.forEach(function (p) {
+    if (p.esContacto || p.soloLocal) return;
+    if (p.abierta || p.tipo === 'checkbox' || p.tipo === 'orden') ids.push(p.id);
+    if (p.campoExtra) ids.push(p.campoExtra.id);
+  });
+  return ids;
+}
+
+var TODAS_VIVIENDA = Object.keys(vivienda.TRACKS)
+  .reduce(function (acum, track) {
+    return acum.concat(preguntasDeBloques(vivienda.TRACKS[track].bloques));
+  }, [])
+  .concat(vivienda.BLOQUE_CIERRE.preguntas)
+  .concat(vivienda.GATING_PASOS.reduce(function (a, paso) {
+    return a.concat(paso.preguntas);
+  }, []));
+
+var COLUMNAS_LARGAS = largasDe(TODAS_VIVIENDA.concat(TODAS_CIUDAD));
+
+ok(COLUMNAS_LARGAS.length > 20,
+  'se encontraron columnas largas en los dos esquemas (' +
+  COLUMNAS_LARGAS.length + ')');
+
+COLUMNAS_LARGAS.forEach(function (id) {
+  ok(gs.COLUMNAS_ANCHAS.indexOf(id) !== -1 || gs.COLUMNAS_MEDIAS.indexOf(id) !== -1,
+    '"' + id + '" tiene ancho declarado (no queda corta y cortada)');
+});
+
+/* Al revés también: una columna declarada ancha que ya no existe es
+   basura que sobrevivió a un borrado. Las dos de contacto son la
+   excepción: viven en `contactos_interes` y no en un esquema. */
+var TODAS_LAS_COLUMNAS = ['A', 'B', 'C', 'D1', 'D2']
+  .reduce(function (acum, track) {
+    return acum.concat(gs.columnasDeTrack(track));
+  }, [])
+  .concat(gs.columnasDeCiudad())
+  .concat(['fecha', 'nombre', 'contacto']);
+
+gs.COLUMNAS_ANCHAS.concat(gs.COLUMNAS_MEDIAS).forEach(function (id) {
+  ok(TODAS_LAS_COLUMNAS.indexOf(id) !== -1,
+    '"' + id + '" con ancho declarado es una columna que existe');
+});
+
+titulo('Grupos de color del encabezado');
+
+/* Cada grupo pinta desde su columna hasta la anterior al siguiente, así
+   que las columnas declaradas tienen que existir y venir en orden: una
+   fuera de orden dejaría un bloque pintado del color del anterior. */
+function verificarGrupos(nombre, columnas, grupos) {
+  var posiciones = grupos.map(function (g) { return columnas.indexOf(g.desde); });
+
+  posiciones.forEach(function (pos, i) {
+    ok(pos !== -1,
+      nombre + ': la columna "' + grupos[i].desde + '" del grupo ' + i + ' existe');
+    if (i > 0) {
+      ok(pos > posiciones[i - 1],
+        nombre + ': el grupo ' + i + ' arranca después del ' + (i - 1));
+    }
+  });
+
+  igual(posiciones[0], 0, nombre + ': el primer grupo arranca en la primera columna');
+
+  /* Y que efectivamente queden todos los colores en uso. */
+  var usados = gs.coloresDeEncabezado(columnas, grupos);
+  grupos.forEach(function (g) {
+    ok(usados.indexOf(g.color) !== -1,
+      nombre + ': el color ' + g.color + ' llega a pintar alguna columna');
+  });
+}
+
+verificarGrupos('ciudad', gs.columnasDeCiudad(), gs.GRUPOS_CIUDAD);
+
+['A', 'B', 'C', 'D1', 'D2'].forEach(function (track) {
+  verificarGrupos(track, gs.columnasDeTrack(track), gs.gruposDeTrack(track));
+});
+
+verificarGrupos('contactos', ['fecha', 'nombre', 'contacto'], gs.GRUPOS_CONTACTOS);
+
+/* Los cinco colores del encabezado llevan texto blanco encima: si
+   alguien aclara uno, el encabezado se vuelve ilegible sin que nadie
+   avise. AA sobre blanco es 4.5:1. */
+function luminancia(hex) {
+  var canales = [1, 3, 5].map(function (i) {
+    var v = parseInt(hex.substr(i, 2), 16) / 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * canales[0] + 0.7152 * canales[1] + 0.0722 * canales[2];
+}
+
+function contraste(a, b) {
+  var x = luminancia(a), y = luminancia(b);
+  return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+}
+
+var COLORES = gs.GRUPOS_CIUDAD.map(function (g) { return g.color; })
+  .concat(gs.gruposDeTrack('A').map(function (g) { return g.color; }));
+
+COLORES.forEach(function (color) {
+  var r = contraste(color, gs.TINTA_ENCABEZADO);
+  ok(r >= 4.5, 'el encabezado ' + color + ' contrasta ' + r.toFixed(2) +
+    ':1 con su texto (AA)');
+});
+
 if (t.esPrincipal(module)) t.resumen();
